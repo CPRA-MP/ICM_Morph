@@ -1770,7 +1770,7 @@ def SedimentDistribution(LandWater, TopoBathy, CurrentEdge, SubsidenceRas, OM, B
 
 #EDW no longer using ChangeMWL in SLR calcs (this was remnant of 25-year version of WM.py)    
 #EDW def SeaLevelRise(MWL, ChangeMWL, TopoBathy, LandWater, LULC, Salinity):
-def SeaLevelRise(MWL,TopoBathy,LandWater,LULC,Salinity,PreviousMWL,PreviousLULC,elapsedyear,BI_Mask,NoUpdateMask,BareGroundCollapse):
+def SeaLevelRise(MWL,TopoBathy,LandWater,LULC,Salinity,PreviousMWL,PreviousLULC,elapsedyear,BI_Mask,NoUpdateMask,BareGroundCollapse,ASalinity):
     try:
         msg0 = "\nBEGIN SEA LEVEL RISE"
         print msg0
@@ -1806,9 +1806,23 @@ def SeaLevelRise(MWL,TopoBathy,LandWater,LULC,Salinity,PreviousMWL,PreviousLULC,
         rLW = Raster(LandWater)
         rLULC = Raster(LULC)
         rSalinity = Raster(Salinity)
+		rAveSalinity = Raster(ASalinity)
         rBI = Raster(BI_Mask)
         #-------------------------------------------------------------------------
 
+		#DEFINE INUNDATION THRESHOLD CONSTANTS
+		Z = 1.96
+		B0 = 0.0058
+		B1 = -0.00207
+		B2 = 0.0809
+		B3 = 0.0892
+		B4 = -0.19
+		
+		#COMPUTE RASTERS FOR NEW INUNDATIONS THRESHOLD
+		rMuDepth = B0+B1*rAveSalinity
+		rSigDepth = B2+B3*math.exp(B4*rAveSalinity)
+		rDepthThreshold = rMuDepth+Z*rSigDepth	
+		
 #EDW no longer using ChangeMWL in SLR calcs (this was remnant of 25-year version of WM.py)    
         ##------------------------------------------------------------------------
         #UPDATE MEAN WATER LEVEL
@@ -1834,29 +1848,36 @@ def SeaLevelRise(MWL,TopoBathy,LandWater,LULC,Salinity,PreviousMWL,PreviousLULC,
         #
         #if Land(LW=1) AND LULC=2 AND (Salinity > 7.0) AND MWL>=RelativeElevation
         # then land lost(change to water)
-        outRas1 = Con((rLW == 1) & (rLULC == 2) & (rSalinity > tSalinity2) & (rUpdatedMWL >= rTopo), 3, 0)
+        #outRas1 = Con((rLW == 1) & (rLULC == 2) & (rSalinity > tSalinity2) & (rUpdatedMWL >= rTopo), 3, 0)
         #
         ##------------------------------------------------------------------------
 
         ##------------------------------------------------------------------------
         #MARSH COLLAPSE INUNDATION STRESS (LAND LOSS)
         #
+        msg0 = "--marsh collapse inundation stress"
+        print msg0		
+		
+        #if Land(LW=1) AND LULC=(2,3,4,5) AND ((MWL-0.3436) > RelativeElevation)
+        # then land lost(change to water)
+        outRas1 = Con((rLW == 1) & (rLULC in [2,3,4,5]) & ((rUpdatedMWL - rDepthThreshold) > rTopo), 3, 0)		
+		
         if elapsedyear != 1:
-            msg0 = "--marsh collapse inundation stress"
-            print msg0
+            #msg0 = "--marsh collapse inundation stress"
+            #print msg0
             rPrevMWL = Raster(PreviousMWL)
 
             #if Land(LW=1) AND LULC=3 AND ((MWL-0.3436) > RelativeElevation) - for both current and previous year
             # then land lost(change to water)
-            outRas2 = Con((rLW == 1) & (rLULC == 3) & ((rUpdatedMWL - tMWL3) > rTopo) & ((rPrevMWL - tMWL3) > rTopo), 3, 0)      
+            #outRas2 = Con((rLW == 1) & (rLULC == 3) & ((rUpdatedMWL - tMWL3) > rTopo) & ((rPrevMWL - tMWL3) > rTopo), 3, 0)      
 
             #if Land(LW=1) AND LULC=4 AND ((MWL-0.2278) > RelativeElevation) - for both current and previous year
             # then land lost(change to water)
-            outRas3 = Con((rLW == 1) & (rLULC == 4) & ((rUpdatedMWL - tMWL4) > rTopo) & ((rPrevMWL - tMWL4) > rTopo), 3, 0)        
+            #outRas3 = Con((rLW == 1) & (rLULC == 4) & ((rUpdatedMWL - tMWL4) > rTopo) & ((rPrevMWL - tMWL4) > rTopo), 3, 0)        
 
             #if Land(LW=1) AND LULC=5 AND ((MWL-0.2050) > RelativeElevation) - for both current and previous year
             # then land lost(change to water)
-            outRas4 = Con((rLW == 1) & (rLULC == 5) & ((rUpdatedMWL - tMWL5) > rTopo) & ((rPrevMWL - tMWL5) > rTopo), 3, 0)        
+            #outRas4 = Con((rLW == 1) & (rLULC == 5) & ((rUpdatedMWL - tMWL5) > rTopo) & ((rPrevMWL - tMWL5) > rTopo), 3, 0)        
 
             ##------------------------------------------------------------------------
             
@@ -1887,9 +1908,9 @@ def SeaLevelRise(MWL,TopoBathy,LandWater,LULC,Salinity,PreviousMWL,PreviousLULC,
             print msg0
 #            arcpy.AddMessage(msg0)
             if BareGroundCollapse <> -9999:
-                rLossGain = CellStatistics([rLW, outRas0, outRas1, outRas2, outRas3, outRas4, outRas5,outRas6], "MAXIMUM", "DATA")
+                rLossGain = CellStatistics([rLW, outRas0, outRas1, outRas5,outRas6], "MAXIMUM", "DATA")
             else:
-                rLossGain = CellStatistics([rLW, outRas0, outRas1, outRas2, outRas3, outRas4, outRas5], "MAXIMUM", "DATA")
+                rLossGain = CellStatistics([rLW, outRas0, outRas1, outRas5], "MAXIMUM", "DATA")
         
         else:
             msg0 = "--skipping inundation stress and land building for first year"
@@ -1938,7 +1959,7 @@ def SeaLevelRise(MWL,TopoBathy,LandWater,LULC,Salinity,PreviousMWL,PreviousLULC,
         del outRas0, outRas1, rLossGain, rNewLW 
         
         if elapsedyear != 1:
-            del outRas2, outRas3, outRas4, outRas5
+            del outRas5
         
         
         e = time.clock()
@@ -3630,7 +3651,7 @@ def main(WM_params,ecohydro_dir,wetland_morph_dir,EHtemp_path,vegetation_dir,veg
 
 
 
-        lstReturns = SeaLevelRise(CurrentMWL, CurrentTOPO, CurrentLW, CurrentLULC, CurrentSalinity, PreviousMWL,PreviousLULC,elapsedyear,BI_Mask,NoUpdateMask,BareGroundCollapse)
+        lstReturns = SeaLevelRise(CurrentMWL, CurrentTOPO, CurrentLW, CurrentLULC, CurrentSalinity, PreviousMWL,PreviousLULC,elapsedyear,BI_Mask,NoUpdateMask,BareGroundCollapse,AveSalinity)
         CurrentLW = lstReturns[0]
 #EDW        CurrentMWL = lstReturns[1]             #EDW - no longer returns updated MWL (this calc has been removed from WM)
         lstLW1234.append(lstReturns[1])
