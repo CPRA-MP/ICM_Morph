@@ -1820,8 +1820,8 @@ def SeaLevelRise(MWL,TopoBathy,LandWater,LULC,Salinity,PreviousMWL,PreviousLULC,
         
         #COMPUTE RASTERS FOR NEW INUNDATIONS THRESHOLD
         rMuDepth = B0+B1*rAveSalinity
-        rSigDepth = B2+B3*math.exp(B4*rAveSalinity)
-        rDepthThreshold = rMuDepth+Z*rSigDepth	
+        rSigDepth = B2+B3*Exp(B4*rAveSalinity)
+        rDepthThreshold = rMuDepth+Z*rSigDepth
         
 #EDW no longer using ChangeMWL in SLR calcs (this was remnant of 25-year version of WM.py)    
         ##------------------------------------------------------------------------
