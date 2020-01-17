@@ -1806,23 +1806,23 @@ def SeaLevelRise(MWL,TopoBathy,LandWater,LULC,Salinity,PreviousMWL,PreviousLULC,
         rLW = Raster(LandWater)
         rLULC = Raster(LULC)
         rSalinity = Raster(Salinity)
-		rAveSalinity = Raster(ASalinity)
+        rAveSalinity = Raster(ASalinity)
         rBI = Raster(BI_Mask)
         #-------------------------------------------------------------------------
-
-		#DEFINE INUNDATION THRESHOLD CONSTANTS
-		Z = 1.96
-		B0 = 0.0058
-		B1 = -0.00207
-		B2 = 0.0809
-		B3 = 0.0892
-		B4 = -0.19
-		
-		#COMPUTE RASTERS FOR NEW INUNDATIONS THRESHOLD
-		rMuDepth = B0+B1*rAveSalinity
-		rSigDepth = B2+B3*math.exp(B4*rAveSalinity)
-		rDepthThreshold = rMuDepth+Z*rSigDepth	
-		
+        
+        #DEFINE INUNDATION THRESHOLD CONSTANTS
+        Z = 1.96
+        B0 = 0.0058
+        B1 = -0.00207
+        B2 = 0.0809
+        B3 = 0.0892
+        B4 = -0.19
+        
+        #COMPUTE RASTERS FOR NEW INUNDATIONS THRESHOLD
+        rMuDepth = B0+B1*rAveSalinity
+        rSigDepth = B2+B3*math.exp(B4*rAveSalinity)
+        rDepthThreshold = rMuDepth+Z*rSigDepth	
+        
 #EDW no longer using ChangeMWL in SLR calcs (this was remnant of 25-year version of WM.py)    
         ##------------------------------------------------------------------------
         #UPDATE MEAN WATER LEVEL
@@ -1857,11 +1857,11 @@ def SeaLevelRise(MWL,TopoBathy,LandWater,LULC,Salinity,PreviousMWL,PreviousLULC,
         #
         msg0 = "--marsh collapse inundation stress"
         print msg0		
-		
+        
         #if Land(LW=1) AND LULC=(2,3,4,5) AND ((MWL-0.3436) > RelativeElevation)
         # then land lost(change to water)
         outRas1 = Con((rLW == 1) & (rLULC in [2,3,4,5]) & ((rUpdatedMWL - rDepthThreshold) > rTopo), 3, 0)		
-		
+        
         if elapsedyear != 1:
             #msg0 = "--marsh collapse inundation stress"
             #print msg0
