@@ -1860,7 +1860,7 @@ def SeaLevelRise(MWL,TopoBathy,LandWater,LULC,Salinity,PreviousMWL,PreviousLULC,
         
         #if Land(LW=1) AND LULC=(2,3,4,5) AND ((MWL-0.3436) > RelativeElevation)
         # then land lost(change to water)
-        outRas1 = Con((rLW == 1) & (rLULC in [2,3,4,5]) & ((rUpdatedMWL - rDepthThreshold) > rTopo), 3, 0)		
+        outRas1 = Con(((rLW == 1) & ((rLULC == 2) | (rLULC == 3) | (rLULC == 4) | (rLULC == 5))) & ((rUpdatedMWL - rDepthThreshold) > rTopo), 3, 0)
         
         if elapsedyear != 1:
             #msg0 = "--marsh collapse inundation stress"
