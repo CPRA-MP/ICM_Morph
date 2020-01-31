@@ -1681,8 +1681,31 @@ def SedimentDistribution(LandWater, TopoBathy, CurrentEdge, SubsidenceRas, OM, B
 # if bulk density raster is 0, do not calculate accretion
 # if raster is water do not add organic matter 
 # if land, add organic matter and background accretion of 2 mm/year
-        rAcc_cm_year = Con( (rBD == 0), 0, Con( rLW == 2, ( rSedL_E_W/(10000*BDWaterVal) ),( ( (rSedL_E_W + rOM)/(10000*rBD) ) + (rConstant2/10.0) ) ) )
-        rAcc_m_year = (rAcc_cm_year / 100) * YearIncrement
+
+# OMAR_test#        rAcc_cm_year = Con( (rBD == 0), 0, Con( rLW == 2, ( rSedL_E_W/(10000*BDWaterVal) ),( ( (rSedL_E_W + rOM)/(10000*rBD) ) + (rConstant2/10.0) ) ) )
+        
+	# new OMAR & self-packing densities from CRMS analysis (performed by 2023 MP Wetlands and Soils Model Improvement team)
+	
+	# LULC = 1 fresh forested/swamp: OMAR=0.107 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=1.407 cm/yr
+	# LULC = 2 fresh marsh:          OMAR=0.089 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=1.175 cm/yr
+	# LULC = 3 intermediate marsh:   OMAR=0.062 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=0.809 cm/yr
+	# LULC = 4 brackish marsh:       OMAR=0.063 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=0.830 cm/yr
+	# LULC = 5 saline marsh:         OMAR=0.093 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=1.222 cm/yr
+	
+	# k1 = 0.076 # g/cm^3 - organic self-packing density (calculated from CRMS data)
+	k2 = 2.106 # g/cm^3 - mineral self-packing density (calculated from CRMS data)
+
+	# rSedL_E_W is the mineral sediment deposition mapped onto inundated areas - units are g/cm^2/yr
+	# if land then set organic accretion rate based on FIBS calculated organic accretion
+	rOrgAcc_cm_year = Con( rLW == 1, Con( rLULC ==1, 1.407, Con( rLULC == 2, 1.175, Con( rLULC == 3, 0.809, Con( rLULC == 4, 0.830, Con( rLULC == 5, 1.222,0.0))))),0.0)
+		
+	# convert mineral sediment deposition to mineral accretion by dividing by mineral self-packing density, k2
+	rMinAcc_cm_year = rSedL_E_W/k2
+		
+	# total accretion is organic + mineral
+	rAcc_cm_year = rOrgAcc_cm_year + rOrgAcc_cm_year
+	
+	rAcc_m_year = (rAcc_cm_year / 100) * YearIncrement
         AccMaxInc = AccMaxYr * YearIncrement
         
         
