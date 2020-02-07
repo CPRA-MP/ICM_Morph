@@ -1546,7 +1546,7 @@ def LossGain(zoneLayer, zoneField, GainField, LossField, LandWater, ProbSurface,
 
 #def SedimentDistribution(LandWater, TopoBathy, SubsidenceRas, OM, BD, LandSed, EdgeSed, WaterSed, HurrSed, AccMaxYr, StageMax, edgeWidthCells):
 # no longer using separate hurricane sediment load - storms are in LandSed,EdgeSed,and WaterSed
-def SedimentDistribution(LandWater, TopoBathy, CurrentEdge, SubsidenceRas, OM, BD, LandSed, EdgeSed, WaterSed, AccMaxYr, StageMax, edgeWidthCells,MEEflag,CompartmentPoly,CompartmentPolyID_Field,BDWaterVal,RegimeChan,elapsedyear):
+def SedimentDistribution(LandWater, TopoBathy, CurrentEdge, SubsidenceRas, OM, BD, LULC, LandSed, EdgeSed, WaterSed, AccMaxYr, StageMax, edgeWidthCells,MEEflag,CompartmentPoly,CompartmentPolyID_Field,BDWaterVal,RegimeChan,elapsedyear):
     try:
         msg0 = "\nBEGIN SEDIMENT DISTRIBUTION & ACCUMULATION"
         print msg0
@@ -1584,6 +1584,7 @@ def SedimentDistribution(LandWater, TopoBathy, CurrentEdge, SubsidenceRas, OM, B
         rSubsid = Raster(SubsidenceRas)
         rOM = Raster(OM)
         rBD = Raster(BD)
+        rLULC = Raster(LULC)		
         rLandSed = Raster(LandSed)
         rEdgeSed = Raster(EdgeSed)
         rWaterSed = Raster(WaterSed)
@@ -1684,28 +1685,28 @@ def SedimentDistribution(LandWater, TopoBathy, CurrentEdge, SubsidenceRas, OM, B
 
 # OMAR_test#        rAcc_cm_year = Con( (rBD == 0), 0, Con( rLW == 2, ( rSedL_E_W/(10000*BDWaterVal) ),( ( (rSedL_E_W + rOM)/(10000*rBD) ) + (rConstant2/10.0) ) ) )
         
-	# new OMAR & self-packing densities from CRMS analysis (performed by 2023 MP Wetlands and Soils Model Improvement team)
+        # new OMAR & self-packing densities from CRMS analysis (performed by 2023 MP Wetlands and Soils Model Improvement team)
 	
-	# LULC = 1 fresh forested/swamp: OMAR=0.107 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=1.407 cm/yr
-	# LULC = 2 fresh marsh:          OMAR=0.089 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=1.175 cm/yr
-	# LULC = 3 intermediate marsh:   OMAR=0.062 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=0.809 cm/yr
-	# LULC = 4 brackish marsh:       OMAR=0.063 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=0.830 cm/yr
-	# LULC = 5 saline marsh:         OMAR=0.093 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=1.222 cm/yr
+        # LULC = 1 fresh forested/swamp: OMAR=0.107 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=1.407 cm/yr
+        # LULC = 2 fresh marsh:          OMAR=0.089 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=1.175 cm/yr
+        # LULC = 3 intermediate marsh:   OMAR=0.062 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=0.809 cm/yr
+        # LULC = 4 brackish marsh:       OMAR=0.063 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=0.830 cm/yr
+        # LULC = 5 saline marsh:         OMAR=0.093 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=1.222 cm/yr
 	
-	# k1 = 0.076 # g/cm^3 - organic self-packing density (calculated from CRMS data)
-	k2 = 2.106 # g/cm^3 - mineral self-packing density (calculated from CRMS data)
+        # k1 = 0.076 # g/cm^3 - organic self-packing density (calculated from CRMS data)
+        k2 = 2.106 # g/cm^3 - mineral self-packing density (calculated from CRMS data)
 
-	# rSedL_E_W is the mineral sediment deposition mapped onto inundated areas - units are g/cm^2/yr
-	# if land then set organic accretion rate based on FIBS calculated organic accretion
-	rOrgAcc_cm_year = Con( rLW == 1, Con( rLULC ==1, 1.407, Con( rLULC == 2, 1.175, Con( rLULC == 3, 0.809, Con( rLULC == 4, 0.830, Con( rLULC == 5, 1.222,0.0))))),0.0)
+        # rSedL_E_W is the mineral sediment deposition mapped onto inundated areas - units are g/cm^2/yr
+        # if land then set organic accretion rate based on FIBS calculated organic accretion
+        rOrgAcc_cm_year = Con( rLW == 1, Con( rLULC ==1, 1.407, Con( rLULC == 2, 1.175, Con( rLULC == 3, 0.809, Con( rLULC == 4, 0.830, Con( rLULC == 5, 1.222,0.0))))),0.0)
 		
-	# convert mineral sediment deposition to mineral accretion by dividing by mineral self-packing density, k2
-	rMinAcc_cm_year = rSedL_E_W/k2
+        # convert mineral sediment deposition to mineral accretion by dividing by mineral self-packing density, k2
+        rMinAcc_cm_year = rSedL_E_W/k2
 		
-	# total accretion is organic + mineral
-	rAcc_cm_year = rOrgAcc_cm_year + rOrgAcc_cm_year
+        # total accretion is organic + mineral
+        rAcc_cm_year = rOrgAcc_cm_year + rOrgAcc_cm_year
 	
-	rAcc_m_year = (rAcc_cm_year / 100) * YearIncrement
+        rAcc_m_year = (rAcc_cm_year / 100) * YearIncrement
         AccMaxInc = AccMaxYr * YearIncrement
         
         
@@ -3619,7 +3620,7 @@ def main(WM_params,ecohydro_dir,wetland_morph_dir,EHtemp_path,vegetation_dir,veg
 
 #EDW # no longer using separate hurricane sediment load - storms are in LandSed,EdgeSed,and WaterSed               
 #EDW 		#lstReturns = SedimentDistribution(CurrentLW, CurrentTOPO, SubsidenceRas, CurrentOM, CurrentBD, CurrentLandSed, CurrentEdgeSed, CurrentWaterSed, NewHurrSed, MaxAccretion, CurrentStageMax, 1)
-        lstReturns = SedimentDistribution(CurrentLW, CurrentTOPO, CurrentEdge, SubsidenceRas, CurrentOM, CurrentBD, CurrentLandSed, CurrentEdgeSed, CurrentWaterSed, MaxAccretion, CurrentStageMax, 1, MEEflag,CompartmentPoly,CompartmentPolyID_Field,BDWaterVal,RegimeChan,elapsedyear)
+        lstReturns = SedimentDistribution(CurrentLW, CurrentTOPO, CurrentEdge, SubsidenceRas, CurrentOM, CurrentBD, CurrentLULC, CurrentLandSed, CurrentEdgeSed, CurrentWaterSed, MaxAccretion, CurrentStageMax, 1, MEEflag,CompartmentPoly,CompartmentPolyID_Field,BDWaterVal,RegimeChan,elapsedyear)
         CurrentTOPO = lstReturns[0]
         CurrentLW = lstReturns[1]
         #
