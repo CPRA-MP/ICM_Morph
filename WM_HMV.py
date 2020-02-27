@@ -1703,7 +1703,7 @@ def SedimentDistribution(LandWater, TopoBathy, CurrentEdge, SubsidenceRas, OM, B
         rMinAcc_cm_year = rSedL_E_W/k2
 		
         # total accretion is organic + mineral
-        rAcc_cm_year = rOrgAcc_cm_year + rOrgAcc_cm_year
+        rAcc_cm_year = rOrgAcc_cm_year + rMinAcc_cm_year
 	
         rAcc_m_year = (rAcc_cm_year / 100) * YearIncrement
         AccMaxInc = AccMaxYr * YearIncrement
