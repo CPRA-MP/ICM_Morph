@@ -1696,12 +1696,12 @@ def SedimentDistribution(LandWater, TopoBathy, CurrentEdge, SubsidenceRas, OM, B
         # k1 = 0.076 # g/cm^3 - organic self-packing density (calculated from CRMS data)
         k2 = 2.106 # g/cm^3 - mineral self-packing density (calculated from CRMS data)
 
-        # rSedL_E_W is the mineral sediment deposition mapped onto inundated areas - units are g/cm^2/yr
+        # rSedL_E_W is the mineral sediment deposition mapped onto inundated areas - units are kg/m^2/yr (which was converted to g/cm^2 in previous equation by the 10000 conversion factor - which also converted BD input from mg/cm^3 to g/cm^3)
         # if land then set organic accretion rate based on FIBS calculated organic accretion
         rOrgAcc_cm_year = Con( rLW == 1, Con( rLULC ==1, 1.407, Con( rLULC == 2, 1.175, Con( rLULC == 3, 0.809, Con( rLULC == 4, 0.830, Con( rLULC == 5, 1.222,0.0))))),0.0)
 		
         # convert mineral sediment deposition to mineral accretion by dividing by mineral self-packing density, k2
-        rMinAcc_cm_year = rSedL_E_W/k2
+        rMinAcc_cm_year = rSedL_E_W/(10.0*k2)	# rSedL_E_W is in units of kg/m^2, dividing by 10 to convert to g/cm^2
 		
         # total accretion is organic + mineral
         rAcc_cm_year = rOrgAcc_cm_year + rMinAcc_cm_year
