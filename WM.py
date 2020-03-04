@@ -1694,14 +1694,15 @@ def SedimentDistribution(LandWater, TopoBathy, CurrentEdge, SubsidenceRas, OM, B
         # LULC = 5 saline marsh:         OMAR=0.093 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=1.222 cm/yr
 	
         # k1 = 0.076 # g/cm^3 - organic self-packing density (calculated from CRMS data)
-        k2 = 2.106 # g/cm^3 - mineral self-packing density (calculated from CRMS data)
-
+        k2_marsh = 2.106 # g/cm^3 - mineral self-packing density (calculated from CRMS data)
+		k2_water = 2.65 # g/cm^3 - settled bulk density of open water bottoms 
+		
         # rSedL_E_W is the mineral sediment deposition mapped onto inundated areas - units are kg/m^2/yr (which was converted to g/cm^2 in previous equation by the 10000 conversion factor - which also converted BD input from mg/cm^3 to g/cm^3)
         # if land then set organic accretion rate based on FIBS calculated organic accretion
         rOrgAcc_cm_year = Con( rLW == 1, Con( rLULC ==1, 1.407, Con( rLULC == 2, 1.175, Con( rLULC == 3, 0.809, Con( rLULC == 4, 0.830, Con( rLULC == 5, 1.222,0.0))))),0.0)
 		
-        # convert mineral sediment deposition to mineral accretion by dividing by mineral self-packing density, k2
-        rMinAcc_cm_year = rSedL_E_W/(10.0*k2)	# rSedL_E_W is in units of kg/m^2, dividing by 10 to convert to g/cm^2
+        # convert mineral sediment deposition to mineral accretion by dividing by mineral self-packing density, k2 (use different values for water and marsh areas)
+        rMinAcc_cm_year = Con(outRasVals234 == 4, rLWrSedL_E_W/(10.0*k2_water), rLWrSedL_E_W/(10.0*k2_marsh))	# rSedL_E_W is in units of kg/m^2, dividing by 10 to convert to g/cm^2 - if water use mineral density for water bottoms, if land use k2 from marsh soils
 		
         # total accretion is organic + mineral
         rAcc_cm_year = rOrgAcc_cm_year + rMinAcc_cm_year
