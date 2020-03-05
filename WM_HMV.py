@@ -1702,7 +1702,7 @@ def SedimentDistribution(LandWater, TopoBathy, CurrentEdge, SubsidenceRas, OM, B
         rOrgAcc_cm_year = Con( rLW == 1, Con( rLULC ==1, 1.407, Con( rLULC == 2, 1.175, Con( rLULC == 3, 0.809, Con( rLULC == 4, 0.830, Con( rLULC == 5, 1.222,0.0))))),0.0)
 		
         # convert mineral sediment deposition to mineral accretion by dividing by mineral self-packing density, k2 (use different values for water and marsh areas)
-        rMinAcc_cm_year = Con(outRasVals234 == 4, rLWrSedL_E_W/(10.0*k2_water), rLWrSedL_E_W/(10.0*k2_marsh))	# rSedL_E_W is in units of kg/m^2, dividing by 10 to convert to g/cm^2 - if water use mineral density for water bottoms, if land use k2 from marsh soils
+        rMinAcc_cm_year = Con(outRasVals234 == 4, rSedL_E_W/(10.0*k2_water), rSedL_E_W/(10.0*k2_marsh))	# rSedL_E_W is in units of kg/m^2, dividing by 10 to convert to g/cm^2 - if water use mineral density for water bottoms, if land use k2 from marsh soils
 		
         # total accretion is organic + mineral
         rAcc_cm_year = rOrgAcc_cm_year + rMinAcc_cm_year
