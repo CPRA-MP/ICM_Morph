@@ -1716,6 +1716,13 @@ def SedimentDistribution(LandWater, TopoBathy, CurrentEdge, SubsidenceRas, OM, B
         rAcc_m_yr_maxstg = Con(rTOPO > rStageMax, 0, rAcc_m_yr_mod)
 
         rAcc_m_yr_maxstg.save(SED_ACC)
+		
+        rOrgAcc_cm_year.save(r"%s\\rOrgAcc_cm_year_%02d.img" % (Intermediate_Files_Path, elapsedyear))
+        rMinAcc_cm_year.save(r"%s\\rMinAcc_cm_year_%02d.img" % (Intermediate_Files_Path, elapsedyear)) 
+        rAcc_m_year.save(r"%s\\rAcc_cm_year_%02d.img" % (Intermediate_Files_Path, elapsedyear)) 
+        outRasVals234.save(r"%s\\outRasVals234_%02d.img" % (Intermediate_Files_Path, elapsedyear))
+        rAcc_m_yr_maxstg.save(r"%s\\rAcc_m_yr_maxstg_%02d.img" % (Intermediate_Files_Path, elapsedyear))
+        rSedL_E_W.save(r"%s\\rSedL_E_W_%02d.img" % (Intermediate_Files_Path, elapsedyear))		
         #
         ##------------------------------------------------------------------------
 
