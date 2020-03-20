@@ -9,6 +9,129 @@ arcpy.CheckOutExtension("3D")
 env.overwriteOutput = True
 env.pyramid = "NONE"
 
+def CalculateInundation(CurrentYear,elapsedyear,ecohydro_dir,EHtemp_path,vegetation_dir,veg_ascii_grid,n500grid,nrows,ncols,veg_ascii_header,InitCond_proj):
+    print(' Reading in grid-to-compartment lookup tables.')
+    grid_ICM_lookup = {}
+    grid_lookup_file = r'%s\grid_lookup_500m.csv' % ecohydro_dir
+    glf = np.genfromtxt(grid_lookup_file, skip_header=1, usecols=(0,1), delimiter=',')
+    for row in glf:
+        grid_ICM_lookup[row[0]] = row[1]
+    del glf
+    
+    veg_grid_ascii_file = os.path.normpath(vegetation_dir + '\\' + veg_ascii_grid)
+    veg_grid_lookup=np.genfromtxt(veg_grid_ascii_file,delimiter=' ',skip_header=6)
+
+    if CurrentYear in range(1904,2100,4):
+        ndays = 366
+    else:
+        ndays = 365
+    
+    ndays_prev = 0
+    
+    if elapsedyear != 1:
+        for PrevYear in range(2015,CurrentYear):    # this will need to be updated - it is hardsetting the start year to 2015 ######  FIX!!!!!!! #### 
+        
+            if PrevYear in range(1904,2100,4):
+                ndays_prev += 366
+            else:
+                ndays_prev += 365
+
+        start_row = ndays_prev
+
+    print(' - reading in stage output file')
+    stg_file = r'%s\STG.out' % (ecohydro_dir)
+    stg_all = np.genfromtxt(stg_file,dtype='float',delimiter = ',',skip_header=start_row)
+    trg_file = r'%s\TRG.out' % (ecohydro_dir)
+    trg_all = np.genfromtxt(trg_file,dtype='float',delimiter = ',',skip_header=start_row)
+    
+    print(' - calculating average elevation for grid cells')
+    ave_elev = {}
+    grid_data_file = r'%s\grid_data_500m_%s.csv' % (EHtemp_path,CurrentYear)
+    grid_elev_data = np.genfromtxt(grid_data_file,delimiter=',',skip_header=1)
+    for row in grid_elev_data:
+        grid_id = row[0]
+        b_el = row[1] # elev of open water bed
+        m_el = row[2] # elev of marsh
+        p_lnd = row[3] # percent of 500-m cell that is land (this includes both upland and marsh)
+        p_m = row[4] # percent of 500-m cell that is marsh (this area is also included in p_lnd)
+        p_w = row[5] # percent of 500-m cell that is water (this plus p_lnd should equal 100)
+        ave_elev[grid_id] = m_el
+    print(' - calculating time inundated at each grid point')
+  
+    inun_sum = {}
+    
+    for grid in range(1,n500grid+1):
+        if ave_elev[grid] == -9999:
+            inun_sum[grid] = ndays*24
+        else:
+            ICM4grid = int(grid_ICM_lookup[grid])
+
+            inun_sum[grid] = 0
+
+            for runday in range(0,ndays):
+                stg = stg_all[runday,ICM4grid-1]
+                trg = trg_all[runday,ICM4grid-1]
+                amp = max(0.5*trg,0.01)
+                hw = stg + amp
+                lw = stg - amp
+
+                # if average marsh elevation is above daily high water - hours inundated = 0
+                if hw < ave_elev[grid]:
+                    inun_hrs = 0.0
+                # if average marsh elevation is below daily low water - hours inundated = 24
+                elif lw > ave_elev[grid]:
+                    inun_hrs = 24.0
+                # otherwise determine points in time where assumed sinusoidal tidal water level crosses marsh elevation
+                else:
+                    depth_term_mag = abs((ave_elev[grid]-stg)/amp)
+
+                    if depth_term_mag > 0:
+                        depth_term_sign = ((ave_elev[grid]-stg)/amp)/depth_term_mag
+                        depth_term = min(1,depth_term_mag)*depth_term_sign
+                    else:
+                        depth_term = 0.0
+
+                    flood_time_zero = np.arcsin(depth_term)*24/(2*np.pi)
+                    drain_time_zero = 12.0 - flood_time_zero
+                    inun_hrs = drain_time_zero - flood_time_zero
+                
+                # add inundated hours from day to running total for the year
+                inun_sum[grid] += inun_hrs
+                
+
+    inun_sum_grid = np.zeros([nrows,ncols])            
+    
+    for m in range(0,nrows):
+        for n in range(0,ncols):
+            gridID = veg_grid_lookup[m][n]
+            if gridID == -9999:
+                inun_sum_grid[m][n] = -9999
+            else:
+                inun_sum_grid[m][n] = inun_sum[gridID]
+        
+    inun_sum_file = r'%s\MPM2023_%s_%s_C000_U00_V00_SLA_O_%02d_%02d_H_INUNhr.asc' % (EHtemp_path,s,g,elapsedyear,elapsedyear)    
+    np.savetxt(inun_sum_file,inun_sum_grid,comments='',delimiter=' ',header=veg_ascii_header,fmt='%i')
+
+    arcpy.env.workspace = InitCond_GDB
+    arcpy.env.scratchWorkspace = Temp_Files_Path
+    arcpy.env.scratchFolder
+    arcpy.env.scratchGDB
+    
+    # convert ascii grid to raster and save in initial conditions GDB
+    Inun500 = '%s\\inun_hr500' % (Temp_Files_GDB) 
+    arcpy.ASCIIToRaster_conversion(inun_sum_grid,Inun500,'INTEGER')
+    
+    # define projection of new LULC raster
+    arcpy.DefineProjection_management(Inun500,InitCond_proj)
+    
+    print "--resampling 500-m LULC raster to 30-m resolution"
+    Inun30 = r'%s\\%sinunhr_30' % (Temp_Files_GDB,nprefix) 
+    
+    # resample 500-m LULC raster to the 30-m resolution used by the rest of the morphology routines
+    arcpy.Resample_management(Inun500,Inun30,"30","NEAREST")
+    
+    return([Inun30])
+
 def CreateWorkSpaces(parentFolder, tempFolder, tempGDBName, intermediateFolder, intermediateGDBName, deliverableFolder):
     ##PURPOSE: creates the folder structure and geodatabases to hold derived data (temp, intermediate, final)
     try:
@@ -1546,7 +1669,7 @@ def LossGain(zoneLayer, zoneField, GainField, LossField, LandWater, ProbSurface,
 
 #def SedimentDistribution(LandWater, TopoBathy, SubsidenceRas, OM, BD, LandSed, EdgeSed, WaterSed, HurrSed, AccMaxYr, StageMax, edgeWidthCells):
 # no longer using separate hurricane sediment load - storms are in LandSed,EdgeSed,and WaterSed
-def SedimentDistribution(LandWater, TopoBathy, CurrentEdge, SubsidenceRas, OM, BD, LULC, LandSed, EdgeSed, WaterSed, AccMaxYr, StageMax, edgeWidthCells,MEEflag,CompartmentPoly,CompartmentPolyID_Field,BDWaterVal,RegimeChan,elapsedyear):
+def SedimentDistribution(hours_inun, LandWater, TopoBathy, CurrentEdge, SubsidenceRas, OM, BD, LULC, LandSed, EdgeSed, WaterSed, AccMaxYr, StageMax, edgeWidthCells,MEEflag,CompartmentPoly,CompartmentPolyID_Field,BDWaterVal,RegimeChan,elapsedyear):
     try:
         msg0 = "\nBEGIN SEDIMENT DISTRIBUTION & ACCUMULATION"
         print msg0
@@ -1578,6 +1701,7 @@ def SedimentDistribution(LandWater, TopoBathy, CurrentEdge, SubsidenceRas, OM, B
         
         ##------------------------------------------------------------------------
         #MAKE SOME RASTERS
+        rInunHr = Raster(hours_inun)    # raster of hours inundated during year
         rTOPO = Raster(TopoBathy)
         rLW = Raster(LandWater)
         rEdge = Raster(CurrentEdge)
@@ -1683,39 +1807,55 @@ def SedimentDistribution(LandWater, TopoBathy, CurrentEdge, SubsidenceRas, OM, B
 # if raster is water do not add organic matter 
 # if land, add organic matter and background accretion of 2 mm/year
 
-# OMAR_test#        rAcc_cm_year = Con( (rBD == 0), 0, Con( rLW == 2, ( rSedL_E_W/(10000*BDWaterVal) ),( ( (rSedL_E_W + rOM)/(10000*rBD) ) + (rConstant2/10.0) ) ) )
+#EDW23#         rAcc_cm_year = Con( (rBD == 0), 0, Con( rLW == 2, ( rSedL_E_W/(10000*BDWaterVal) ),( ( (rSedL_E_W + rOM)/(10000*rBD) ) + (rConstant2/10.0) ) ) )
         
-        # new OMAR & self-packing densities from CRMS analysis (performed by 2023 MP Wetlands and Soils Model Improvement team)
-	
+        # new OMAR & self-packing densities from CRMS analysis and belowground biomass productivity as a function of inundation(performed by 2023 MP Wetlands and Soils Model Improvement team)
+
         # LULC = 1 fresh forested/swamp: OMAR=0.107 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=1.407 cm/yr
         # LULC = 2 fresh marsh:          OMAR=0.089 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=1.175 cm/yr
-        # LULC = 3 intermediate marsh:   OMAR=0.062 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=0.809 cm/yr
-        # LULC = 4 brackish marsh:       OMAR=0.063 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=0.830 cm/yr
-        # LULC = 5 saline marsh:         OMAR=0.093 g/cm^2/year, k1=0.076 g/cm^3, organic accretion=1.222 cm/yr
-	
-        # k1 = 0.076 # g/cm^3 - organic self-packing density (calculated from CRMS data)
+        # LULC = 3 intermediate marsh:   organic accretion = 0.1*0.8887*exp(-0.01*pct_inun)/k1 cm/yr - exponential decay function for belowground biomass productivity inundation function 
+        # LULC = 4 brackish marsh:       organic accretion = 0.1*6.3712*exp(-0.045*pct_inun)/k1 cm/yr - use exponential decay function for belowground biomass productivity inundation function
+        # LULC = 5 saline marsh:         organic accretion = 0.1*1.7717*exp(-0.025*pct_inun)/k1 cm/yr - use exponential decay function for belowground biomass productivity inundation function
+
+        k1 = 0.076 # g/cm^3 - organic self-packing density (calculated from CRMS data)
         k2_marsh = 2.106 # g/cm^3 - mineral self-packing density (calculated from CRMS data)
-		k2_water = 2.65 # g/cm^3 - settled bulk density of open water bottoms 
-		
+        k2_water = 2.65 # g/cm^3 - settled bulk density of open water bottoms 
+
         # rSedL_E_W is the mineral sediment deposition mapped onto inundated areas - units are kg/m^2/yr (which was converted to g/cm^2 in previous equation by the 10000 conversion factor - which also converted BD input from mg/cm^3 to g/cm^3)
         # if land then set organic accretion rate based on FIBS calculated organic accretion
-        rOrgAcc_cm_year = Con( rLW == 1, Con( rLULC ==1, 1.407, Con( rLULC == 2, 1.175, Con( rLULC == 3, 0.809, Con( rLULC == 4, 0.830, Con( rLULC == 5, 1.222,0.0))))),0.0)
-		
+        rOrgAcc_cm_year = Con( rLW == 1, Con( rLULC ==1, 1.407, Con( rLULC == 2, 1.175, Con( rLULC == 3, 0.1*0.8887*Exp(-0.010*(100*rInunHr/(365*24)))/k1, Con( rLULC == 4, 0.1*6.3712*Exp(-0.045*(100*rInunHr/(365*24)))/k1, Con( rLULC == 5, 0.1*1.7717*Exp(-0.025*(100*rInunHr/(365*24)))/k1,0.0))))),0.0)
         # convert mineral sediment deposition to mineral accretion by dividing by mineral self-packing density, k2 (use different values for water and marsh areas)
         rMinAcc_cm_year = Con(outRasVals234 == 4, rSedL_E_W/(10000.0*k2_water), rSedL_E_W/(10000.0*k2_marsh))	# rSedL_E_W is in units of g/m^2, dividing by 10000 to convert to g/cm^2 - if water use mineral density for water bottoms, if land use k2 from marsh soils
-		
+
         # total accretion is organic + mineral
         rAcc_cm_year = rOrgAcc_cm_year + rMinAcc_cm_year
-	
-        rAcc_m_year = (rAcc_cm_year / 100) * YearIncrement
-        AccMaxInc = AccMaxYr * YearIncrement
-        
-        
-        rAcc_m_yr_mod = Con(rAcc_m_year > AccMaxInc, AccMaxInc, rAcc_m_year)
-        #mod to include max stage
-        rAcc_m_yr_maxstg = Con(rTOPO > rStageMax, 0, rAcc_m_yr_mod)
 
-        rAcc_m_yr_maxstg.save(SED_ACC)
+        rAcc_m_year = (rAcc_cm_year / 100) * YearIncrement
+        
+#EDW23#         AccMaxInc = AccMaxYr * YearIncrement
+#EDW23#        rAcc_m_yr_mod = Con(rAcc_m_year > AccMaxInc, AccMaxInc, rAcc_m_year)
+        
+        # apply maximum accretion by FIBS type
+        
+        # LULC = 1 fresh forested/swamp: max total accretion = 2.82 cm/yr
+        # LULC = 2 fresh marsh:  max total accretion = 1.906 cm/yr
+        # LULC = 3 intermediate marsh:  max total accretion = 1.99 cm/yr
+        # LULC = 4 brackish marsh:  max total accretion = 1.63 cm/yr
+        # LULC = 5 saline marsh:  max total accretion = 2.80 cm/yr
+        # LULC = 6 water:  max total accretion = 10.0 cm/yr
+        # LULC = 7 upland:  max total accretion = 0.0 cm/yr
+        # LULC = 8 flotant:  max total accretion = 1.906 cm/yr
+        # LULC = 9 bareground:  max total accretion = 10.0 cm/yr
+        
+        rAccMax_m_year = Con( rLW == 1, Con(rLULC == 1, 0.0282, Con(rLULC == 2, 0.01906, Con(rLULC == 3, 0.0199, Con(rLULC == 4, 0.0163, Con(rLULC == 5, 0.0280, Con(rLULC == 7, 0.0, Con(rLULC == 8, 0.01906 , 0.10 ))))))),0.10)
+        rAcc_m_yr_mod = Con( rAcc_m_year > rAccMax_m_year, rAccMax_m_year, rAcc_m_year )
+
+        rAcc_m_yr_mod.save(SED_ACC)
+        
+#EDW23#         #mod to include max stage
+#EDW23#         rAcc_m_yr_maxstg = Con(rTOPO > rStageMax, 0, rAcc_m_yr_mod)
+
+#EDW23#        rAcc_m_yr_maxstg.save(SED_ACC)
         #
         ##------------------------------------------------------------------------
 
@@ -3610,6 +3750,11 @@ def main(WM_params,ecohydro_dir,wetland_morph_dir,EHtemp_path,vegetation_dir,veg
 #EDW##        #
         ##------------------------------------------------------------------------
 
+        ##-----------------------------------------------------------------------
+        ##TABULATION OF HOURS INUNDATED DURING YEAR
+        lstReturns = CalculateInundation(CurrentYear,elapsedyear,ecohydro_dir,EHtemp_path,vegetation_dir,veg_ascii_grid,n500grid,nrows,ncols,veg_ascii_header,InitCond_proj)
+        hours_inun = lstReturns[0] # string with location of hours_inundated raster
+        
         ##------------------------------------------------------------------------
         ##SEDIMENT DISTRIBUTION AND ACCRETION
         #
