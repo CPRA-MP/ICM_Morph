@@ -3766,7 +3766,7 @@ def main(WM_params,ecohydro_dir,wetland_morph_dir,EHtemp_path,vegetation_dir,veg
 
 #EDW # no longer using separate hurricane sediment load - storms are in LandSed,EdgeSed,and WaterSed               
 #EDW 		#lstReturns = SedimentDistribution(CurrentLW, CurrentTOPO, SubsidenceRas, CurrentOM, CurrentBD, CurrentLandSed, CurrentEdgeSed, CurrentWaterSed, NewHurrSed, MaxAccretion, CurrentStageMax, 1)
-        lstReturns = SedimentDistribution(CurrentLW, CurrentTOPO, CurrentEdge, SubsidenceRas, CurrentOM, CurrentBD, CurrentLULC, CurrentLandSed, CurrentEdgeSed, CurrentWaterSed, MaxAccretion, CurrentStageMax, 1, MEEflag,CompartmentPoly,CompartmentPolyID_Field,BDWaterVal,RegimeChan,elapsedyear)
+        lstReturns = SedimentDistribution(hours_inun,CurrentLW, CurrentTOPO, CurrentEdge, SubsidenceRas, CurrentOM, CurrentBD, CurrentLULC, CurrentLandSed, CurrentEdgeSed, CurrentWaterSed, MaxAccretion, CurrentStageMax, 1, MEEflag,CompartmentPoly,CompartmentPolyID_Field,BDWaterVal,RegimeChan,elapsedyear)
         CurrentTOPO = lstReturns[0]
         CurrentLW = lstReturns[1]
         #
