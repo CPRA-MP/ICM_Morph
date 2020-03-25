@@ -27,7 +27,7 @@ def CalculateInundation(CurrentYear,elapsedyear,ecohydro_dir,EHtemp_path,vegetat
         ndays = 365
     
     ndays_prev = 0
-    
+	    
     if elapsedyear != 1:
         for PrevYear in range(2015,CurrentYear):    # this will need to be updated - it is hardsetting the start year to 2015 ######  FIX!!!!!!! #### 
         
@@ -36,7 +36,7 @@ def CalculateInundation(CurrentYear,elapsedyear,ecohydro_dir,EHtemp_path,vegetat
             else:
                 ndays_prev += 365
 
-        start_row = ndays_prev
+    start_row = ndays_prev
 
     print(' - reading in stage output file')
     stg_file = r'%s\STG.out' % (ecohydro_dir)
@@ -98,7 +98,7 @@ def CalculateInundation(CurrentYear,elapsedyear,ecohydro_dir,EHtemp_path,vegetat
                 # add inundated hours from day to running total for the year
                 inun_sum[grid] += inun_hrs
                 
-
+    
     inun_sum_grid = np.zeros([nrows,ncols])            
     
     for m in range(0,nrows):
@@ -108,18 +108,19 @@ def CalculateInundation(CurrentYear,elapsedyear,ecohydro_dir,EHtemp_path,vegetat
                 inun_sum_grid[m][n] = -9999
             else:
                 inun_sum_grid[m][n] = inun_sum[gridID]
-        
-    inun_sum_file = r'%s\MPM2023_%s_%s_C000_U00_V00_SLA_O_%02d_%02d_H_INUNhr.asc' % (EHtemp_path,s,g,elapsedyear,elapsedyear)    
+    
+    inun_sum_file = r'%s\%s_O_%02d_%02d_H_INUNhr.asc' % (EHtemp_path,SG,elapsedyear,elapsedyear)    
     np.savetxt(inun_sum_file,inun_sum_grid,comments='',delimiter=' ',header=veg_ascii_header,fmt='%i')
-
+    
     arcpy.env.workspace = InitCond_GDB
     arcpy.env.scratchWorkspace = Temp_Files_Path
     arcpy.env.scratchFolder
     arcpy.env.scratchGDB
     
+    
     # convert ascii grid to raster and save in initial conditions GDB
     Inun500 = '%s\\inun_hr500' % (Temp_Files_GDB) 
-    arcpy.ASCIIToRaster_conversion(inun_sum_grid,Inun500,'INTEGER')
+    arcpy.ASCIIToRaster_conversion(inun_sum_file,Inun500,'INTEGER')
     
     # define projection of new LULC raster
     arcpy.DefineProjection_management(Inun500,InitCond_proj)
@@ -1714,6 +1715,7 @@ def SedimentDistribution(hours_inun, LandWater, TopoBathy, CurrentEdge, Subsiden
         rStageMax = Raster(StageMax)
         rMEE = Raster(MEEflag)
         rRegimeCh = Raster(RegimeChan)
+        rInunHr = Raster(hours_inun)
         #rHurrSed = Raster(HurrSed) # no longer using separate hurricane sediment load - storms are in LandSed,EdgeSed,and WaterSed
         #
         #-------------------------------------------------------------------------
@@ -1860,7 +1862,7 @@ def SedimentDistribution(hours_inun, LandWater, TopoBathy, CurrentEdge, Subsiden
         rMinAcc_cm_year.save(r"%s\\rMinAcc_cm_year_%02d.img" % (Intermediate_Files_Path, elapsedyear)) 
         rAcc_cm_year.save(r"%s\\rAcc_cm_year_%02d.img" % (Intermediate_Files_Path, elapsedyear)) 
         outRasVals234.save(r"%s\\outRasVals234_%02d.img" % (Intermediate_Files_Path, elapsedyear))
-        rAcc_m_yr_maxstg.save(r"%s\\rAcc_m_yr_maxstg_%02d.img" % (Intermediate_Files_Path, elapsedyear))
+#        rAcc_m_yr_maxstg.save(r"%s\\rAcc_m_yr_maxstg_%02d.img" % (Intermediate_Files_Path, elapsedyear))
         rSedL_E_W.save(r"%s\\rSedL_E_W_%02d.img" % (Intermediate_Files_Path, elapsedyear))		
         #
         ##------------------------------------------------------------------------
@@ -1874,7 +1876,8 @@ def SedimentDistribution(hours_inun, LandWater, TopoBathy, CurrentEdge, Subsiden
         
         arcpy.env.extent = rTOPO
 #EDW        updatedTOPO = rTOPO + rAcc_m_year - rSubsid
-        updatedTOPO = rTOPO + rAcc_m_yr_maxstg - rSubsid
+#        updatedTOPO = rTOPO + rAcc_m_yr_maxstg - rSubsid
+        updatedTOPO = rTOPO + rAcc_m_yr_mod - rSubsid
         updatedTOPO.save(SED_TOPOclip)
         newTOPOname = SED_TOPOclip
         try:
@@ -1910,7 +1913,8 @@ def SedimentDistribution(hours_inun, LandWater, TopoBathy, CurrentEdge, Subsiden
         del rTOPO, rLW, rSubsid, rOM, rBD, rLandSed, rEdgeSed, rWaterSed, outRas0, outRasVals234,outRasVals234_1
         del rSedL_E_W, rAcc_cm_year, rAcc_m_year, rAcc_m_yr_mod, updatedTOPO
        # del  rNewTOPO
-        del rStageMax, rAcc_m_yr_maxstg
+#        del rStageMax, rAcc_m_yr_maxstg
+        del rStageMax
 #skip        del rNonEdgeLW, rEdgeAccr, rIntAccr, rLandAccr, rWaterAccr
         del rFloodedLand, rNonEdgeLand,rSumFlood,rSumNonEdge,rLandSedWeight
 
@@ -3758,7 +3762,7 @@ def main(WM_params,ecohydro_dir,wetland_morph_dir,EHtemp_path,vegetation_dir,veg
 
         ##-----------------------------------------------------------------------
         ##TABULATION OF HOURS INUNDATED DURING YEAR
-        lstReturns = CalculateInundation(CurrentYear,elapsedyear,ecohydro_dir,EHtemp_path,vegetation_dir,veg_ascii_grid,n500grid,nrows,ncols,veg_ascii_header,InitCond_proj)
+        lstReturns = CalculateInundation(CurrentYear,elapsedyear,ecohydro_dir,EHtemp_path,vegetation_dir,veg_ascii_grid,n500grid,n500rows,n500cols,veg_ascii_header,InitCond_proj)
         hours_inun = lstReturns[0] # string with location of hours_inundated raster
         
         ##------------------------------------------------------------------------
