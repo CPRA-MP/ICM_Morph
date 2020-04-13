@@ -23,27 +23,27 @@ program main
     implicit none
     
     integer :: i
-    
-    pause
-   
-    
-    write(*,*) 'sp kind = ',sp  
-    write(*,*) 'dp kind = ',dp
-    
+    character*300 :: skip_header
+
     call params_alloc
     
     
     ! read xyz file into arrays
-    open(unit=111, file='.\data\xyz_1.csv')
-    read(111,*)                                                         ! skip header row of xyz file
+    ! 1st column of xyz is x (integer)
+    ! 2nd column is y (integer)
+    ! 3rd column is z (single precision variable)
+    ! 4th column is ICM Hydro compartment (integer)
+    
+    open(unit=111, file='.\data\xyzc_1.csv')
+    read(111,*) skip_header
     do i = 1,n30
-        read(111,*) x(i), y(i), z(i)                                    ! 1st column is x (integer), 2nd column is y (integer), 3rd column is z (single precision variable)
+        read(111,*) g30_x(i), g30_y(i), g30_z(i), g30_comp(i)              
     end do
     
+    write(*,*)
+    write(*,*) '...check memory usage now'
     pause
     
-    write(*,*) x(400),y(400),z(400)
-    write(*,*) maxval(x), maxval(y), maxval(z)
     
     
 end program

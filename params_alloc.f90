@@ -4,9 +4,10 @@ subroutine params_alloc
     
     n30 = 1048575
     
-    allocate(x(n30))
-    allocate(y(n30))
-    allocate(z(n30))
+    allocate(g30_x(n30))
+    allocate(g30_y(n30))
+    allocate(g30_z(n30))
+    allocate(g30_comp(n30))
     
     return
     
