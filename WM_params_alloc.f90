@@ -1,6 +1,7 @@
 subroutine params_alloc
     
     use params
+    implicit none 
     
     n30 = 1048575
     
