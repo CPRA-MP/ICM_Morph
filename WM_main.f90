@@ -23,10 +23,18 @@ program main
     use params
     implicit none
     
+    integer :: i    ! iterator
+    integer :: comp ! local variable for 30-m pixel's corresponding ICM-Hydro compartment
+    
     call params_alloc
     
     call preprocessing
     
-    
+    do i = 1,n30
+        comp = g30_comp(i) 
+        if (i == 1) then
+            write(*,*) stg_mx_yr(comp)
+        end if
+    end do  
     
 end program
