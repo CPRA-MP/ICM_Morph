@@ -4,21 +4,20 @@ module params
     
     implicit none
 
+    ! local variables
     integer,parameter :: sp=selected_real_kind(p=6)                 ! determine single precision kind value   
     integer,parameter :: dp=selected_real_kind(p=13)                ! determine double precision kind value
-    
-    integer :: n30                                                  ! number of 30-m grid cells in xyzc file
+    integer :: ndem                                                 ! number of DEM pixels in xyzc file
     integer :: ncomp                                                ! number of ICM-Hydro compartments
-    
     character*3000 :: skip_header
     
-    ! variables read in from xyzc file
-    integer,dimension(:),allocatable :: g30_x                       ! x-coordinate of 30-m pixel (UTM m, zone 15N)
-    integer,dimension(:),allocatable :: g30_y                       ! y-coordinate of 30-m pixel (UTM m, zone 15N)
-    real(sp),dimension(:),allocatable :: g30_z                      ! average elevation of 30-m pixel (m NAVD88)
-    integer,dimension(:),allocatable :: g30_comp                    ! ICM-Hydro compartment  ID overlaying 30-m pixel (-)
+    ! define variables read in from xyzc file
+    integer,dimension(:),allocatable :: dem_x                       ! x-coordinate of DEM pixel (UTM m, zone 15N)
+    integer,dimension(:),allocatable :: dem_y                       ! y-coordinate of DEM pixel (UTM m, zone 15N)
+    real(sp),dimension(:),allocatable :: dem_z                      ! average elevation of DEM pixel (m NAVD88)
+    integer,dimension(:),allocatable :: dem_comp                    ! ICM-Hydro compartment  ID overlaying DEM pixel (-)
     
-    ! variables rad in from compartment_out Hydro summary file
+    ! define variables read in from compartment_out Hydro summary file
     real(sp),dimension(:),allocatable :: stg_mx_yr                  ! max stage - annual (m NAVD88)
     real(sp),dimension(:),allocatable :: stg_av_yr                  ! mean stage - annual (m NAVD88)
     real(sp),dimension(:),allocatable :: stg_av_smr                 ! mean stage - summer (m NAVD88)
@@ -39,5 +38,10 @@ module params
     real(sp),dimension(:),allocatable :: stdev_annual_tss           ! standard deviation of total suspended solids - annual (mg/L)
     real(sp),dimension(:),allocatable :: totalland_m2               ! land area in ICM-Hydro compartmnet (m^2)
 
+    ! define variables calculated within code
+    real(sp),dimension(:),allocatable :: dem_inun_dep               ! inundation depth at each DEM pixel (m)
+    integer,dimension(:),allocatable :: comp_ndem_all               ! number of DEM pixels within each ICM-Hydro compartment (-)
+    integer,dimension(:),allocatable :: comp_ndem_wet               ! number of inundated DEM pixels within each ICM-Hydro compartment (-)
+    
     
 end module params

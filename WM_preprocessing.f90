@@ -3,29 +3,33 @@ subroutine preprocessing
     use params
     implicit none
     
+    ! local variables
     integer :: i        ! iterator
     real(sp) :: dump    ! variable to read unused data into
     
     ! read xyz file into arrays
-    ! 1st column of xyz is x (integer)
-    ! 2nd column is y (integer)
-    ! 3rd column is z (single precision variable)
-    ! 4th column is ICM Hydro compartment (integer)
+        ! 1st column of xyz is x (integer)
+        ! 2nd column is y (integer)
+        ! 3rd column is z (single precision variable)
+        ! 4th column is ICM Hydro compartment (integer)
+    
+    write(  *,*) ' - reading in DEM data for: ','xyzc_1'
+    write(000,*) ' - reading in DEM data for: ','xyzc_1'
     
     open(unit=111, file='.\data\xyzc_1.csv')
     read(111,*) skip_header
-    do i = 1,n30
-        read(111,*) g30_x(i), g30_y(i), g30_z(i), g30_comp(i)
+    do i = 1,ndem
+        read(111,*) dem_x(i), dem_y(i), dem_z(i), dem_comp(i)
     end do
     
     close(111)
-    
-    write(*,*)
-    write(*,*) '...check memory usage now'
-    pause
-    
+
     
     ! read ICM-Hydro compartment output file into arrays
+    
+    write(  *,*) ' - reading in ICM-Hydro compartment-level output'
+    write(000,*) ' - reading in ICM-Hydro compartment-level output'
+        
     open(unit=112, file='.\hydro\compartment_out.csv')
     read(112,*) skip_header
     do i = 1,ncomp
@@ -49,9 +53,8 @@ subroutine preprocessing
    &         ave_annual_tss(i),             &
    &         stdev_annual_tss(i),           &
    &         totalland_m2(i)
-        write(*,*) i
     end do
-    
+    close(112)
     return
 
 end

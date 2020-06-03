@@ -3,16 +3,16 @@ subroutine params_alloc
     use params
     implicit none 
     
-    n30 = 1048575
-    ncomp = 946
+    ndem = 1048575              ! number of DEM pixels - will be an array dimension for all DEM-level data
+    ncomp = 946                 ! number of ICM-Hydro compartments - will be an array dimension for all compartment-level data
 
-    ! variables read in from xyzc file
-    allocate(g30_x(n30))
-    allocate(g30_y(n30))
-    allocate(g30_z(n30))
-    allocate(g30_comp(n30))
+    ! allocate memory for variables read in from xyzc file
+    allocate(dem_x(ndem))
+    allocate(dem_y(ndem))
+    allocate(dem_z(ndem))
+    allocate(dem_comp(ndem))
     
-    ! variables rad in from compartment_out Hydro summary file
+    ! allocate memory for variables read in from compartment_out Hydro summary file
     allocate(stg_mx_yr(ncomp))
     allocate(stg_av_yr(ncomp))
     allocate(stg_av_smr(ncomp))
@@ -32,6 +32,12 @@ subroutine params_alloc
     allocate(ave_annual_tss(ncomp))
     allocate(stdev_annual_tss(ncomp))
     allocate(totalland_m2(ncomp))
+   
+    ! allocate memory for variables calculated within code
+    allocate(dem_inun_dep(ndem))
+    allocate(comp_ndem_all(ncomp))
+    allocate(comp_ndem_wet(ncomp))
+    
     
     return
     
