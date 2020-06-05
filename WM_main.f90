@@ -34,8 +34,6 @@ program main
     hydro_comp_out_file= 'compartment_out.csv'                              !'.\hydro\compartment_out.csv'
     veg_file = 'MPM2017_S04_G300_C000_U00_V00_SLA_O_01_01_V_vegty.asc+'     !'.\veg\MPM2017_S04_G300_C000_U00_V00_SLA_O_01_01_V_vegty.asc+'   
     
-    dem_file = trim(adjustL(dem_file))
-    write(*,*) dem_file,"-hello"
     
     ! open log file and print simulation start time
     call date_and_time(VALUES=dtvalues)

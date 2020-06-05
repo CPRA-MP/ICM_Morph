@@ -13,11 +13,11 @@ subroutine preprocessing
         ! 3rd column is z (single precision variable)
         ! 4th column is ICM Hydro compartment (integer)
     
-    write(  *,*) ' - reading in DEM data for: ','xyzc_1'
-    write(000,*) ' - reading in DEM data for: ','xyzc_1'
+    write(  *,*) ' - reading in DEM data for: ',trim(adjustL(dem_file))
+    write(000,*) ' - reading in DEM data for: ',trim(adjustL(dem_file))
 
     
-    open(unit=111, file=dem_file)
+    open(unit=111, file=trim(adjustL(dem_file)))
     read(111,*) skip_header
     do i = 1,ndem
         read(111,*) dem_x(i), dem_y(i), dem_z(i), dem_comp(i)
@@ -31,7 +31,7 @@ subroutine preprocessing
     write(  *,*) ' - reading in ICM-Hydro compartment-level output'
     write(000,*) ' - reading in ICM-Hydro compartment-level output'
         
-    open(unit=112, file=hydro_comp_out_file)
+    open(unit=112, file=trim(adjustL(hydro_comp_out_file)))
     read(112,*) skip_header
     do i = 1,ncomp
         read(112,*) dump,                   &
