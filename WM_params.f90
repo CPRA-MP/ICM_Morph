@@ -11,6 +11,12 @@ module params
     integer :: ncomp                                                ! number of ICM-Hydro compartments
     character*3000 :: skip_header
     
+    ! I/O files
+    character*100 :: morph_log_file                                     ! file name of text file that logs all Morph print statements - no filepath will save this in executable directory
+    character*100 :: dem_file                                           ! file name, with relative path, to DEM XYZ file
+    character*100 :: hydro_comp_out_file                                ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro
+    character*100 :: veg_file                                           ! file name, with relative path, to *vegty.asc+ file saved by ICM-LAVegMod    
+        
     ! define variables read in from xyzc file
     integer,dimension(:),allocatable :: dem_x                       ! x-coordinate of DEM pixel (UTM m, zone 15N)
     integer,dimension(:),allocatable :: dem_y                       ! y-coordinate of DEM pixel (UTM m, zone 15N)

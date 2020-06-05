@@ -15,8 +15,9 @@ subroutine preprocessing
     
     write(  *,*) ' - reading in DEM data for: ','xyzc_1'
     write(000,*) ' - reading in DEM data for: ','xyzc_1'
+
     
-    open(unit=111, file='.\data\xyzc_1.csv')
+    open(unit=111, file=dem_file)
     read(111,*) skip_header
     do i = 1,ndem
         read(111,*) dem_x(i), dem_y(i), dem_z(i), dem_comp(i)
@@ -30,7 +31,7 @@ subroutine preprocessing
     write(  *,*) ' - reading in ICM-Hydro compartment-level output'
     write(000,*) ' - reading in ICM-Hydro compartment-level output'
         
-    open(unit=112, file='.\hydro\compartment_out.csv')
+    open(unit=112, file=hydro_comp_out_file)
     read(112,*) skip_header
     do i = 1,ncomp
         read(112,*) dump,                   &
