@@ -5,14 +5,19 @@ subroutine params_alloc
     
     ndem = 1048575              ! number of DEM pixels - will be an array dimension for all DEM-level data
     ncomp = 946                 ! number of ICM-Hydro compartments - will be an array dimension for all compartment-level data
-
-    ! allocate memory for variables read in from xyzc file
+    ngrid = 3813                ! number of ICM-LAVegMod grid cells - will be an array dimension for all gridd-level data
+    
+    ! allocate memory for variables read in or calculated from xyzc DEM file in subroutine: PREPROCESSING
     allocate(dem_x(ndem))
     allocate(dem_y(ndem))
     allocate(dem_z(ndem))
     allocate(dem_comp(ndem))
+    allocate(dem_grid(ndem))
+    allocate(dem_lndtyp(ndem))
+    allocate(comp_ndem_all(ncomp))
+    allocate(grid_ndem_all(ngrid))
     
-    ! allocate memory for variables read in from compartment_out Hydro summary file
+    ! allocate memory for variables read in or calculated from compartment_out Hydro summary file in subroutine: PREPROCESSING
     allocate(stg_mx_yr(ncomp))
     allocate(stg_av_yr(ncomp))
     allocate(stg_av_smr(ncomp))
@@ -32,13 +37,19 @@ subroutine params_alloc
     allocate(ave_annual_tss(ncomp))
     allocate(stdev_annual_tss(ncomp))
     allocate(totalland_m2(ncomp))
-   
-    ! allocate memory for variables calculated within code
-    allocate(dem_inun_dep(ndem))
-    allocate(comp_ndem_all(ncomp))
-    allocate(comp_ndem_wet(ncomp))
+
+    ! define variables read in or calculated from vegtype ICM-LAVegMod summary file in subroutine: PREPROCESSING
+    allocate(grid_pct_land(ngrid))
+    allocate(grid_pct_water(ngrid))
+    allocate(grid_pct_bare(ngrid)) 
+    allocate(grid_pct_upland(ngrid))
+    allocate(grid_pct_flot(ngrid))
+    allocate(grid_FIBS_score(ngrid))
     
-    
+    ! allocate memory for global variables calculated in subroutine: Inundation
+    allocate(dem_inun_dep(ndem,13))
+    allocate(comp_ndem_wet(ncomp,13))
+    allocate(grid_ndem_wet(ncomp,13))
     return
     
 end

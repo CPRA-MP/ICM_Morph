@@ -11,7 +11,7 @@
 !                                                  
 !                                                  
 !   Questions: eric.white@la.gov                   
-!   last update: 4/13/2020                          
+!   last update: 8/1/2020                          
 !                                                     
 !   project site: https://github.com/CPRA-MP      
 !   documentation: http://coastal.la.gov/our-plan  
@@ -24,15 +24,14 @@ program main
     implicit none
     
     ! local variables
-    integer :: i                    ! iterator
-    integer :: comp                 ! local variable for 30-m pixel's corresponding ICM-Hydro compartment
-    integer,dimension(8) :: dtvalues
+    integer :: tp                       ! local variable for time period to use for calculation
+    integer,dimension(8) :: dtvalues    ! variable to store date time values
     
      ! set file names and directories for I/O files       
     morph_log_file = '_ICM-Morph_runlog.log'
     dem_file = 'xyzc_1.csv'                                                !'.\data\xyzc_1.csv'
     hydro_comp_out_file= 'compartment_out.csv'                              !'.\hydro\compartment_out.csv'
-    veg_file = 'MPM2017_S04_G300_C000_U00_V00_SLA_O_01_01_V_vegty.asc+'     !'.\veg\MPM2017_S04_G300_C000_U00_V00_SLA_O_01_01_V_vegty.asc+'   
+    veg_out_file = 'MPM2017_S04_G300_C000_U00_V00_SLA_O_01_01_V_vegty.asc+'     !'.\veg\MPM2017_S04_G300_C000_U00_V00_SLA_O_01_01_V_vegty.asc+'   
     
     
     ! open log file and print simulation start time
@@ -50,8 +49,15 @@ program main
     ! read in various datasets from file and save to arrays
     call preprocessing
 
-    ! calculate inundation from the mean annual water surface elevation
-    call inundation(13)
+    ! calculate monthly and annual inundation
+    ! initialize 2-d arrays that will store monthly and annual inundation depths and count of wet pixels in each comp/grid
+    dem_inun_dep = 0
+    comp_ndem_wet = 0
+    grid_ndem_wet = 0
+
+    do tp = 1,13
+        call inundation(tp) 
+    end do
     
     ! print simulation end time and close log file
     call date_and_time(VALUES=dtvalues)

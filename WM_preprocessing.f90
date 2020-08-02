@@ -4,37 +4,31 @@ subroutine preprocessing
     implicit none
     
     ! local variables
-    integer :: i        ! iterator
-    real(sp) :: dump    ! variable to read unused data into
+    integer :: i                    ! iterator
     
     ! read xyz file into arrays
-        ! 1st column of xyz is x (integer)
-        ! 2nd column is y (integer)
-        ! 3rd column is z (single precision variable)
-        ! 4th column is ICM Hydro compartment (integer)
-    
     write(  *,*) ' - reading in DEM data for: ',trim(adjustL(dem_file))
     write(000,*) ' - reading in DEM data for: ',trim(adjustL(dem_file))
-
-    
     open(unit=111, file=trim(adjustL(dem_file)))
-    read(111,*) skip_header
+    comp_ndem_all = 0                   ! before looping through all DEM pixels, initialize counter array to zero
+    grid_ndem_all = 0                   ! before looping through all DEM pixels, initialize counter array to zero
+    read(111,*) dump_txt
     do i = 1,ndem
-        read(111,*) dem_x(i), dem_y(i), dem_z(i), dem_comp(i)
+        read(111,*) dem_x(i), dem_y(i), dem_z(i), dem_comp(i), dem_grid(i), dem_lndtyp(i)
+        comp_ndem_all(dem_comp) =  comp_ndem_all(dem_comp) + 1  !count number of DEM pixels within each ICM-Hydro compartment
+        grid_ndem_all(dem_grid) =  grid_ndem_all(dem_grid) + 1  !count number of DEM pixels within each ICM-LAVegMod grid cell
     end do
     
     close(111)
 
     
     ! read ICM-Hydro compartment output file into arrays
-    
     write(  *,*) ' - reading in ICM-Hydro compartment-level output'
     write(000,*) ' - reading in ICM-Hydro compartment-level output'
-        
     open(unit=112, file=trim(adjustL(hydro_comp_out_file)))
-    read(112,*) skip_header
+    read(112,*) dump_txt
     do i = 1,ncomp
-        read(112,*) dump,                   &
+        read(112,*) dump_txt,                   &
    &         stg_mx_yr(i),                  &
    &         stg_av_yr(i),                  &
    &         stg_av_smr(i),                 &
@@ -56,6 +50,33 @@ subroutine preprocessing
    &         totalland_m2(i)
     end do
     close(112)
+    
+ 
+    ! read ICM-LAVegMod grid output file into arrays
+    write(  *,*) ' - reading in ICM-LAVegMod grid-level output'
+    write(000,*) ' - reading in ICM-LAVegMod grid-level output'
+    grid_pct_flot(i) = 
+    open(unit=113, file=trim(adjustL(veg_out_file)))
+    read(113,*) dump_txt
+    do i = 1,ngrid
+        read(113,*) dump_flt,dump_flt,dump_flt,dump_flt,dump_flt, &
+   &                dump_flt,dump_flt,dump_flt,dump_flt,dump_flt, &
+   &                dump_flt,dump_flt,dump_flt,dump_flt,dump_flt, &
+   &                dump_flt,                                     &
+   &                grid_pct_water(i),                            &
+   &                dump_flt,dump_flt,dump_flt,                   & 
+   &                grid_pct_upland(i),                           &
+   &                dump_flt,dump_flt,dump_flt,dump_flt,dump_flt, &
+   &                dump_flt,dump_flt,dump_flt,dump_flt,dump_flt, &
+   &                dump_flt,dump_flt,dump_flt,                   &            
+   &                grid_pct_bare(i),                             &
+   &                dump_flt,dump_flt,dump_flt,dump_flt,dump_flt, &
+   &                dump_flt,dump_flt,dump_flt,dump_flt,          &              
+   &                grid_FIBS_score(i)  
+        grid_pct_land(i) = 1.0 - grid_pct_water(i) - grid_pct_bare(i) - grid_pct_upland(i) - grid_pct_flot(i)
+    end do
+        
+    close(113)
+    
     return
-
 end

@@ -9,21 +9,32 @@ module params
     integer,parameter :: dp=selected_real_kind(p=13)                ! determine double precision kind value
     integer :: ndem                                                 ! number of DEM pixels in xyzc file
     integer :: ncomp                                                ! number of ICM-Hydro compartments
-    character*3000 :: skip_header
+    character*3000 :: dump_txt                                      ! dummy variable to use for skipping lines in input files
+    integer :: dump_int                                             ! dummy variable to use for data in input files
+    real(sp) :: dump_flt                                            ! dummy variable to use for data in input files
     
-    ! I/O files
+    ! I/O files in subroutine: MAIN
     character*100 :: morph_log_file                                     ! file name of text file that logs all Morph print statements - no filepath will save this in executable directory
     character*100 :: dem_file                                           ! file name, with relative path, to DEM XYZ file
     character*100 :: hydro_comp_out_file                                ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro
-    character*100 :: veg_file                                           ! file name, with relative path, to *vegty.asc+ file saved by ICM-LAVegMod    
+    character*100 :: veg_out_file                                           ! file name, with relative path, to *vegty.asc+ file saved by ICM-LAVegMod    
         
-    ! define variables read in from xyzc file
+    ! define variables read in or calculated from xyzc file in subroutine: PREPROCESSING
     integer,dimension(:),allocatable :: dem_x                       ! x-coordinate of DEM pixel (UTM m, zone 15N)
     integer,dimension(:),allocatable :: dem_y                       ! y-coordinate of DEM pixel (UTM m, zone 15N)
     real(sp),dimension(:),allocatable :: dem_z                      ! average elevation of DEM pixel (m NAVD88)
     integer,dimension(:),allocatable :: dem_comp                    ! ICM-Hydro compartment  ID overlaying DEM pixel (-)
+    integer,dimension(:),allocatable :: dem_grid                    ! ICM-LAVegMod grid  ID overlaying DEM pixel (-)
+    integer,dimension(:),allocatable :: dem_lndtyp                  ! Land type classification of DEM pixel
+                                                                    !               1 = vegetated wetland
+                                                                    !               2 = water
+                                                                    !               3 = flotant marsh
+                                                                    !               4 = unvegetated wetland/new subaerial unvegetated mudflat (e.g., bare ground)
+                                                                    !               5 = developed land/upland/etc. that are not modeled in ICM-LAVegMod
+    integer,dimension(:),allocatable :: comp_ndem_all               ! number of DEM pixels within each ICM-Hydro compartment (-)
+    integer,dimension(:),allocatable :: grid_ndem_all               ! number of DEM pixels within each ICM-LAVegMod grid cell (-)                                                         
     
-    ! define variables read in from compartment_out Hydro summary file
+    ! define variables read in or calculated from compartment_out Hydro summary file in subroutine: PREPROCESSING
     real(sp),dimension(:),allocatable :: stg_mx_yr                  ! max stage - annual (m NAVD88)
     real(sp),dimension(:),allocatable :: stg_av_yr                  ! mean stage - annual (m NAVD88)
     real(sp),dimension(:),allocatable :: stg_av_smr                 ! mean stage - summer (m NAVD88)
@@ -44,10 +55,20 @@ module params
     real(sp),dimension(:),allocatable :: stdev_annual_tss           ! standard deviation of total suspended solids - annual (mg/L)
     real(sp),dimension(:),allocatable :: totalland_m2               ! land area in ICM-Hydro compartmnet (m^2)
 
-    ! define variables calculated within code
-    real(sp),dimension(:),allocatable :: dem_inun_dep               ! inundation depth at each DEM pixel (m)
-    integer,dimension(:),allocatable :: comp_ndem_all               ! number of DEM pixels within each ICM-Hydro compartment (-)
-    integer,dimension(:),allocatable :: comp_ndem_wet               ! number of inundated DEM pixels within each ICM-Hydro compartment (-)
+    ! define variables read in or calculated from vegtype ICM-LAVegMod summary file in subroutine: PREPROCESSING
+    real(sp),dimension(:),allocatable :: grid_pct_land              ! percent of ICM_LAVegMod grid cell that is vegetated land
+    real(sp),dimension(:),allocatable :: grid_pct_water             ! percent of ICM_LAVegMod grid cell that is water
+    real(sp),dimension(:),allocatable :: grid_pct_bare              ! percent of ICM-LAVegMod grid cell that is non-vegetated wetland (bare ground)
+    real(sp),dimension(:),allocatable :: grid_pct_upland            ! percent of ICM-LAVegMod grid cell that is upland/developed (e.g., NotMod) and is too high and dry for wetland vegetation
+    real(sp),dimension(:),allocatable :: grid_pct_flot              ! percent of ICM_LAVegMod grid cell that is flotant marsh
+    real(sp),dimension(:),allocatable :: grid_FIBS_score            ! weighted FIBS score of ICM-LAVegMod grid cell - used for accretion
+    
+    
+    
+    ! define global variables calculated in subroutine: INUNDATION
+    real(sp),dimension(:,:),allocatable :: dem_inun_dep             ! inundation depth at each DEM pixel from monthly and annual mean water levels (m)
+    integer,dimension(:,:),allocatable :: comp_ndem_wet             ! number of inundated DEM pixels within each ICM-Hydro compartment from monthly and annual mean water levels (-)
+    integer,dimension(:,:),allocatable :: grid_ndem_wet             ! number of inundated DEM pixels within each ICM-LAVegMod grid cell from monthly and annual mean water levels (-)
     
     
 end module params
