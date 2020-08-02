@@ -18,7 +18,6 @@ subroutine preprocessing
         comp_ndem_all(dem_comp) =  comp_ndem_all(dem_comp) + 1  !count number of DEM pixels within each ICM-Hydro compartment
         grid_ndem_all(dem_grid) =  grid_ndem_all(dem_grid) + 1  !count number of DEM pixels within each ICM-LAVegMod grid cell
     end do
-    
     close(111)
 
     
@@ -55,7 +54,13 @@ subroutine preprocessing
     ! read ICM-LAVegMod grid output file into arrays
     write(  *,*) ' - reading in ICM-LAVegMod grid-level output'
     write(000,*) ' - reading in ICM-LAVegMod grid-level output'
-    grid_pct_flot(i) = 
+    
+    ! initialize grid data arrays to 0.0
+    grid_pct_water = 0.0
+    grid_pct_upland = 0.0
+    grid_pct_bare = 0.0
+    grid_pct_dead_flt = 0.0
+    
     open(unit=113, file=trim(adjustL(veg_out_file)))
     read(113,*) dump_txt
     do i = 1,ngrid
@@ -72,11 +77,12 @@ subroutine preprocessing
    &                grid_pct_bare(i),                             &
    &                dump_flt,dump_flt,dump_flt,dump_flt,dump_flt, &
    &                dump_flt,dump_flt,dump_flt,dump_flt,          &              
-   &                grid_FIBS_score(i)  
-        grid_pct_land(i) = 1.0 - grid_pct_water(i) - grid_pct_bare(i) - grid_pct_upland(i) - grid_pct_flot(i)
-    end do
+   &                grid_pct_dead_flt(i),                         &
+   &                grid_FIBS_score(i)
         
+    end do
     close(113)
-    
+
+        
     return
 end

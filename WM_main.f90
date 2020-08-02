@@ -31,8 +31,9 @@ program main
     morph_log_file = '_ICM-Morph_runlog.log'
     dem_file = 'xyzc_1.csv'                                                !'.\data\xyzc_1.csv'
     hydro_comp_out_file= 'compartment_out.csv'                              !'.\hydro\compartment_out.csv'
-    veg_out_file = 'MPM2017_S04_G300_C000_U00_V00_SLA_O_01_01_V_vegty.asc+'     !'.\veg\MPM2017_S04_G300_C000_U00_V00_SLA_O_01_01_V_vegty.asc+'   
-    
+    veg_out_file = 'MPM2017_S04_G300_C000_U00_V00_SLA_O_01_01_V_vegty.csv'    
+ 
+
     
     ! open log file and print simulation start time
     call date_and_time(VALUES=dtvalues)
@@ -49,6 +50,9 @@ program main
     ! read in various datasets from file and save to arrays
     call preprocessing
 
+    grid_pct_vg_land = 1.0 - grid_pct_water - grid_pct_bare - grid_pct_upland - grid_pct_flt
+
+    
     ! calculate monthly and annual inundation
     ! initialize 2-d arrays that will store monthly and annual inundation depths and count of wet pixels in each comp/grid
     dem_inun_dep = 0
@@ -58,6 +62,10 @@ program main
     do tp = 1,13
         call inundation(tp) 
     end do
+    
+    ! update dem_lndtyp for dead flotant marsh - will only convert dem_lndtyp values of 3 (flotant) to 2 (water)
+    call flotant
+    
     
     ! print simulation end time and close log file
     call date_and_time(VALUES=dtvalues)

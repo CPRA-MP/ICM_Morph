@@ -39,17 +39,22 @@ subroutine params_alloc
     allocate(totalland_m2(ncomp))
 
     ! define variables read in or calculated from vegtype ICM-LAVegMod summary file in subroutine: PREPROCESSING
-    allocate(grid_pct_land(ngrid))
     allocate(grid_pct_water(ngrid))
-    allocate(grid_pct_bare(ngrid)) 
     allocate(grid_pct_upland(ngrid))
-    allocate(grid_pct_flot(ngrid))
+    allocate(grid_pct_bare(ngrid)) 
+    allocate(grid_pct_dead_flt(ngrid))
     allocate(grid_FIBS_score(ngrid))
     
     ! allocate memory for global variables calculated in subroutine: Inundation
     allocate(dem_inun_dep(ndem,13))
     allocate(comp_ndem_wet(ncomp,13))
     allocate(grid_ndem_wet(ncomp,13))
+    
+    
+    
+    allocate(grid_pct_vg_land(ngrid))
+    allocate(grid_pct_flt(ngrid))
+    
     return
     
 end

@@ -56,19 +56,19 @@ module params
     real(sp),dimension(:),allocatable :: totalland_m2               ! land area in ICM-Hydro compartmnet (m^2)
 
     ! define variables read in or calculated from vegtype ICM-LAVegMod summary file in subroutine: PREPROCESSING
-    real(sp),dimension(:),allocatable :: grid_pct_land              ! percent of ICM_LAVegMod grid cell that is vegetated land
     real(sp),dimension(:),allocatable :: grid_pct_water             ! percent of ICM_LAVegMod grid cell that is water
-    real(sp),dimension(:),allocatable :: grid_pct_bare              ! percent of ICM-LAVegMod grid cell that is non-vegetated wetland (bare ground)
     real(sp),dimension(:),allocatable :: grid_pct_upland            ! percent of ICM-LAVegMod grid cell that is upland/developed (e.g., NotMod) and is too high and dry for wetland vegetation
-    real(sp),dimension(:),allocatable :: grid_pct_flot              ! percent of ICM_LAVegMod grid cell that is flotant marsh
+    real(sp),dimension(:),allocatable :: grid_pct_bare              ! percent of ICM-LAVegMod grid cell that is non-vegetated wetland (bare ground)
+    real(sp),dimension(:),allocatable :: grid_pct_dead_flt          ! percent of ICM_LAVegMod grid cell that converted from flotant marsh to water during year
     real(sp),dimension(:),allocatable :: grid_FIBS_score            ! weighted FIBS score of ICM-LAVegMod grid cell - used for accretion
-    
-    
     
     ! define global variables calculated in subroutine: INUNDATION
     real(sp),dimension(:,:),allocatable :: dem_inun_dep             ! inundation depth at each DEM pixel from monthly and annual mean water levels (m)
     integer,dimension(:,:),allocatable :: comp_ndem_wet             ! number of inundated DEM pixels within each ICM-Hydro compartment from monthly and annual mean water levels (-)
     integer,dimension(:,:),allocatable :: grid_ndem_wet             ! number of inundated DEM pixels within each ICM-LAVegMod grid cell from monthly and annual mean water levels (-)
-    
+   
+    ! define global variables that are used summarizing end-of-year landscape per LAVegMod grid cell
+    real(sp),dimension(:),allocatable :: grid_pct_vg_land           ! percent of ICM_LAVegMod grid cell that is vegetated land
+    real(sp),dimension(:),allocatable :: grid_pct_vg_flt             ! percent of ICM_LAVegMod grid cell that is flotant marsh
     
 end module params

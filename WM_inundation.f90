@@ -11,7 +11,7 @@ subroutine inundation(tp)
     ! local variables
     integer :: i                                    ! iterator
     integer :: c                                    ! local compartment ID variable
-    integer ::                                      ! local grid ID variable
+    integer :: g                                    ! local grid ID variable
     integer :: tp                                   ! flag to indicate which timeperiod to use for inundation calculations (1-12=month; 13 = annual)
     real(sp) :: wse_by_comp(ncomp)                  ! local array with WSE data (one value for each ICM-Hydro compartment) to use in calculations 
     real(sp) :: z                                   ! local elevation variable
