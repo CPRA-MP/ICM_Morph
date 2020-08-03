@@ -38,8 +38,8 @@ subroutine inundation(tp)
         dem_inun_dep(i,wse_to_use) = wse - z
 
         if (wse > z) then        
-            comp_ndem_wet(c) = comp_ndem_wet(c) + 1
-            grid_ndem_wet(g) = grid_ndem_wet(g) + 1
+            comp_ndem_wet(c,tp) = comp_ndem_wet(c,tp) + 1
+            grid_ndem_wet(g,tp) = grid_ndem_wet(g,tp) + 1
         end if
         
     end do

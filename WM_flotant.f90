@@ -60,7 +60,7 @@ subroutine flotant
     
     ! loop through flotant marsh pixels and convert to open water
     ! update counter for each grid cell so that once percent dead floatant is met no more flotant pixels will be converted to water
-    
+    ! reduce count of flt pixels in grid counter
     grid_dead_flt_killed_cntr = 0
     do i 1,ndem
         if (dem_lndtyp(i) = 3) then
@@ -68,10 +68,11 @@ subroutine flotant
             if (grid_dead_flt_killed_cntr(g) < grid_dead_flt_all(g)) then
                 dem_lndtyp(i) = 2
                 grid_flt_killed_cntr(g) = grid_flt_killed_cntr(g) + 1
+                grid_flt_all(g) = max(0,grid_flt_all(g) - 1)
             end if
         end if
     end do
-    
+    grid_pct_flt = grid_flt_all / grid_ndem_all
     
     return
 

@@ -43,6 +43,12 @@ subroutine params_alloc
     allocate(grid_pct_upland(ngrid))
     allocate(grid_pct_bare(ngrid)) 
     allocate(grid_pct_dead_flt(ngrid))
+    allocate(grid_pct_vglnd_BLHF(ngrid))
+    allocate(grid_pct_vglnd_SWF(ngrid))
+    allocate(grid_pct_vglnd_FM(ngrid))
+    allocate(grid_pct_vglnd_IM(ngrid))
+    allocate(grid_pct_vglnd_BM(ngrid))
+    allocate(grid_pct_vglnd_SM(ngrid))
     allocate(grid_FIBS_score(ngrid))
     
     ! allocate memory for global variables calculated in subroutine: Inundation
@@ -54,6 +60,12 @@ subroutine params_alloc
     
     allocate(grid_pct_vg_land(ngrid))
     allocate(grid_pct_flt(ngrid))
+    
+    allocate(comp_pct_water(ncomp))
+    allocate(comp_pct_wetland(ncomp))
+    allocate(comp_pct_upland(ncomp))
+    allocate(comp_wetland_elev(ncomp))
+    allocate(comp_water_elev(ncomp))
     
     return
     

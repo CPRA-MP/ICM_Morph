@@ -14,11 +14,12 @@ module params
     real(sp) :: dump_flt                                            ! dummy variable to use for data in input files
     
     ! I/O files in subroutine: MAIN
-    character*100 :: morph_log_file                                     ! file name of text file that logs all Morph print statements - no filepath will save this in executable directory
-    character*100 :: dem_file                                           ! file name, with relative path, to DEM XYZ file
-    character*100 :: hydro_comp_out_file                                ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro
-    character*100 :: veg_out_file                                           ! file name, with relative path, to *vegty.asc+ file saved by ICM-LAVegMod    
-        
+    character*100 :: morph_log_file                                 ! file name of text file that logs all Morph print statements - no filepath will save this in executable directory
+    character*100 :: dem_file                                       ! file name, with relative path, to DEM XYZ file
+    character*100 :: hydro_comp_out_file                            ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro
+    character*100 :: veg_out_file                                   ! file name, with relative path, to *vegty.asc+ file saved by ICM-LAVegMod    
+    character*100 :: grid_summary_eoy_file                          ! file name, with relative path, to summary grid file for end-of-year landscape
+    
     ! define variables read in or calculated from xyzc file in subroutine: PREPROCESSING
     integer,dimension(:),allocatable :: dem_x                       ! x-coordinate of DEM pixel (UTM m, zone 15N)
     integer,dimension(:),allocatable :: dem_y                       ! y-coordinate of DEM pixel (UTM m, zone 15N)
@@ -60,6 +61,12 @@ module params
     real(sp),dimension(:),allocatable :: grid_pct_upland            ! percent of ICM-LAVegMod grid cell that is upland/developed (e.g., NotMod) and is too high and dry for wetland vegetation
     real(sp),dimension(:),allocatable :: grid_pct_bare              ! percent of ICM-LAVegMod grid cell that is non-vegetated wetland (bare ground)
     real(sp),dimension(:),allocatable :: grid_pct_dead_flt          ! percent of ICM_LAVegMod grid cell that converted from flotant marsh to water during year
+    real(sp),dimension(:),allocatable :: grid_pct_vglnd_BLHF        ! percent of vegetated land that is bottomland hardwood forest
+    real(sp),dimension(:),allocatable :: grid_pct_vglnd_SWF         ! percent of vegetated land that is swamp forest
+    real(sp),dimension(:),allocatable :: grid_pct_vglnd_FM          ! percent of vegetated land that is fresh (attached) marsh 
+    real(sp),dimension(:),allocatable :: grid_pct_vglnd_IM          ! percent of vegetated land that is intermediate marsh
+    real(sp),dimension(:),allocatable :: grid_pct_vglnd_BM          ! percent of vegetated land that is brackish marsh
+    real(sp),dimension(:),allocatable :: grid_pct_vglnd_SM          ! percent of vegetated land that is saline marsh
     real(sp),dimension(:),allocatable :: grid_FIBS_score            ! weighted FIBS score of ICM-LAVegMod grid cell - used for accretion
     
     ! define global variables calculated in subroutine: INUNDATION
@@ -69,6 +76,13 @@ module params
    
     ! define global variables that are used summarizing end-of-year landscape per LAVegMod grid cell
     real(sp),dimension(:),allocatable :: grid_pct_vg_land           ! percent of ICM_LAVegMod grid cell that is vegetated land
-    real(sp),dimension(:),allocatable :: grid_pct_vg_flt             ! percent of ICM_LAVegMod grid cell that is flotant marsh
+    real(sp),dimension(:),allocatable :: grid_pct_flt               ! percent of ICM_LAVegMod grid cell that is flotant marsh
+    
+    real(sp),dimension(:),allocatable :: comp_pct_water             ! percent of ICM-Hydro compartment that is open water
+    real(sp),dimension(:),allocatable :: comp_pct_wetland           ! percent of ICM-Hydro compartment that is wetland (attached vegetated + flotant_ + non-vegetated)
+    real(sp),dimension(:),allocatable :: comp_pct_upland            ! percent of ICM-Hydro compartment that is upland (not modeled in ICM-LAVegMod)
+    real(sp),dimension(:),allocatable :: comp_wetland_elev          ! average elevation of wetland in ICM-Hydro compartment
+    real(sp),dimension(:),allocatable :: comp_water_elev            ! average elevation of water bottom in ICM-Hydro compartment
+    
     
 end module params
