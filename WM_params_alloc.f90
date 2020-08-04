@@ -14,8 +14,11 @@ subroutine params_alloc
     allocate(dem_comp(ndem))
     allocate(dem_grid(ndem))
     allocate(dem_lndtyp(ndem))
+    allocate(dem_col(ndem))
+    allocate(dem_row(ndem))    
     allocate(comp_ndem_all(ncomp))
     allocate(grid_ndem_all(ngrid))
+
     
     ! allocate memory for variables read in or calculated from compartment_out Hydro summary file in subroutine: PREPROCESSING
     allocate(stg_mx_yr(ncomp))
@@ -69,4 +72,18 @@ subroutine params_alloc
     
     return
     
-end
+    end
+    
+subroutine dem_params_alloc(n_dem_col,n_dem_row)
+    ! separate subroutine to allocate DEM grid due to the grid size not being known until DEM xyz file is preprocessed
+    use params
+    implicit none 
+    
+    integer :: n_dem_col
+    integer :: n_dem_row
+    
+    allocate(dem_index_mapped(n_dem_col,n_dem_row))
+    
+    return
+    
+    end

@@ -35,7 +35,7 @@ subroutine inundation(tp)
         g = dem_grid(i)
         wse = wse_by_comp(c)            ! wse_by_comp is passed into this subroutine
         
-        dem_inun_dep(i,wse_to_use) = wse - z
+        dem_inun_dep(i,tp) = wse - z
 
         if (wse > z) then        
             comp_ndem_wet(c,tp) = comp_ndem_wet(c,tp) + 1

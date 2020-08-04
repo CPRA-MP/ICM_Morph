@@ -4,11 +4,13 @@ module params
     
     implicit none
 
-    ! local variables
+    ! generic variables used across all subroutines
     integer,parameter :: sp=selected_real_kind(p=6)                 ! determine single precision kind value   
     integer,parameter :: dp=selected_real_kind(p=13)                ! determine double precision kind value
     integer :: ndem                                                 ! number of DEM pixels in xyzc file
     integer :: ncomp                                                ! number of ICM-Hydro compartments
+    integer :: ngrid                                                ! number of ICM-LAVegMod grid cells
+    integer :: dem_res                                              ! XY resolution of DEM (m)
     character*3000 :: dump_txt                                      ! dummy variable to use for skipping lines in input files
     integer :: dump_int                                             ! dummy variable to use for data in input files
     real(sp) :: dump_flt                                            ! dummy variable to use for data in input files
@@ -26,14 +28,20 @@ module params
     real(sp),dimension(:),allocatable :: dem_z                      ! average elevation of DEM pixel (m NAVD88)
     integer,dimension(:),allocatable :: dem_comp                    ! ICM-Hydro compartment  ID overlaying DEM pixel (-)
     integer,dimension(:),allocatable :: dem_grid                    ! ICM-LAVegMod grid  ID overlaying DEM pixel (-)
+    integer :: dem_LLx                                              ! lower left X-coordinate of DEM grid
+    integer :: dem_LLy                                              ! lower left Y-coordinate of DEM grid
+    integer :: dem_URx                                              ! upper right X-coordinate of DEM grid
+    integer :: dem_URy                                              ! upper right Y-coordinate of DEM grid
+    integer,dimension(:),allocatable :: dem_col                     ! same as dem_x but use column number instead of X coordinate
+    integer,dimension(:),allocatable :: dem_row                     ! same as dem_y but use column number instead of Y coordinate
+    integer,dimension(:),allocatable :: comp_ndem_all               ! number of DEM pixels within each ICM-Hydro compartment (-)
+    integer,dimension(:),allocatable :: grid_ndem_all               ! number of DEM pixels within each ICM-LAVegMod grid cell (-)                                                         
     integer,dimension(:),allocatable :: dem_lndtyp                  ! Land type classification of DEM pixel
                                                                     !               1 = vegetated wetland
                                                                     !               2 = water
                                                                     !               3 = flotant marsh
                                                                     !               4 = unvegetated wetland/new subaerial unvegetated mudflat (e.g., bare ground)
                                                                     !               5 = developed land/upland/etc. that are not modeled in ICM-LAVegMod
-    integer,dimension(:),allocatable :: comp_ndem_all               ! number of DEM pixels within each ICM-Hydro compartment (-)
-    integer,dimension(:),allocatable :: grid_ndem_all               ! number of DEM pixels within each ICM-LAVegMod grid cell (-)                                                         
     
     ! define variables read in or calculated from compartment_out Hydro summary file in subroutine: PREPROCESSING
     real(sp),dimension(:),allocatable :: stg_mx_yr                  ! max stage - annual (m NAVD88)
@@ -84,5 +92,7 @@ module params
     real(sp),dimension(:),allocatable :: comp_wetland_elev          ! average elevation of wetland in ICM-Hydro compartment
     real(sp),dimension(:),allocatable :: comp_water_elev            ! average elevation of water bottom in ICM-Hydro compartment
     
+    ! DEM mapping arrays tha tare allocated in their own allocation subroutine DEM_PARAMS_ALLOC
+    integer,dimension(:,:),allocatable :: dem_index_mapped          ! DEM grid IDs, mapped
     
 end module params

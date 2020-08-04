@@ -35,7 +35,7 @@ program main
     veg_out_file = 'MPM2017_S04_G300_C000_U00_V00_SLA_O_01_01_V_vegty.csv'    
     !  output files
     grid_summary_eoy_file = 'grid_summary_eoy.csv'
-
+    dem_res = 30
     
     ! open log file and print simulation start time
     call date_and_time(VALUES=dtvalues)

@@ -42,8 +42,8 @@ subroutine flotant
     ! count starting number of flotant marsh pixels in each ICM-LAVegMod grid cell
     grid_flt_all = 0
     do i = 1,ndem
-        g = grid_dem(i)
-        if (dem_lndtyp(i) == 3)                 ! check if DEM pixel is classified as flotant marsh in input landscape
+        g = dem_grid(i)
+        if (dem_lndtyp(i) == 3) then               ! check if DEM pixel is classified as flotant marsh in input landscape
             grid_flt_all(g) = grid_flt_all(g) + 1    
         end if
     end do
@@ -62,12 +62,12 @@ subroutine flotant
     ! update counter for each grid cell so that once percent dead floatant is met no more flotant pixels will be converted to water
     ! reduce count of flt pixels in grid counter
     grid_dead_flt_killed_cntr = 0
-    do i 1,ndem
-        if (dem_lndtyp(i) = 3) then
-            g = grid_dem(i)
+    do i = 1,ndem
+        if (dem_lndtyp(i) == 3) then
+            g = dem_grid(i)
             if (grid_dead_flt_killed_cntr(g) < grid_dead_flt_all(g)) then
                 dem_lndtyp(i) = 2
-                grid_flt_killed_cntr(g) = grid_flt_killed_cntr(g) + 1
+                grid_dead_flt_killed_cntr(g) = grid_dead_flt_killed_cntr(g) + 1
                 grid_flt_all(g) = max(0,grid_flt_all(g) - 1)
             end if
         end if
