@@ -18,7 +18,6 @@ subroutine params_alloc
     allocate(dem_row(ndem))    
     allocate(comp_ndem_all(ncomp))
     allocate(grid_ndem_all(ngrid))
-
     
     ! allocate memory for variables read in or calculated from compartment_out Hydro summary file in subroutine: PREPROCESSING
     allocate(stg_mx_yr(ncomp))
@@ -41,6 +40,11 @@ subroutine params_alloc
     allocate(stdev_annual_tss(ncomp))
     allocate(totalland_m2(ncomp))
 
+    ! allocate memory for variables read in from previous year's compartment_out Hydro summary file in subroutine: PREPROCESSING
+    allocate(stg_av_prev_yr(ncomp))
+    allocate(sal_av_prev_yr(ncomp))
+ 
+    
     ! define variables read in or calculated from vegtype ICM-LAVegMod summary file in subroutine: PREPROCESSING
     allocate(grid_pct_water(ngrid))
     allocate(grid_pct_upland(ngrid))
@@ -54,21 +58,44 @@ subroutine params_alloc
     allocate(grid_pct_vglnd_SM(ngrid))
     allocate(grid_FIBS_score(ngrid))
     
+    ! define variables read in from monthly summary files  in subroutine: PREPROCESSING
+    allocate(stg_av_mons(ncomp,12))
+    allocate(stg_mx_mons(ncomp,12))
+    allocate(sed_dp_ow_mons(ncomp,12))
+    allocate(sed_dp_mi_mons(ncomp,12))
+    allocate(sed_dp_me_mons(ncomp,12))
+    
     ! allocate memory for global variables calculated in subroutine: Inundation
-    allocate(dem_inun_dep(ndem,13))
+    allocate(dem_inun_dep(ndem,14))
     allocate(comp_ndem_wet(ncomp,13))
     allocate(grid_ndem_wet(ncomp,13))
     
+    ! allocate memory for global variables calculated in subroutine: INUNDATION_THRESHOLDS
+    allocate(lnd_change_flag(ndem))
+
     
-    
+    ! allocate memory for variable used to write to output files
+    ! some output variables are allocated elsewhere, but these are only used for summarizing output
+    allocate(grid_pct_upland_dry(ngrid))
+    allocate(grid_pct_upland_wet(ngrid))
     allocate(grid_pct_vg_land(ngrid))
     allocate(grid_pct_flt(ngrid))
+    allocate(grid_bed_z(ngrid))
+    allocate(grid_land_z(ngrid))
+    allocate(grid_pct_edge(ngrid))
+    allocate(grid_gadwl_dep(ngrid,14))  
+    allocate(grid_gwteal_dep(ngrid,9)) 
+    allocate(grid_motduck_dep(ngrid,9))
     
     allocate(comp_pct_water(ncomp))
     allocate(comp_pct_wetland(ncomp))
     allocate(comp_pct_upland(ncomp))
-    allocate(comp_wetland_elev(ncomp))
-    allocate(comp_water_elev(ncomp))
+    allocate(comp_wetland_z(ncomp))
+    allocate(comp_water_z(ncomp))
+    allocate(comp_edge_area(ncomp))
+    
+    
+    
     
     return
     

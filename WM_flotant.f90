@@ -1,7 +1,13 @@
 subroutine flotant
-    ! subroutine that updates flotant marsh coverage for each DEM pixel
-    ! and updates grid cell percent coverage values.
-    ! dem_lndtyp array will be updated after this subroutine
+    ! global arrays updated by subroutine:
+    !      grid_pct_flt
+    !      lnd_change_flg
+    !
+    ! Subroutine that updates lnd_change_flag array for pixels that are initially flotant marsh
+    ! and also has dead flotant marsh in the ICM-LAVegMod grid cell for the year.
+    ! 
+    ! Subroutine also updates grid cell percent coverage of flotant marsh values
+    ! based on input dead_flotant from ICM-LAVegMod output file.
     !
     ! This subroutine depends on the initial classification of a 30-m DEM pixel as flotant marsh
     ! and the amount of flotant marsh that was converted to open water within each ICM-LAVegMod
@@ -52,7 +58,7 @@ subroutine flotant
     grid_dead_flt_all = 0
     do i = 1,ngrid
         if (grid_pct_dead_flt(i) > 0.0) then    ! if there's dead flotant in grid cell
-            if (grid_flt_all(i) > 0) then       ! and there's flotant marsh to removein grid cell
+            if (grid_flt_all(i) > 0) then       ! and there's flotant marsh to remove in grid cell
                 grid_dead_flt_all(i) = int( grid_pct_dead_flt(i)*grid_flt_all(i) )
             end if
         end if
@@ -66,12 +72,17 @@ subroutine flotant
         if (dem_lndtyp(i) == 3) then
             g = dem_grid(i)
             if (grid_dead_flt_killed_cntr(g) < grid_dead_flt_all(g)) then
-                dem_lndtyp(i) = 2
+                
+                lnd_change_flag(i) = -2
+                
                 grid_dead_flt_killed_cntr(g) = grid_dead_flt_killed_cntr(g) + 1
-                grid_flt_all(g) = max(0,grid_flt_all(g) - 1)
+                grid_flt_all(g) = max(0,grid_flt_all(g)-1)
+            
             end if
         end if
     end do
+    
+    ! update percentage of ICM-LAVegMod grid cell that is still floating mat at end of year
     grid_pct_flt = grid_flt_all / grid_ndem_all
     
     return

@@ -18,7 +18,7 @@ subroutine preprocessing
     
     open(unit=111, file=trim(adjustL(dem_file)))
    
-    read(111,*) dump_txt
+    read(111,*) dump_txt        ! dump header
     do i = 1,ndem
         read(111,*) dem_x(i),               &
    &                dem_y(i),               &
@@ -40,8 +40,8 @@ subroutine preprocessing
         end if
         
         ! count number of DEM pixels within each ICM-Hydro compartment & ICM-LAVegMod grid cells
-        comp_ndem_all(dem_comp) =  comp_ndem_all(dem_comp) + 1
-        grid_ndem_all(dem_grid) =  grid_ndem_all(dem_grid) + 1
+        comp_ndem_all(dem_comp(i)) =  comp_ndem_all(dem_comp(i)) + 1
+        grid_ndem_all(dem_grid(i)) =  grid_ndem_all(dem_grid(i)) + 1
     end do
     close(111)
 
@@ -67,14 +67,13 @@ subroutine preprocessing
         dem_row(i) = i_row
     end do
     
-    
     ! read ICM-Hydro compartment output file into arrays
     write(  *,*) ' - reading in annual ICM-Hydro compartment-level output'
     write(000,*) ' - reading in annual ICM-Hydro compartment-level output'
     
     open(unit=112, file=trim(adjustL(hydro_comp_out_file)))
     
-    read(112,*) dump_txt
+    read(112,*) dump_txt        ! dump header
     do i = 1,ncomp
         read(112,*) dump_txt,               &
    &         stg_mx_yr(i),                  &
@@ -99,10 +98,131 @@ subroutine preprocessing
     end do
     close(112)
     
+    ! read previous year's ICM-Hydro compartment output file into arrays
+    write(  *,*) ' - reading in previous year annual ICM-Hydro compartment-level output'
+    write(000,*) ' - reading in previous year annual ICM-Hydro compartment-level output'
+    
+    open(unit=1120, file=trim(adjustL(prv_hydro_comp_out_file)))
+    
+    read(1120,*) dump_txt        ! dump header
+    do i = 1,ncomp
+        read(112,*) dump_txt,               &
+   &         dump_flt    ,                  &
+   &         stg_av_prev_yr(i),             &
+   &         dump_flt    ,                  &
+   &         dump_flt    ,                  &
+   &         sal_av_prev_yr(i),             &
+   &         dump_flt    ,                  &
+   &         dump_flt    ,                  &
+   &         dump_flt    ,                  &
+   &         dump_flt    ,                  &
+   &         dump_flt    ,                  &
+   &         dump_flt    ,                  &
+   &         dump_flt    ,                  &
+   &         dump_flt    ,                  &
+   &         dump_flt    ,                  &
+   &         dump_flt    ,                  &
+   &         dump_flt    ,                  &
+   &         dump_flt    ,                  &
+   &         dump_flt    ,                  &
+   &         dump_flt
+    end do
+    close(1120)
+
+    ! read in monthly data for stage and sediment deposition (open water and marsh)    
     write(  *,*) ' - reading in monthly ICM-Hydro compartment-level output'
     write(000,*) ' - reading in monthly ICM-Hydro compartment-level output'
-!    read in monthly data for stage and sediment deposition (open water and marsh)
+
+    open(unit=113, file=trim(adjustL(monthly_mean_stage_file)))
+    open(unit=114, file=trim(adjustL(monthly_max_stage_file)))
+    open(unit=115, file=trim(adjustL(monthly_ow_sed_dep_file)))
+    open(unit=116, file=trim(adjustL(monthly_mi_sed_dep_file)))
+    open(unit=117, file=trim(adjustL(monthly_me_sed_dep_file)))
     
+    read(113,*) dump_txt        ! dump header
+    read(114,*) dump_txt        ! dump header
+    read(115,*) dump_txt        ! dump header
+    read(116,*) dump_txt        ! dump header
+    read(117,*) dump_txt        ! dump header
+    
+    do i = 1,ncomp
+        read(113,*) dump_int,                   &
+   &         stg_av_mons(i,1),                  &
+   &         stg_av_mons(i,2),                  &
+   &         stg_av_mons(i,3),                  &
+   &         stg_av_mons(i,4),                  &
+   &         stg_av_mons(i,5),                  &
+   &         stg_av_mons(i,6),                  &
+   &         stg_av_mons(i,7),                  &
+   &         stg_av_mons(i,8),                  &
+   &         stg_av_mons(i,9),                  &
+   &         stg_av_mons(i,10),                 &
+   &         stg_av_mons(i,11),                 &
+   &         stg_av_mons(i,12)
+        
+        read(114,*) dump_int,                   &
+   &         stg_mx_mons(i,1),                  &
+   &         stg_mx_mons(i,2),                  &
+   &         stg_mx_mons(i,3),                  &
+   &         stg_mx_mons(i,4),                  &
+   &         stg_mx_mons(i,5),                  &
+   &         stg_mx_mons(i,6),                  &
+   &         stg_mx_mons(i,7),                  &
+   &         stg_mx_mons(i,8),                  &
+   &         stg_mx_mons(i,9),                  &
+   &         stg_mx_mons(i,10),                 &
+   &         stg_mx_mons(i,11),                 &
+   &         stg_mx_mons(i,12)       
+        
+        read(115,*) dump_int,                   &
+   &         sed_dp_ow_mons(i,1),               &
+   &         sed_dp_ow_mons(i,2),               &
+   &         sed_dp_ow_mons(i,3),               &
+   &         sed_dp_ow_mons(i,4),               &
+   &         sed_dp_ow_mons(i,5),               &
+   &         sed_dp_ow_mons(i,6),               &
+   &         sed_dp_ow_mons(i,7),               &
+   &         sed_dp_ow_mons(i,8),               &
+   &         sed_dp_ow_mons(i,9),               &
+   &         sed_dp_ow_mons(i,10),              &
+   &         sed_dp_ow_mons(i,11),              &
+   &         sed_dp_ow_mons(i,12)        
+        
+        read(116,*) dump_int,                   &
+   &         sed_dp_mi_mons(i,1),               &
+   &         sed_dp_mi_mons(i,2),               &
+   &         sed_dp_mi_mons(i,3),               &
+   &         sed_dp_mi_mons(i,4),               &
+   &         sed_dp_mi_mons(i,5),               &
+   &         sed_dp_mi_mons(i,6),               &
+   &         sed_dp_mi_mons(i,7),               &
+   &         sed_dp_mi_mons(i,8),               &
+   &         sed_dp_mi_mons(i,9),               &
+   &         sed_dp_mi_mons(i,10),              &
+   &         sed_dp_mi_mons(i,11),              &
+   &         sed_dp_mi_mons(i,12)
+        
+        read(117,*) dump_int,                   &
+   &         sed_dp_me_mons(i,1),               &
+   &         sed_dp_me_mons(i,2),               &
+   &         sed_dp_me_mons(i,3),               &
+   &         sed_dp_me_mons(i,4),               &
+   &         sed_dp_me_mons(i,5),               &
+   &         sed_dp_me_mons(i,6),               &
+   &         sed_dp_me_mons(i,7),               &
+   &         sed_dp_me_mons(i,8),               &
+   &         sed_dp_me_mons(i,9),               &
+   &         sed_dp_me_mons(i,10),              &
+   &         sed_dp_me_mons(i,11),              &
+   &         sed_dp_me_mons(i,12)        
+  
+    end do
+    
+    close(113)
+    close(114)
+    close(115)
+    close(116)            
+    close(117)
     
     ! read ICM-LAVegMod grid output file into arrays
     write(  *,*) ' - reading in ICM-LAVegMod grid-level output'
@@ -113,11 +233,13 @@ subroutine preprocessing
     grid_pct_upland = 0.0
     grid_pct_bare = 0.0
     grid_pct_dead_flt = 0.0
+    grid_bed_z = 0.0
+    grid_land_z = 0.0
     
-    open(unit=113, file=trim(adjustL(veg_out_file)))
-    read(113,*) dump_txt
+    open(unit=118, file=trim(adjustL(veg_out_file)))
+    read(118,*) dump_txt        ! dump header
     do i = 1,ngrid
-        read(113,*) dump_flt,dump_flt,dump_flt,dump_flt,dump_flt,   &
+        read(118,*) dump_flt,dump_flt,dump_flt,dump_flt,dump_flt,   &
    &                dump_flt,dump_flt,dump_flt,dump_flt,dump_flt,   &
    &                dump_flt,dump_flt,dump_flt,dump_flt,dump_flt,   &
    &                dump_flt,                                       &
@@ -140,7 +262,7 @@ subroutine preprocessing
    &                grid_FIBS_score(i)
         
     end do
-    close(113)
+    close(118)
 
         
     return

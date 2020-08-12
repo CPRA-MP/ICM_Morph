@@ -1,7 +1,13 @@
-subroutine inundation(tp)
+subroutine inundation_depths(tp)
     ! subroutine that calculates inundation depth for each DEM pixel
+    ! global arrays updated by subroutine:
+    !      dem_inun_dep
+    !      comp_ndem_wet
+    !      grid_ndem_wet
+    
+    !  
+    !
     ! the inundation will be calculated from the DEM data and whichever water surface elevation array is passed into the subroutine
-    ! the WSE array has one value for each ICM-Hydro compartment
     ! the WSE array must have values relative to the same vertical datum and use the same units as the DEM data
     
 
@@ -18,15 +24,21 @@ subroutine inundation(tp)
     real(sp) :: wse                                 ! local water surface elevation variable
     
     
-    
+    ! tp=13 uses current year annual mean stage to calculate inundation    
     if (tp == 13) then
         write(  *,*) " - calculating inundation for year"
         write(000,*) " - calculating inundation for year"
         wse_by_comp = stg_av_yr
+    ! tp=14 uses previous year annual mean stage to calculate inundation    
+    else if (tp == 14) then
+        write(  *,*) " - calculating inundation for year"
+        write(000,*) " - calculating inundation for year"
+        wse_by_comp = stg_av_prev_yr
+    ! tp <= 12 uses monthly mean stage to calculate inundation for month tp
     else
-        wse_by_comp = stg_av_mons(1:ncomp,wse_to_use)
         write(  *,*) " - calculating inundation for month: " , tp
         write(000,*) " - calculating inundation for month: " , tp
+        wse_by_comp = stg_av_mons(1:ncomp,tp)
     end if
     
     do i = 1,ndem

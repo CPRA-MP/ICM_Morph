@@ -19,8 +19,26 @@ module params
     character*100 :: morph_log_file                                 ! file name of text file that logs all Morph print statements - no filepath will save this in executable directory
     character*100 :: dem_file                                       ! file name, with relative path, to DEM XYZ file
     character*100 :: hydro_comp_out_file                            ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro
+    character*100 :: prv_hydro_comp_out_file                        ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro for previous year
+    character*100 :: monthly_mean_stage_file                        ! file name, with relative path, to compartment summary file with monthly mean water levels
+    character*100 :: monthly_max_stage_file                         ! file name, with relative path, to compartment summary file with monthly maximum water levels 
+    character*100 :: monthly_ow_sed_dep_file                        ! file name, with relative path, to compartment summary file with monthly sediment deposition in open water
+    character*100 :: monthly_mi_sed_dep_file                        ! file name, with relative path, to compartment summary file with monthly sediment deposition on interior marsh
+    character*100 :: monthly_me_sed_dep_file                        ! file name, with relative path, to compartment summary file with monthly sediment deposition on marsh edge
     character*100 :: veg_out_file                                   ! file name, with relative path, to *vegty.asc+ file saved by ICM-LAVegMod    
     character*100 :: grid_summary_eoy_file                          ! file name, with relative path, to summary grid file for end-of-year landscape
+    character*100 :: grid_data_file                                 ! file name, with relative path, to summary grid data file used internally by ICM
+    character*100 :: grid_depth_file_Gdw                            ! file name, with relative path, to Gadwall depth grid data file used internally by ICM and HSI
+    character*100 :: grid_depth_file_GwT                            ! file name, with relative path, to Greenwing Teal depth grid data file used internally by ICM and HSI
+    character*100 :: grid_depth_file_MtD                            ! file name, with relative path, to Mottled Duck depth grid data file used internally by ICM and HSI 
+    character*100 :: grid_pct_edge_file                             ! file name, with relative path, to percent edge grid data file used internally by ICM and HSI 
+    
+    character*100 :: comp_elev_file                                 ! file name, with relative path, to elevation summary compartment file used internally by ICM
+    character*100 :: comp_wat_file                                  ! file name, with relative path, to percent water summary compartment file used internally by ICM
+    character*100 :: comp_upl_file                                  ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
+    
+    
+    
     
     ! define variables read in or calculated from xyzc file in subroutine: PREPROCESSING
     integer,dimension(:),allocatable :: dem_x                       ! x-coordinate of DEM pixel (UTM m, zone 15N)
@@ -64,6 +82,10 @@ module params
     real(sp),dimension(:),allocatable :: stdev_annual_tss           ! standard deviation of total suspended solids - annual (mg/L)
     real(sp),dimension(:),allocatable :: totalland_m2               ! land area in ICM-Hydro compartmnet (m^2)
 
+    ! define variables read in from previous year's compartment_out Hydro summary file in subroutine: PREPROCESSING
+    real(sp),dimension(:),allocatable :: stg_av_prev_yr             ! mean stage from previous year - annual (ppt)
+    real(sp),dimension(:),allocatable :: sal_av_prev_yr             ! mean salinity from previous year - annual (ppt)
+    
     ! define variables read in or calculated from vegtype ICM-LAVegMod summary file in subroutine: PREPROCESSING
     real(sp),dimension(:),allocatable :: grid_pct_water             ! percent of ICM_LAVegMod grid cell that is water
     real(sp),dimension(:),allocatable :: grid_pct_upland            ! percent of ICM-LAVegMod grid cell that is upland/developed (e.g., NotMod) and is too high and dry for wetland vegetation
@@ -77,22 +99,45 @@ module params
     real(sp),dimension(:),allocatable :: grid_pct_vglnd_SM          ! percent of vegetated land that is saline marsh
     real(sp),dimension(:),allocatable :: grid_FIBS_score            ! weighted FIBS score of ICM-LAVegMod grid cell - used for accretion
     
+    ! define variables read in from monthly summary files  in subroutine: PREPROCESSING
+    real(sp),dimension(:,:),allocatable :: stg_av_mons              ! monthly mean stage (m NAVD88) - second dimension (1-12) corresponds to month 
+    real(sp),dimension(:,:),allocatable :: stg_mx_mons              ! monthly max stage (m NAVD88) - second dimension (1-12) corresponds to month 
+    real(sp),dimension(:,:),allocatable :: sed_dp_ow_mons           ! monthly mineral sediment deposition - open water (g/m^2) - second dimension (1-12) corresponds to month 
+    real(sp),dimension(:,:),allocatable :: sed_dp_mi_mons           ! monthly mineral sediment deposition - interior marsh (g/m^2) - second dimension (1-12) corresponds to month 
+    real(sp),dimension(:,:),allocatable :: sed_dp_me_mons           ! monthly mineral sediment deposition - marsh edge (g/m^2) - second dimension (1-12) corresponds to month 
+    
     ! define global variables calculated in subroutine: INUNDATION
     real(sp),dimension(:,:),allocatable :: dem_inun_dep             ! inundation depth at each DEM pixel from monthly and annual mean water levels (m)
     integer,dimension(:,:),allocatable :: comp_ndem_wet             ! number of inundated DEM pixels within each ICM-Hydro compartment from monthly and annual mean water levels (-)
     integer,dimension(:,:),allocatable :: grid_ndem_wet             ! number of inundated DEM pixels within each ICM-LAVegMod grid cell from monthly and annual mean water levels (-)
    
-    ! define global variables that are used summarizing end-of-year landscape per LAVegMod grid cell
-    real(sp),dimension(:),allocatable :: grid_pct_vg_land           ! percent of ICM_LAVegMod grid cell that is vegetated land
-    real(sp),dimension(:),allocatable :: grid_pct_flt               ! percent of ICM_LAVegMod grid cell that is flotant marsh
+    ! define global variables calculated in subroutine: INUNDATION_THRESHOLDS
+    integer,dimension(:),allocatable :: lnd_change_flag             ! flag indicating why a pixel changed land type classification during the year
+                                                                    !               -1 = conversion from vegetated wetland to open water
+                                                                    !                0 = no change
+                                                                    !                1 = conversion from open water to land eligible for vegetation
+    
+    ! define global variables that are used summarizing end-of-year landscape
+    real(sp),dimension(:),allocatable :: grid_pct_upland_dry        ! percent of ICM-LAVegMod grid cell that is upland and is higher than any inundation that would be considered appropriate for wetlands
+    real(sp),dimension(:),allocatable :: grid_pct_upland_wet        ! percent of ICM-LAVegMod grid cell that is upland but is within inundation range of wetlands
+    real(sp),dimension(:),allocatable :: grid_pct_vg_land           ! percent of ICM-LAVegMod grid cell that is vegetated land
+    real(sp),dimension(:),allocatable :: grid_pct_flt               ! percent of ICM-LAVegMod grid cell that is flotant marsh
+    real(sp),dimension(:),allocatable :: grid_bed_z                 ! mean elevation of water pixels within each ICM-LAVegMod grid cell
+    real(sp),dimension(:),allocatable :: grid_land_z                ! mean elevation of land (including flotant) pixels within each ICM-LAVegMod grid cell
+    real(sp),dimension(:),allocatable :: grid_pct_edge              ! percent of ICM-LAVegMod grid cell that is edge
+    integer,dimension(:,:),allocatable :: grid_gadwl_dep            ! area in each ICM-LAVegMod grid cell that is classified for each of the 14 depths used in the Gadwall HSI
+    integer,dimension(:,:),allocatable :: grid_gwteal_dep           ! area in each ICM-LAVegMod grid cell that is classified for each of the 9 depths used in the Greenwinged Teal HSI
+    integer,dimension(:,:),allocatable :: grid_motduck_dep          ! area in each ICM-LAVegMod grid cell that is classified for each of the 9 depths used in the Mottled Duck HSI
+    
     
     real(sp),dimension(:),allocatable :: comp_pct_water             ! percent of ICM-Hydro compartment that is open water
     real(sp),dimension(:),allocatable :: comp_pct_wetland           ! percent of ICM-Hydro compartment that is wetland (attached vegetated + flotant_ + non-vegetated)
     real(sp),dimension(:),allocatable :: comp_pct_upland            ! percent of ICM-Hydro compartment that is upland (not modeled in ICM-LAVegMod)
-    real(sp),dimension(:),allocatable :: comp_wetland_elev          ! average elevation of wetland in ICM-Hydro compartment
-    real(sp),dimension(:),allocatable :: comp_water_elev            ! average elevation of water bottom in ICM-Hydro compartment
+    real(sp),dimension(:),allocatable :: comp_wetland_z             ! average elevation of wetland in ICM-Hydro compartment
+    real(sp),dimension(:),allocatable :: comp_water_z               ! average elevation of water bottom in ICM-Hydro compartment
+    integer,dimension(:),allocatable :: comp_edge_area              ! area of edge within each ICM-Hydro compartment (sq m)
     
-    ! DEM mapping arrays tha tare allocated in their own allocation subroutine DEM_PARAMS_ALLOC
+    ! DEM mapping arrays that are allocated in their own allocation subroutine DEM_PARAMS_ALLOC
     integer,dimension(:,:),allocatable :: dem_index_mapped          ! DEM grid IDs, mapped
     
 end module params
