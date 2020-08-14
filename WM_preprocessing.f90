@@ -5,8 +5,6 @@ subroutine preprocessing
     
     ! local variables
     integer :: i                    ! iterator
-    integer :: n_dem_col            ! number of columns (e.g. range in X) in DEM when mapped
-    integer :: n_dem_row            ! number of rows (e.g. range in Y) in DEM when mapped
     integer :: i_col                ! X-coordinate converted to column number of mapped DEM
     integer :: i_row                ! Y-coordinate converted to row number of mapped DEM
 
@@ -69,7 +67,7 @@ subroutine preprocessing
     ! calculate number of rows and columns in mapped DEM from X-Y ranges determined above
     n_dem_col = 1+(dem_URx - dem_LLx)/dem_res
     n_dem_row = 1+(dem_URy - dem_LLy)/dem_res
-    
+
     ! allocate array for DEM map    
     call dem_params_alloc(n_dem_col,n_dem_row)
     

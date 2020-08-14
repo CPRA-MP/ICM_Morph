@@ -45,6 +45,7 @@ program main
     monthly_mi_sed_dep_file =   'D:\MP2023\morph_test\input\compartment_monthly_sed_dep_interior.csv'
     monthly_me_sed_dep_file =   'D:\MP2023\morph_test\input\compartment_monthly_sed_dep_edge.csv'
     !  output files
+    edge_eoy_xyz_file =         'D:\MP2023\morph_test\output\edge_eoy_2015.xyz'
     grid_summary_eoy_file =     'D:\MP2023\morph_test\output\grid_summary_eoy_2015.csv'
     grid_data_file =            'D:\MP2023\morph_test\output\grid_data_500m_2015.csv'
     grid_depth_file_Gdw =       'D:\MP2023\morph_test\output\GadwallDepths_cm_2015.csv'
@@ -110,18 +111,19 @@ program main
     !       -1 = loss of vegetated land to open water; 
     !        1 = gain of land (from open water) that will be eligible for vegetation
     
+    call edge_delineation
+    
     ! initialize land change flag for each DEM pixel to zero 
     lnd_change_flag = 0             
     call flotant
     call inundation_thresholds
-    
-    ! initialize edge flag for each DEM pixel to zero
-    dem_edge = 0
+
     
     call inundation_HSI_bins
     call summaries
-    call write_output
-    
+    call write_output_summaries
+    call write_output_rasters
+
     ! print simulation end time and close log file
     call date_and_time(VALUES=dtvalues)
     write(  *,*)

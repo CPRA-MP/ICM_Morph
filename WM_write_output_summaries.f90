@@ -1,4 +1,4 @@
-subroutine write_output
+subroutine write_output_summaries
     ! subroutine that writes output files
     
 
@@ -40,7 +40,6 @@ subroutine write_output
         grid_pct_land_tot = dem_NoDataVal
         grid_pct_land_wetl = dem_NoDataVal
 
-        if 
         grid_pct_vg_land   = 1.0 - grid_pct_water(i) - grid_pct_flt(i) - grid_pct_bare(i) - grid_pct_upland(i)
         grid_pct_land_tot  = 1.0 - grid_pct_water(i) - grid_pct_flt(i)
         grid_pct_land_wetl =       grid_pct_vg_land + grid_pct_flt(i) + grid_pct_bare(i)

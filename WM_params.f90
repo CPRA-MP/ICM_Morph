@@ -13,12 +13,8 @@ module params
     integer :: ngrid                                                ! number of ICM-LAVegMod grid cells
     integer :: dem_res                                              ! XY resolution of DEM (m)
     integer :: nlt                                                  ! number of landtype classification
-                                                                    ! ****must correspond with dem_lndtyp variable defined below****
-                                                                    !               1 = vegetated wetland
-                                                                    !               2 = water
-                                                                    !               3 = unvegetated wetland/new subaerial unvegetated mudflat (e.g., bare ground)
-                                                                    !               4 = developed land/upland/etc. that are not modeled in ICM-LAVegMod
-                                                                    !               5 = flotant marsh
+                                                                    ! **** nlt must equal the number of classifications in dem_lndtyp variable defined below****
+
     
     character*3000 :: dump_txt                                      ! dummy variable to use for skipping lines in input files
     integer :: dump_int                                             ! dummy variable to use for data in input files
@@ -38,6 +34,7 @@ module params
     character*100 :: monthly_mi_sed_dep_file                        ! file name, with relative path, to compartment summary file with monthly sediment deposition on interior marsh
     character*100 :: monthly_me_sed_dep_file                        ! file name, with relative path, to compartment summary file with monthly sediment deposition on marsh edge
     character*100 :: veg_out_file                                   ! file name, with relative path, to *vegty.asc+ file saved by ICM-LAVegMod    
+    character*100 :: edge_eoy_xyz_file                              ! file name, with relative path, to XYZ raster output file for edge pixels
     character*100 :: grid_summary_eoy_file                          ! file name, with relative path, to summary grid file for end-of-year landscape
     character*100 :: grid_data_file                                 ! file name, with relative path, to summary grid data file used internally by ICM
     character*100 :: grid_depth_file_Gdw                            ! file name, with relative path, to Gadwall depth grid data file used internally by ICM and HSI
@@ -56,8 +53,8 @@ module params
     integer,dimension(:),allocatable :: dem_x                       ! x-coordinate of DEM pixel (UTM m, zone 15N)
     integer,dimension(:),allocatable :: dem_y                       ! y-coordinate of DEM pixel (UTM m, zone 15N)
     real(sp),dimension(:),allocatable :: dem_z                      ! average elevation of DEM pixel (m NAVD88)
-    integer,dimension(:),allocatable :: dem_comp                    ! ICM-Hydro compartment  ID overlaying DEM pixel (-)
-    integer,dimension(:),allocatable :: dem_grid                    ! ICM-LAVegMod grid  ID overlaying DEM pixel (-)
+    integer,dimension(:),allocatable :: dem_comp                    ! ICM-Hydro compartment ID overlaying DEM pixel (-)
+    integer,dimension(:),allocatable :: dem_grid                    ! ICM-LAVegMod grid ID overlaying DEM pixel (-)
     integer :: dem_LLx                                              ! lower left X-coordinate of DEM grid
     integer :: dem_LLy                                              ! lower left Y-coordinate of DEM grid
     integer :: dem_URx                                              ! upper right X-coordinate of DEM grid
@@ -68,7 +65,11 @@ module params
     integer,dimension(:),allocatable :: grid_ndem_all               ! number of DEM pixels within each ICM-LAVegMod grid cell (-)                                                         
     integer,dimension(:),allocatable :: dem_lndtyp                  ! Land type classification of DEM pixel
                                                                     ! ****dem_lntyp must correspond with nlt variable defined above****
-                                                                    
+                                                                    !               1 = vegetated wetland
+                                                                    !               2 = water
+                                                                    !               3 = unvegetated wetland/new subaerial unvegetated mudflat (e.g., bare ground)
+                                                                    !               4 = developed land/upland/etc. that are not modeled in ICM-LAVegMod
+                                                                    !               5 = flotant marsh
     
     ! define variables read in or calculated from compartment_out Hydro summary file in subroutine: PREPROCESSING
     real(sp),dimension(:),allocatable :: stg_mx_yr                  ! max stage - annual (m NAVD88)
@@ -115,7 +116,7 @@ module params
     real(sp),dimension(:,:),allocatable :: sed_dp_mi_mons           ! monthly mineral sediment deposition - interior marsh (g/m^2) - second dimension (1-12) corresponds to month 
     real(sp),dimension(:,:),allocatable :: sed_dp_me_mons           ! monthly mineral sediment deposition - marsh edge (g/m^2) - second dimension (1-12) corresponds to month 
 
-    ! define variables calculated in subroutine: EDGE
+    ! define variables calculated in subroutine: EDGE_DELINEATION
     integer,dimension(:),allocatable :: dem_edge                    ! flag indicating whether DEM pixel is edge (0=non edge; 1=edge)
     
     ! define global variables calculated in subroutine: INUNDATION
@@ -125,10 +126,12 @@ module params
    
     ! define global variables calculated in subroutine: INUNDATION_THRESHOLDS
     integer,dimension(:),allocatable :: lnd_change_flag             ! flag indicating why a pixel changed land type classification during the year
-                                                                    !               -1 = conversion from vegetated wetland to open water
+                                                                    !               -1 = conversion from vegetated wetland to open water due to inundation
+                                                                    !               -2 = conversion from flotant marsh mat to open water                                                          
+                                                                    !               -3 = conversion from marsh edge to open water due to erosion
                                                                     !                0 = no change
                                                                     !                1 = conversion from open water to land eligible for vegetation
-                                                                    !               -2 = conversion from flotant marsh mat to open water
+
 
     
     
@@ -152,6 +155,8 @@ module params
     integer,dimension(:),allocatable :: comp_edge_area              ! area of edge within each ICM-Hydro compartment (sq m)
     
     ! DEM mapping arrays that are allocated in their own allocation subroutine DEM_PARAMS_ALLOC
+    integer :: n_dem_col                                            ! number of columns (e.g. range in X) in DEM when mapped
+    integer :: n_dem_row                                            ! number of rows (e.g. range in Y) in DEM when mapped
     integer,dimension(:,:),allocatable :: dem_index_mapped          ! DEM grid IDs, mapped
     
 end module params

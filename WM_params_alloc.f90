@@ -72,10 +72,10 @@ subroutine params_alloc
     allocate(sed_dp_mi_mons(ncomp,12))
     allocate(sed_dp_me_mons(ncomp,12))
     
-    ! allocate memory for global variables calculated in subroutine: EDGE
+    ! allocate memory for global variables calculated in subroutine: EDGE_DELINEATION
     allocate(dem_edge(ndem))
     
-    ! allocate memory for global variables calculated in subroutine: EDGE
+    ! allocate memory for global variables calculated in subroutine: INUNDATION_DEPTHS
     allocate(dem_inun_dep(ndem,14))
     allocate(comp_ndem_wet(ncomp,13))
     allocate(grid_ndem_wet(ncomp,13))
@@ -102,24 +102,17 @@ subroutine params_alloc
     allocate(comp_wetland_z(ncomp))
     allocate(comp_water_z(ncomp))
     allocate(comp_edge_area(ncomp))
-    
-    
-    
-    
+ 
     return
+end
     
-    end
-    
-subroutine dem_params_alloc(n_dem_col,n_dem_row)
+subroutine dem_params_alloc
     ! separate subroutine to allocate DEM grid due to the grid size not being known until DEM xyz file is preprocessed
     use params
     implicit none 
-    
-    integer :: n_dem_col
-    integer :: n_dem_row
+
     
     allocate(dem_index_mapped(n_dem_col,n_dem_row))
     
     return
-    
-    end
+end
