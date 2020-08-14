@@ -35,8 +35,14 @@ program main
     dem_file =                  'D:\MP2023\morph_test\input\morph_test_DEM30.xyz'
     lwf_file =                  'D:\MP2023\morph_test\input\morph_test_LWF30.xyz'
     meer_file =                 'D:\MP2023\morph_test\input\morph_test_MEE30.xyz'
+    pldr_file =                 'D:\MP2023\morph_test\input\morph_test_polders.xyz'
     comp_file =                 'D:\MP2023\morph_test\input\morph_test_ICMcomp.xyz'
     grid_file =                 'D:\MP2023\morph_test\input\morph_test_ICMgrid.xyz'
+    dsub_file =                 'D:\MP2023\morph_test\input\deep_subsidence_mm.xyz'
+    ssub_file =                 'D:\MP2023\morph_test\input\ecoregion_shallow_subsidence_mm.csv'        
+    act_del_file =              'D:\MP2023\morph_test\input\compartment_active_delta.csv'
+    comp_eco_file =             'D:\MP2023\morph_test\input\compartment_ecoregion.csv' 
+    
     hydro_comp_out_file =       'D:\MP2023\morph_test\input\compartment_out_2015.csv'
     prv_hydro_comp_out_file =   'D:\MP2023\morph_test\input\compartment_out_2014.csv'     
     veg_out_file =              'D:\MP2023\morph_test\input\MPM2017_S04_G300_C000_U00_V00_SLA_O_01_01_V_vegty.csv'    
@@ -49,7 +55,7 @@ program main
     edge_eoy_xyz_file =         'D:\MP2023\morph_test\output\edge_eoy_2015.xyz'
     dem_eoy_xyz_file =          'D:\MP2023\morph_test\output\tbdem_eoy_2015.xyz'
     lndtyp_eoy_xyz_file =       'D:\MP2023\morph_test\output\lndtyp_eoy_2015.xyz'
-    lndchng_eoy_xyz_file =       'D:\MP2023\morph_test\output\lndchng_eoy_2015.xyz'
+    lndchng_eoy_xyz_file =      'D:\MP2023\morph_test\output\lndchng_eoy_2015.xyz'
     grid_summary_eoy_file =     'D:\MP2023\morph_test\output\grid_summary_eoy_2015.csv'
     grid_data_file =            'D:\MP2023\morph_test\output\grid_data_500m_2015.csv'
     grid_depth_file_Gdw =       'D:\MP2023\morph_test\output\GadwallDepths_cm_2015.csv'
@@ -116,11 +122,19 @@ program main
     
     call edge_delineation
     
+    
+!   call mineral_deposition
+!   call organic_accretion
+!
     ! initialize land change flag for each DEM pixel to zero 
     lnd_change_flag = 0             
+    
     call flotant
     call inundation_thresholds
-
+!    
+!    call subsidence
+!    call update_elevation
+!    call update_land_type - tabulate sediment mass of lost area
     
     call inundation_HSI_bins
     call summaries

@@ -48,7 +48,7 @@ subroutine flotant
     grid_flt_all = 0
     do i = 1,ndem
         g = dem_grid(i)
-        if (dem_lndtyp(i) == 3) then               ! check if DEM pixel is classified as flotant marsh in input landscape
+        if (dem_lndtyp(i) == 3) then                                ! check if DEM pixel is classified as flotant marsh in input landscape
             grid_flt_all(g) = grid_flt_all(g) + 1    
         end if
     end do
@@ -56,8 +56,8 @@ subroutine flotant
     ! count number of dead flotant marsh pixels in each ICM-LAVegMod grid cell
     grid_dead_flt_all = 0
     do i = 1,ngrid
-        if (grid_pct_dead_flt(i) > 0.0) then    ! if there's dead flotant in grid cell
-            if (grid_flt_all(i) > 0) then       ! and there's flotant marsh to remove in grid cell
+        if (grid_pct_dead_flt(i) > 0.0) then                        ! if there's dead flotant in grid cell
+            if (grid_flt_all(i) > 0) then                           ! and there's flotant marsh to remove in grid cell
                 grid_dead_flt_all(i) = int( grid_pct_dead_flt(i)*grid_flt_all(i) )
             end if
         end if
@@ -68,11 +68,11 @@ subroutine flotant
     ! reduce count of flt pixels in grid counter
     grid_dead_flt_killed_cntr = 0
     do i = 1,ndem
-        if (dem_lndtyp(i) == 5) then                        ! dem_lndtyp = 5 for flotant marsh
+        if (dem_lndtyp(i) == 5) then                                ! dem_lndtyp = 5 for flotant marsh
             g = dem_grid(i)
             if (grid_dead_flt_killed_cntr(g) < grid_dead_flt_all(g)) then
                 
-                lnd_change_flag(i) = -2                     ! lnd_change_flag = -2 for conversion from flotant marsh mat to open water
+                lnd_change_flag(i) = -2                             ! lnd_change_flag = -2 for conversion from flotant marsh mat to open water
                 
                 grid_dead_flt_killed_cntr(g) = grid_dead_flt_killed_cntr(g) + 1
                 grid_flt_all(g) = max(0,grid_flt_all(g)-1)

@@ -3,6 +3,7 @@ subroutine params_alloc
     use params
     implicit none 
 
+    neco =        30                ! number of ecoregions
     ndem =    279045                ! number of DEM pixels - will be an array dimension for all DEM-level data
     ncomp =      946                ! number of ICM-Hydro compartments - will be an array dimension for all compartment-level data
     ngrid =   187553                ! number of ICM-LAVegMod grid cells - will be an array dimension for all gridd-level data
@@ -24,6 +25,10 @@ subroutine params_alloc
     allocate(dem_lndtyp(ndem))
     allocate(dem_col(ndem))
     allocate(dem_row(ndem))    
+    allocate(dem_dpsb(ndem))
+    allocate(er_shsb(neco)) 
+    allocate(comp_eco(ncomp))         
+    allocate(comp_act_dlt(ncomp)) 
     allocate(comp_ndem_all(ncomp))
     allocate(grid_ndem_all(ngrid))
     

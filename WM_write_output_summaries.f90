@@ -39,7 +39,7 @@ subroutine write_output_summaries
 
         grid_pct_vg_land   = 1.0 - grid_pct_water(i) - grid_pct_flt(i) - grid_pct_bare(i) - grid_pct_upland(i)
         grid_pct_land_tot  = 1.0 - grid_pct_water(i) - grid_pct_flt(i)
-        grid_pct_land_wetl =       grid_pct_vg_land + grid_pct_flt(i) + grid_pct_bare(i)
+        grid_pct_land_wetl =       grid_pct_vg_land  + grid_pct_flt(i) + grid_pct_bare(i)
    
         
         write(900,1900) i,                          &

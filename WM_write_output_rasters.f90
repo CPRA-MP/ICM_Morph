@@ -33,7 +33,7 @@ subroutine write_output_rasters
     
     open(unit=801, file = trim(adjustL(dem_eoy_xyz_file) ))
     ! write headers
-    ! write(800,'(A)') 'X    Y   Z'                              ! no header neededin XYZ raster format
+    ! write(800,'(A)') 'X    Y   Z'                                 ! no header neededin XYZ raster format
  
     do i = 1,ndem
         if (dem_z(i) /= dem_NoDataVal) then
@@ -51,7 +51,7 @@ subroutine write_output_rasters
     
     open(unit=802, file = trim(adjustL(lndchng_eoy_xyz_file) ))
     ! write headers
-    ! write(800,'(A)') 'X    Y   lndchange_flg'                              ! no header neededin XYZ raster format
+    ! write(800,'(A)') 'X    Y   lndchange_flg'                    ! no header neededin XYZ raster format
  
     do i = 1,ndem
         if (dem_z(i) /= dem_NoDataVal) then
@@ -68,7 +68,7 @@ subroutine write_output_rasters
     
     open(unit=803, file = trim(adjustL(lndtyp_eoy_xyz_file) ))
     ! write headers
-    ! write(800,'(A)') 'X    Y   lndchange_flg'                              ! no header neededin XYZ raster format
+    ! write(800,'(A)') 'X    Y   lndchange_flg'                    ! no header neededin XYZ raster format
  
     do i = 1,ndem
         if (dem_z(i) /= dem_NoDataVal) then

@@ -12,6 +12,7 @@ module params
     integer :: ndem                                                 ! number of DEM pixels in xyzc file
     integer :: ncomp                                                ! number of ICM-Hydro compartments
     integer :: ngrid                                                ! number of ICM-LAVegMod grid cells
+    integer :: neco                                                 ! number of ecoregions used to summarize data
     integer :: dem_res                                              ! XY resolution of DEM (m)
     integer :: nlt                                                  ! number of landtype classification
                                                                     ! **** nlt must equal the number of classifications in dem_lndtyp variable defined below****
@@ -26,8 +27,14 @@ module params
     character*100 :: dem_file                                       ! file name, with relative path, to DEM XYZ file
     character*100 :: lwf_file                                       ! file name, with relative path, to land/water file that is same resolution and structure as DEM XYZ
     character*100 :: meer_file                                      ! file name, with relative path, to marsh edge erosion rate file that is same resolution and structure as DEM XYZ
+    character*100 :: pldr_file                                      ! file name, with relative path, to polder file that is same resolution and structure as DEM XYZ (0=non-poldered pixel; 1=pixel within a polder)
     character*100 :: grid_file                                      ! file name, with relative path, to ICM-LAVegMod grid map file that is same resolution and structure as DEM XYZ
     character*100 :: comp_file                                      ! file name, with relative path, to ICM-Hydro compartment map file that is same resolution and structure as DEM XYZ
+    character*100 :: dsub_file                                      ! file name, with relative path, to deep subsidence rate map file that is same resolution and structure as DEM XYZ (mm/yr; positive values are for downward VLM)
+    character*100 :: ssub_file                                      ! file name, with relative path, to shallow subsidence table with statistics by ecoregion (mm/yr; positive values are for downward VLM)
+    character*100 :: act_del_file                                   ! file name, with relative path, to lookup table that identifies whether an ICM-Hydro compartment is assigned as an 'active delta' site for use with Fresh Marsh organic accretion
+    character*100 :: comp_eco_file                                  ! file name, with relative path, to lookup table that assigns an ecoregion to each ICM-Hydro compartment    
+    
     character*100 :: hydro_comp_out_file                            ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro
     character*100 :: prv_hydro_comp_out_file                        ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro for previous year
     character*100 :: monthly_mean_stage_file                        ! file name, with relative path, to compartment summary file with monthly mean water levels
@@ -55,12 +62,18 @@ module params
     
     
     ! define variables read in or calculated from xyz files in subroutine: PREPROCESSING
-    integer,dimension(:),allocatable :: dem_x                       ! x-coordinate of DEM pixel (UTM m, zone 15N)
-    integer,dimension(:),allocatable :: dem_y                       ! y-coordinate of DEM pixel (UTM m, zone 15N)
-    real(sp),dimension(:),allocatable :: dem_z                      ! average elevation of DEM pixel (m NAVD88)
-    real(sp),dimension(:),allocatable :: dem_meer                   ! marsh edge erosion rate of DEM pixel (m / yr)
-    integer,dimension(:),allocatable :: dem_comp                    ! ICM-Hydro compartment ID overlaying DEM pixel (-)
-    integer,dimension(:),allocatable :: dem_grid                    ! ICM-LAVegMod grid ID overlaying DEM pixel (-)
+    integer,dimension(:),allocatable ::  dem_x                       ! x-coordinate of DEM pixel (UTM m, zone 15N)
+    integer,dimension(:),allocatable ::  dem_y                       ! y-coordinate of DEM pixel (UTM m, zone 15N)
+    integer,dimension(:),allocatable ::  dem_comp                    ! ICM-Hydro compartment ID overlaying DEM pixel (-)
+    integer,dimension(:),allocatable ::  dem_grid                    ! ICM-LAVegMod grid ID overlaying DEM pixel (-)
+    real(sp),dimension(:),allocatable :: dem_z                       ! average elevation of DEM pixel (m NAVD88)
+    real(sp),dimension(:),allocatable :: dem_meer                    ! marsh edge erosion rate of DEM pixel (m / yr)
+    real(sp),dimension(:),allocatable :: dem_dpsb                    ! deep subsidence rate of DEM pixel (mm / yr; positive indicates downward VLM)
+    real(sp),dimension(:),allocatable :: er_shsb                     ! shallow subsidence for ecoregion (mm/yr; positive indicates downward VLM)
+    integer,dimension(:),allocatable ::  comp_eco                    ! ecoregion number of ICM-Hydro compartment
+    integer,dimension(:),allocatable ::  comp_act_dlt                ! flag indicating whether ICM-Hydro compartment is considered an active delta for fresh marsh organic accretion (0=inactive; 1=active)
+        
+    
     integer :: dem_LLx                                              ! lower left X-coordinate of DEM grid
     integer :: dem_LLy                                              ! lower left Y-coordinate of DEM grid
     integer :: dem_URx                                              ! upper right X-coordinate of DEM grid

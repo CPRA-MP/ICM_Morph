@@ -20,13 +20,13 @@ subroutine inundation_thresholds
     real(sp) :: dep_prev_yr                                         ! local variable for inundation depth over DEM pixel from previous year mean stage
     real(sp) :: sal_prev_yr                                         ! local variable for salinity at DEM pixel from previous year mean salinity
     real(sp) :: Z                                                   ! Z-value for quantile (Z=1.96 is 97.5th percentile)
-    real(sp) :: B0                                                  ! coefficient from quantile regression on CRMS annual inundation-salinity data
-    real(sp) :: B1                                                  ! coefficient from quantile regression on CRMS annual inundation-salinity data
-    real(sp) :: B2                                                  ! coefficient from quantile regression on CRMS annual inundation-salinity data
-    real(sp) :: B3                                                  ! coefficient from quantile regression on CRMS annual inundation-salinity data
-    real(sp) :: B4                                                  ! coefficient from quantile regression on CRMS annual inundation-salinity data
-    real(sp) :: MuDepth                                             ! mean depth for given salinity value from quantile regression - for current year      
-    real(sp) :: SigmaDepth                                          ! st dev depth for given salinity value from quantile regression - for current year      
+    real(sp) :: B0                                                  ! coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    real(sp) :: B1                                                  ! coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    real(sp) :: B2                                                  ! coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    real(sp) :: B3                                                  ! coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    real(sp) :: B4                                                  ! coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    real(sp) :: MuDepth                                             ! mean depth for given salinity value from quantile regression - for current year  (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    real(sp) :: SigmaDepth                                          ! st dev depth for given salinity value from quantile regression - for current year  (see App. A of MP2023 Wetland Vegetation Model Improvement report)
     real(sp) :: DepthThreshold_Wet                                  ! too wet for vegetation - depth threshold for given Z and given salinity value from quantile regression - for current year
     real(sp) :: DepthThreshold_Dry                                  ! too dry for vegetation - depth threshold for given Z and given salinity value from quantile regression - for current year
     real(sp) :: MuDepth_prv                                         ! mean depth for given salinity value from quantile regression - for previous year
@@ -43,11 +43,11 @@ subroutine inundation_thresholds
     ! see ICM-LAVegMod documentation from 2023 updates for analysis and theory
     Z = 2.57                    ! z=+2.57 for 99.5th %ile   z=-2.57 for 5th %ile 
    !Z = 1.96                    ! z=+1.96 for 95th %ile     z=-1.96 for 5th %ile 
-    B0 = 0.0058
-    B1 = -0.00207
-    B2 = 0.0809
-    B3 = 0.0892
-    B4 = -0.19
+    B0 = 0.0058                 ! quantile regression coefficient (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    B1 = -0.00207               ! quantile regression coefficient (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    B2 = 0.0809                 ! quantile regression coefficient (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    B3 = 0.0892                 ! quantile regression coefficient (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    B4 = -0.19                  ! quantile regression coefficient (see App. A of MP2023 Wetland Vegetation Model Improvement report)
     
     ! elevation (meters) , relative to annual mean water level, at which point vegetation can establish
     ! see ICM-LAVegMod documentation from 2023 updates for analysis and theory
@@ -80,49 +80,57 @@ subroutine inundation_thresholds
         dep_yr = dem_inun_dep(i,13)
         sal_yr = sal_av_yr(c)
         
-        ! if vegetated land - check for inundation stress
-        if (dem_lndtyp(i) == 1) then
-            MuDepth = B0 + B1*sal_yr
-            SigmaDepth = B2 + B3*exp(B4*sal_yr)
-            DepthThreshold_Wet =  MuDepth  + Z*SigmaDepth
-            
-            ! if current year inundation is above threshold, check previous year            
-            if (dep_yr >= DepthThreshold_Wet) then
-                dep_prev_yr = dem_inun_dep(i,14)
-                sal_prev_yr = sal_av_prev_yr(c)
-                
-                MuDepth_prv = B0 + B1*sal_prev_yr
-                SigmaDepth_prv = B2 + B3*exp(B4*sal_prev_yr)
-                DepthThreshold_Wet_prv =  MuDepth_prv  + Z*SigmaDepth_prv
-                
-                ! if both current year and previous year have inundation above threshold, set flag to collapse land
-                if (dep_prev_yr >= DepthThreshold_Wet_prv) then
-                    lnd_change_flag(i) = -1                         ! lnd_change_flag = -1 for conversion from vegetated wetland to open water
-                end if
-            end if
         
-        ! if water - check if current year elevation is above MWL by depth threshold defining whether vegetation can establish
-        else if (dem_lndtyp(i) == 2) then
-            if (dep_yr < ht_abv_mwl_est) then
-                dep_prev_yr = dem_inun_dep(i,14)
-                ! if both current year and previous year have elevation above threshold for establishment, convert water to land eligible for vegetation
-                if (dep_prev_yr < ht_abv_mwl_est) then
-                    lnd_change_flag(i) = 1                          ! lnd_change_flag = 1 for conversion from open water to land eligible for vegetation
-                end if
-            end if
-            
-        ! if upland - check if inundation would allow for wetland vegetation to establish
-        else if (dem_lndtyp(i) == 5) then
-            MuDepth = B0 + B1*sal_yr
-            SigmaDepth = B2 + B3*exp(B4*sal_yr)
-            DepthThreshold_Dry =  MuDepth - Z*SigmaDepth
-            
-            if (dep_yr >= DepthThreshold_Dry) then
-                grid_n_upland_wet(g) = grid_n_upland_wet(g) + 1 
-            else
-                grid_n_upland_dry(g) = grid_n_upland_dry(g) + 1
-            end if
+        ! check here to see if lnd_change_flag has been change by any other subroutines,
+        ! if so, skip ahead to not overwrite previously run land change functions (e.g. edge erosion)
+        ! this flag is added to any subroutine that alters lnd_change_flag so that the priority of land change
+        ! is purely a function of the order in which the subroutines are called in MAIN
         
+        if (lnd_change_flag(i) == 0) then
+            ! if vegetated land - check for inundation stress
+            if (dem_lndtyp(i) == 1) then
+                MuDepth = B0 + B1*sal_yr
+                SigmaDepth = B2 + B3*exp(B4*sal_yr)
+                DepthThreshold_Wet =  MuDepth  + Z*SigmaDepth
+                
+                ! if current year inundation is above threshold, check previous year            
+                if (dep_yr >= DepthThreshold_Wet) then
+                    dep_prev_yr = dem_inun_dep(i,14)
+                    sal_prev_yr = sal_av_prev_yr(c)
+                    
+                    MuDepth_prv = B0 + B1*sal_prev_yr
+                    SigmaDepth_prv = B2 + B3*exp(B4*sal_prev_yr)
+                    DepthThreshold_Wet_prv =  MuDepth_prv  + Z*SigmaDepth_prv
+                    
+                    ! if both current year and previous year have inundation above threshold, set flag to collapse land
+                    if (dep_prev_yr >= DepthThreshold_Wet_prv) then
+                        lnd_change_flag(i) = -1                         ! lnd_change_flag = -1 for conversion from vegetated wetland to open water
+                    end if
+                end if
+            
+            ! if water - check if current year elevation is above MWL by depth threshold defining whether vegetation can establish
+            else if (dem_lndtyp(i) == 2) then
+                if (dep_yr < ht_abv_mwl_est) then
+                    dep_prev_yr = dem_inun_dep(i,14)
+                    ! if both current year and previous year have elevation above threshold for establishment, convert water to land eligible for vegetation
+                    if (dep_prev_yr < ht_abv_mwl_est) then
+                        lnd_change_flag(i) = 1                          ! lnd_change_flag = 1 for conversion from open water to land eligible for vegetation
+                    end if
+                end if
+                
+            ! if upland - check if inundation would allow for wetland vegetation to establish
+            else if (dem_lndtyp(i) == 5) then
+                MuDepth = B0 + B1*sal_yr
+                SigmaDepth = B2 + B3*exp(B4*sal_yr)
+                DepthThreshold_Dry =  MuDepth - Z*SigmaDepth
+                
+                if (dep_yr >= DepthThreshold_Dry) then
+                    grid_n_upland_wet(g) = grid_n_upland_wet(g) + 1 
+                else
+                    grid_n_upland_dry(g) = grid_n_upland_dry(g) + 1
+                end if
+            
+            end if
         end if
     end do        
     

@@ -110,6 +110,77 @@ subroutine preprocessing
     close(1114)
     
     
+    ! read in ecoregion-to-compartment map
+    write(  *,*) ' - reading in ICM-Hydro compartment-to-ecoregion lookup table'
+    write(000,*) ' - reading in ICM-Hydro compartment-to-ecoregion lookup table'
+    
+    ! initialize grid data arrays to 0.0
+    comp_eco = 0.0
+    
+    open(unit=1115, file=trim(adjustL(comp_eco_file)))
+    read(1115,*) dump_txt                            ! dump header
+    do i = 1,ncomp
+        read(1115,*) dump_int,               &       ! ICM-Hydro_comp
+   &                 comp_eco(i),            &       ! ecoregion number 
+   &                 dump_txt,               &       ! ecoregion code
+   &                 dump_txt                        ! descriptive name
+    end do
+    close(1115)
+  
+    ! read in active delta compartment flags
+    write(  *,*) ' - reading in ICM-Hydro compartment table assigning active deltaic locations'
+    write(000,*) ' - reading in ICM-Hydro compartment table assigning active deltaic locations'
+    
+    ! initialize grid data arrays to 0.0
+    comp_act_dlt = 0.0
+    
+    open(unit=1116, file=trim(adjustL(act_del_file)))
+    read(1116,*) dump_txt                               ! dump header
+    do i = 1,ncomp
+        read(1116,*) dump_int,comp_act_dlt(i)           ! compartment ID, active delta flag
+    end do
+    close(1116)
+    
+    ! read in deep subsidence data
+    write(  *,*) ' - reading in deep susidence rate map'
+    write(000,*) ' - reading in deep susidence rate map'
+    
+    ! initialize grid data arrays to 0.0
+    dem_dpsb = 0.0
+    
+    open(unit=1117, file=trim(adjustL(dsub_file)))
+    !read(1117,*) dump_txt                               ! dump header
+    do i = 1,ndem
+        read(1117,*) dump_int,dump_int,dem_dpsb(i)      ! X, Y, deep subsidence
+        if (dem_dpsb(i) == dem_NoDataVal) then          ! set to zero if no data
+            dem_dpsb(i) = 0.0
+        end if
+    end do
+    close(1117)
+    
+    ! read in shallow subsidence lookup table
+    write(  *,*) ' - reading in shallow subsidence statistics by ecoregion'
+    write(000,*) ' - reading in shallow subsidence statistics by ecoregion'
+    
+    ! initialize table to 0.0
+    er_shsb = 0.0
+    
+    open(unit=1118, file=trim(adjustL(ssub_file)))
+    read(1118,*) dump_txt                               ! dump header
+    do i = 1,neco
+        read(1118,*) dump_int,                  &       ! ecoregion number
+   &                dump_txt,                   &       ! ecoregion abbreviation
+   &                dump_txt,                  &       ! 25th %ile shallow subsidence rate (mm/yr) - positive is downward
+   &                dump_flt,                   &       ! 50th %ile shallow subsidence rate (mm/yr) - positive is downward
+   &                er_shsb(i),                 &       ! 75th %ile shallow subsidence rate (mm/yr) - positive is downward
+   &                dump_flt,                   &       ! 25th %ile shallow subsidence rate (mm/yr) - positive is downward
+   &                dump_txt                            ! notes
+    end do
+    close(1118) 
+
+        
+     
+    
     ! read ICM-Hydro compartment output file into arrays
     write(  *,*) ' - reading in annual ICM-Hydro compartment-level output'
     write(000,*) ' - reading in annual ICM-Hydro compartment-level output'
@@ -333,10 +404,13 @@ subroutine preprocessing
    &                grid_pct_vglnd_IM(i),                           &      !  Intermediate
    &                grid_pct_vglnd_BM(i),                           &      !  Brackish
    &                grid_pct_vglnd_SM(i),                           &      !  Saline 
-   &                grid_FIBS_score(i)                                     !  FIBS
+   &                grid_FIBS_score(i)                                     !  FFIBS
     end do
     close(118)
+    
+    
 
-        
+    
+    
     return
 end
