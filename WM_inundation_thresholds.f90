@@ -41,7 +41,8 @@ subroutine inundation_thresholds
     
     ! parameters from quantile fit of CRMS annual mean inundation and salinity depth
     ! see ICM-LAVegMod documentation from 2023 updates for analysis and theory
-    Z = 1.96
+    Z = 2.57                    ! z=+2.57 for 99.5th %ile   z=-2.57 for 5th %ile 
+   !Z = 1.96                    ! z=+1.96 for 95th %ile     z=-1.96 for 5th %ile 
     B0 = 0.0058
     B1 = -0.00207
     B2 = 0.0809
@@ -96,7 +97,7 @@ subroutine inundation_thresholds
                 
                 ! if both current year and previous year have inundation above threshold, set flag to collapse land
                 if (dep_prev_yr >= DepthThreshold_Wet_prv) then
-                    lnd_change_flag(i) = -1
+                    lnd_change_flag(i) = -1                         ! lnd_change_flag = -1 for conversion from vegetated wetland to open water
                 end if
             end if
         
@@ -106,7 +107,7 @@ subroutine inundation_thresholds
                 dep_prev_yr = dem_inun_dep(i,14)
                 ! if both current year and previous year have elevation above threshold for establishment, convert water to land eligible for vegetation
                 if (dep_prev_yr < ht_abv_mwl_est) then
-                    lnd_change_flag(i) = 1
+                    lnd_change_flag(i) = 1                          ! lnd_change_flag = 1 for conversion from open water to land eligible for vegetation
                 end if
             end if
             
@@ -121,6 +122,7 @@ subroutine inundation_thresholds
             else
                 grid_n_upland_dry(g) = grid_n_upland_dry(g) + 1
             end if
+        
         end if
     end do        
     
@@ -128,8 +130,8 @@ subroutine inundation_thresholds
     grid_pct_upland_wet = 0.0
     grid_pct_upland_dry = 0.0
 
-    grid_pct_upland_wet = float(grid_n_upland_wet)/float(grid_ndem_all)
-    grid_pct_upland_dry = float(grid_n_upland_dry)/float(grid_ndem_all)
+    grid_pct_upland_wet = float(grid_n_upland_wet)/max(0.001,float(grid_ndem_all))
+    grid_pct_upland_dry = float(grid_n_upland_dry)/max(0.001,float(grid_ndem_all))
         
     return
 

@@ -2,10 +2,17 @@ subroutine params_alloc
     
     use params
     implicit none 
-    
-    ndem = 1048575              ! number of DEM pixels - will be an array dimension for all DEM-level data
-    ncomp = 946                 ! number of ICM-Hydro compartments - will be an array dimension for all compartment-level data
-    ngrid = 3813                ! number of ICM-LAVegMod grid cells - will be an array dimension for all gridd-level data
+
+    ndem =    279045                ! number of DEM pixels - will be an array dimension for all DEM-level data
+    ncomp =      946                ! number of ICM-Hydro compartments - will be an array dimension for all compartment-level data
+    ngrid =   187553                ! number of ICM-LAVegMod grid cells - will be an array dimension for all gridd-level data
+    nlt =          5                ! number of landtype classification
+                                    ! ****must correspond with dem_lndtyp variable defined in PARAMS****
+                                    !               1 = vegetated wetland
+                                    !               2 = water
+                                    !               3 = unvegetated wetland/new subaerial unvegetated mudflat (e.g., bare ground)
+                                    !               4 = developed land/upland/etc. that are not modeled in ICM-LAVegMod
+                                    !               5 = flotant marsh
     
     ! allocate memory for variables read in or calculated from xyzc DEM file in subroutine: PREPROCESSING
     allocate(dem_x(ndem))
@@ -65,7 +72,10 @@ subroutine params_alloc
     allocate(sed_dp_mi_mons(ncomp,12))
     allocate(sed_dp_me_mons(ncomp,12))
     
-    ! allocate memory for global variables calculated in subroutine: Inundation
+    ! allocate memory for global variables calculated in subroutine: EDGE
+    allocate(dem_edge(ndem))
+    
+    ! allocate memory for global variables calculated in subroutine: EDGE
     allocate(dem_inun_dep(ndem,14))
     allocate(comp_ndem_wet(ncomp,13))
     allocate(grid_ndem_wet(ncomp,13))
@@ -78,11 +88,10 @@ subroutine params_alloc
     ! some output variables are allocated elsewhere, but these are only used for summarizing output
     allocate(grid_pct_upland_dry(ngrid))
     allocate(grid_pct_upland_wet(ngrid))
-    allocate(grid_pct_vg_land(ngrid))
     allocate(grid_pct_flt(ngrid))
+    allocate(grid_pct_edge(ngrid))
     allocate(grid_bed_z(ngrid))
     allocate(grid_land_z(ngrid))
-    allocate(grid_pct_edge(ngrid))
     allocate(grid_gadwl_dep(ngrid,14))  
     allocate(grid_gwteal_dep(ngrid,9)) 
     allocate(grid_motduck_dep(ngrid,9))

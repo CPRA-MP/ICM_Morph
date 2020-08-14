@@ -26,18 +26,18 @@ subroutine inundation_depths(tp)
     
     ! tp=13 uses current year annual mean stage to calculate inundation    
     if (tp == 13) then
-        write(  *,*) " - calculating inundation for year"
-        write(000,*) " - calculating inundation for year"
+        write(  *,*) ' - calculating inundation for current year'
+        write(000,*) ' - calculating inundation for current year'
         wse_by_comp = stg_av_yr
     ! tp=14 uses previous year annual mean stage to calculate inundation    
     else if (tp == 14) then
-        write(  *,*) " - calculating inundation for year"
-        write(000,*) " - calculating inundation for year"
+        write(  *,*) ' - calculating inundation for previous year'
+        write(000,*) ' - calculating inundation for previous year'
         wse_by_comp = stg_av_prev_yr
     ! tp <= 12 uses monthly mean stage to calculate inundation for month tp
     else
-        write(  *,*) " - calculating inundation for month: " , tp
-        write(000,*) " - calculating inundation for month: " , tp
+        write(  *,*) ' - calculating inundation for current year, month: ' , tp
+        write(000,*) ' - calculating inundation for current year, month: ' , tp
         wse_by_comp = stg_av_mons(1:ncomp,tp)
     end if
     
@@ -55,7 +55,7 @@ subroutine inundation_depths(tp)
         end if
         
     end do
-    
+
     return
 
 end

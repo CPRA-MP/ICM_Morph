@@ -7,10 +7,19 @@ module params
     ! generic variables used across all subroutines
     integer,parameter :: sp=selected_real_kind(p=6)                 ! determine single precision kind value   
     integer,parameter :: dp=selected_real_kind(p=13)                ! determine double precision kind value
+    integer :: dem_NoDataVal                                        ! value representing NoData in input XYZ rasters
     integer :: ndem                                                 ! number of DEM pixels in xyzc file
     integer :: ncomp                                                ! number of ICM-Hydro compartments
     integer :: ngrid                                                ! number of ICM-LAVegMod grid cells
     integer :: dem_res                                              ! XY resolution of DEM (m)
+    integer :: nlt                                                  ! number of landtype classification
+                                                                    ! ****must correspond with dem_lndtyp variable defined below****
+                                                                    !               1 = vegetated wetland
+                                                                    !               2 = water
+                                                                    !               3 = unvegetated wetland/new subaerial unvegetated mudflat (e.g., bare ground)
+                                                                    !               4 = developed land/upland/etc. that are not modeled in ICM-LAVegMod
+                                                                    !               5 = flotant marsh
+    
     character*3000 :: dump_txt                                      ! dummy variable to use for skipping lines in input files
     integer :: dump_int                                             ! dummy variable to use for data in input files
     real(sp) :: dump_flt                                            ! dummy variable to use for data in input files
@@ -18,6 +27,9 @@ module params
     ! I/O files in subroutine: MAIN
     character*100 :: morph_log_file                                 ! file name of text file that logs all Morph print statements - no filepath will save this in executable directory
     character*100 :: dem_file                                       ! file name, with relative path, to DEM XYZ file
+    character*100 :: lwf_file                                       ! file name, with relative path, to land/water file that is same resolution and structure as DEM XYZ
+    character*100 :: grid_file                                      ! file name, with relative path, to ICM-LAVegMod grid map file that is same resolution and structure as DEM XYZ
+    character*100 :: comp_file                                      ! file name, with relative path, to ICM-Hydro compartment map file that is same resolution and structure as DEM XYZ
     character*100 :: hydro_comp_out_file                            ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro
     character*100 :: prv_hydro_comp_out_file                        ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro for previous year
     character*100 :: monthly_mean_stage_file                        ! file name, with relative path, to compartment summary file with monthly mean water levels
@@ -55,11 +67,8 @@ module params
     integer,dimension(:),allocatable :: comp_ndem_all               ! number of DEM pixels within each ICM-Hydro compartment (-)
     integer,dimension(:),allocatable :: grid_ndem_all               ! number of DEM pixels within each ICM-LAVegMod grid cell (-)                                                         
     integer,dimension(:),allocatable :: dem_lndtyp                  ! Land type classification of DEM pixel
-                                                                    !               1 = vegetated wetland
-                                                                    !               2 = water
-                                                                    !               3 = flotant marsh
-                                                                    !               4 = unvegetated wetland/new subaerial unvegetated mudflat (e.g., bare ground)
-                                                                    !               5 = developed land/upland/etc. that are not modeled in ICM-LAVegMod
+                                                                    ! ****dem_lntyp must correspond with nlt variable defined above****
+                                                                    
     
     ! define variables read in or calculated from compartment_out Hydro summary file in subroutine: PREPROCESSING
     real(sp),dimension(:),allocatable :: stg_mx_yr                  ! max stage - annual (m NAVD88)
@@ -105,6 +114,9 @@ module params
     real(sp),dimension(:,:),allocatable :: sed_dp_ow_mons           ! monthly mineral sediment deposition - open water (g/m^2) - second dimension (1-12) corresponds to month 
     real(sp),dimension(:,:),allocatable :: sed_dp_mi_mons           ! monthly mineral sediment deposition - interior marsh (g/m^2) - second dimension (1-12) corresponds to month 
     real(sp),dimension(:,:),allocatable :: sed_dp_me_mons           ! monthly mineral sediment deposition - marsh edge (g/m^2) - second dimension (1-12) corresponds to month 
+
+    ! define variables calculated in subroutine: EDGE
+    integer,dimension(:),allocatable :: dem_edge                    ! flag indicating whether DEM pixel is edge (0=non edge; 1=edge)
     
     ! define global variables calculated in subroutine: INUNDATION
     real(sp),dimension(:,:),allocatable :: dem_inun_dep             ! inundation depth at each DEM pixel from monthly and annual mean water levels (m)
@@ -116,15 +128,17 @@ module params
                                                                     !               -1 = conversion from vegetated wetland to open water
                                                                     !                0 = no change
                                                                     !                1 = conversion from open water to land eligible for vegetation
+                                                                    !               -2 = conversion from flotant marsh mat to open water
+
+    
     
     ! define global variables that are used summarizing end-of-year landscape
     real(sp),dimension(:),allocatable :: grid_pct_upland_dry        ! percent of ICM-LAVegMod grid cell that is upland and is higher than any inundation that would be considered appropriate for wetlands
     real(sp),dimension(:),allocatable :: grid_pct_upland_wet        ! percent of ICM-LAVegMod grid cell that is upland but is within inundation range of wetlands
-    real(sp),dimension(:),allocatable :: grid_pct_vg_land           ! percent of ICM-LAVegMod grid cell that is vegetated land
     real(sp),dimension(:),allocatable :: grid_pct_flt               ! percent of ICM-LAVegMod grid cell that is flotant marsh
+    real(sp),dimension(:),allocatable :: grid_pct_edge              ! percent of ICM-LAVegMod grid cell that is edge
     real(sp),dimension(:),allocatable :: grid_bed_z                 ! mean elevation of water pixels within each ICM-LAVegMod grid cell
     real(sp),dimension(:),allocatable :: grid_land_z                ! mean elevation of land (including flotant) pixels within each ICM-LAVegMod grid cell
-    real(sp),dimension(:),allocatable :: grid_pct_edge              ! percent of ICM-LAVegMod grid cell that is edge
     integer,dimension(:,:),allocatable :: grid_gadwl_dep            ! area in each ICM-LAVegMod grid cell that is classified for each of the 14 depths used in the Gadwall HSI
     integer,dimension(:,:),allocatable :: grid_gwteal_dep           ! area in each ICM-LAVegMod grid cell that is classified for each of the 9 depths used in the Greenwinged Teal HSI
     integer,dimension(:,:),allocatable :: grid_motduck_dep          ! area in each ICM-LAVegMod grid cell that is classified for each of the 9 depths used in the Mottled Duck HSI

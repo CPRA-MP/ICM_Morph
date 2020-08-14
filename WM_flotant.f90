@@ -33,7 +33,6 @@ subroutine flotant
     
     ! local variables
     integer :: i                                                    ! iterator
-    integer :: c                                                    ! local compartment ID variable
     integer :: g                                                    ! local grid ID variable
     integer,dimension(:),allocatable :: grid_flt_all                ! sum of flotant marsh pixels in each ICM-LAVegMod grid cell
     integer,dimension(:),allocatable :: grid_dead_flt_all           ! sum of dead flotant marsh pixels in each ICM-LAVegMod grid cell that will convert to open water
@@ -43,8 +42,8 @@ subroutine flotant
     allocate(grid_dead_flt_all(ngrid))
     allocate(grid_dead_flt_killed_cntr(ngrid))
     
-    write(  *,*) " - updating flotant marsh pixels"
-    write(000,*) " - updating flotant marsh pixels"
+    write(  *,*) ' - updating flotant marsh pixels'
+    write(000,*) ' - updating flotant marsh pixels'
     ! count starting number of flotant marsh pixels in each ICM-LAVegMod grid cell
     grid_flt_all = 0
     do i = 1,ndem
@@ -69,11 +68,11 @@ subroutine flotant
     ! reduce count of flt pixels in grid counter
     grid_dead_flt_killed_cntr = 0
     do i = 1,ndem
-        if (dem_lndtyp(i) == 3) then
+        if (dem_lndtyp(i) == 5) then                        ! dem_lndtyp = 5 for flotant marsh
             g = dem_grid(i)
             if (grid_dead_flt_killed_cntr(g) < grid_dead_flt_all(g)) then
                 
-                lnd_change_flag(i) = -2
+                lnd_change_flag(i) = -2                     ! lnd_change_flag = -2 for conversion from flotant marsh mat to open water
                 
                 grid_dead_flt_killed_cntr(g) = grid_dead_flt_killed_cntr(g) + 1
                 grid_flt_all(g) = max(0,grid_flt_all(g)-1)
@@ -83,7 +82,7 @@ subroutine flotant
     end do
     
     ! update percentage of ICM-LAVegMod grid cell that is still floating mat at end of year
-    grid_pct_flt = grid_flt_all / grid_ndem_all
+    grid_pct_flt = grid_flt_all / max(grid_ndem_all,1)
     
     return
 

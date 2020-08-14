@@ -22,8 +22,8 @@ subroutine inundation_HSI_bins
     grid_gwteal_dep = 0
     grid_motduck_dep = 0
     
-    write(  *,*) " - tabulating area within each depth bin for Gadwall, Greenwing Teal, and Mottled Duck HSIs"
-    write(000,*) " - tabulating area within each depth bin for Gadwall, Greenwing Teal, and Mottled Duck HSIs"
+    write(  *,'(A)') '  - tabulating area within each depth bin for waterfowl HSIs'
+    write(000,'(A)') '  - tabulating area within each depth bin for waterfowl HSIs'
     
     do i=1,ndem
         g = dem_grid(i)
@@ -41,8 +41,10 @@ subroutine inundation_HSI_bins
             dep_sep_mar = dep_sep_mar + dem_inun_dep(i,m)
             dep_oct_apr = dep_oct_apr + dem_inun_dep(i,m)
         end do
+
         dep_oct_apr = dep_oct_apr + dem_inun_dep(i,4)
         dep_sep_mar = dep_sep_mar + dem_inun_dep(i,9)
+
         do m = 10,12
             dep_sep_mar = dep_sep_mar + dem_inun_dep(i,m)
             dep_oct_apr = dep_oct_apr + dem_inun_dep(i,m)

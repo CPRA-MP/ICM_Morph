@@ -9,23 +9,44 @@ subroutine preprocessing
     integer :: n_dem_row            ! number of rows (e.g. range in Y) in DEM when mapped
     integer :: i_col                ! X-coordinate converted to column number of mapped DEM
     integer :: i_row                ! Y-coordinate converted to row number of mapped DEM
-    ! read xyz file into arrays
-    write(  *,*) ' - reading in DEM data for: ',trim(adjustL(dem_file))
-    write(000,*) ' - reading in DEM data for: ',trim(adjustL(dem_file))
 
-    comp_ndem_all = 0                   ! before looping through all DEM pixels, initialize counter array to zero
-    grid_ndem_all = 0                   ! before looping through all DEM pixels, initialize counter array to zero
-    
-    open(unit=111, file=trim(adjustL(dem_file)))
+
+    ! read pixel-to-compartment mapping file into arrays
+    write(  *,*) ' - reading in DEM-pixel-to-compartment map data'
+    write(000,*) ' - reading in DEM-pixel-to-compartment map data'
    
-    read(111,*) dump_txt        ! dump header
+    open(unit=1111, file=trim(adjustL(comp_file)))
+!    read(1111,*) dump_txt        ! dump header
     do i = 1,ndem
-        read(111,*) dem_x(i),               &
-   &                dem_y(i),               &
-   &                dem_z(i),               &
-   &                dem_comp(i),            &
-   &                dem_grid(i),            &
-   &                dem_lndtyp(i)
+        read(1111,*) dump_int,dump_int,dem_comp(i)
+    end do
+    close(1111)
+ 
+    ! read pixel-to-grid mapping file into arrays
+    write(  *,*) ' - reading in DEM-pixel-to-grid cell map data'
+    write(000,*) ' - reading in DEM-pixel-to-grid cell map data'
+  
+    open(unit=1112, file=trim(adjustL(grid_file)))
+!    read(1112,*) dump_txt        ! dump header
+    do i = 1,ndem    
+        read(1112,*) dump_int,dump_int,dem_grid(i)
+    end do
+    close(1112)
+
+    
+    ! read xyz file into arrays
+    write(  *,*) ' - reading in DEM data'
+    write(000,*) ' - reading in DEM data'
+
+    grid_ndem_all = 0                   ! before looping through all DEM pixels, initialize counter array to zero
+    comp_ndem_all = 0                   ! before looping through all DEM pixels, initialize counter array to zero    
+
+    
+    open(unit=1110, file=trim(adjustL(dem_file)))
+   
+!    read(1110,*) dump_txt        ! dump header
+    do i = 1,ndem
+        read(1110,*) dem_x(i),dem_y(i),dem_z(i)
         ! determine lower left and upper right corners of DEM grid
         if (i == 1) then
             dem_LLx = dem_x(i)
@@ -43,8 +64,8 @@ subroutine preprocessing
         comp_ndem_all(dem_comp(i)) =  comp_ndem_all(dem_comp(i)) + 1
         grid_ndem_all(dem_grid(i)) =  grid_ndem_all(dem_grid(i)) + 1
     end do
-    close(111)
-
+    close(1110)
+    
     ! calculate number of rows and columns in mapped DEM from X-Y ranges determined above
     n_dem_col = 1+(dem_URx - dem_LLx)/dem_res
     n_dem_row = 1+(dem_URy - dem_LLy)/dem_res
@@ -52,7 +73,7 @@ subroutine preprocessing
     ! allocate array for DEM map    
     call dem_params_alloc(n_dem_col,n_dem_row)
     
-    ! initialze arrays to 0
+    ! initialize arrays to 0
     dem_index_mapped = 0
     dem_col = 0
     dem_row = 0
@@ -66,6 +87,18 @@ subroutine preprocessing
         dem_col(i) = i_col
         dem_row(i) = i_row
     end do
+
+    ! read LWF map file into arrays
+    write(  *,*) ' - reading in land-water map data'
+    write(000,*) ' - reading in land-water map data'
+  
+    open(unit=1113, file=trim(adjustL(lwf_file)))    
+!    read(1113,*) dump_txt        ! dump header
+    do i = 1,ndem 
+        read(1113,*) dump_int,dump_int,dem_lndtyp(i)
+    end do
+    close(1113)
+    
     
     ! read ICM-Hydro compartment output file into arrays
     write(  *,*) ' - reading in annual ICM-Hydro compartment-level output'
@@ -106,7 +139,7 @@ subroutine preprocessing
     
     read(1120,*) dump_txt        ! dump header
     do i = 1,ncomp
-        read(112,*) dump_txt,               &
+        read(1120,*) dump_txt,               &
    &         dump_flt    ,                  &
    &         stg_av_prev_yr(i),             &
    &         dump_flt    ,                  &
@@ -239,28 +272,58 @@ subroutine preprocessing
     open(unit=118, file=trim(adjustL(veg_out_file)))
     read(118,*) dump_txt        ! dump header
     do i = 1,ngrid
-        read(118,*) dump_flt,dump_flt,dump_flt,dump_flt,dump_flt,   &
-   &                dump_flt,dump_flt,dump_flt,dump_flt,dump_flt,   &
-   &                dump_flt,dump_flt,dump_flt,dump_flt,dump_flt,   &
-   &                dump_flt,                                       &
-   &                grid_pct_water(i),                              &
-   &                dump_flt,dump_flt,dump_flt,                     & 
-   &                grid_pct_upland(i),                             &
-   &                dump_flt,dump_flt,dump_flt,dump_flt,dump_flt,   &
-   &                dump_flt,dump_flt,dump_flt,dump_flt,dump_flt,   &
-   &                dump_flt,dump_flt,dump_flt,                     &              
-   &                grid_pct_bare(i),                               &
-   &                dump_flt,dump_flt,dump_flt,dump_flt,dump_flt,   &
-   &                dump_flt,dump_flt,dump_flt,dump_flt,            &               
-   &                grid_pct_dead_flt(i),                           &
-   &                grid_pct_vglnd_BLHF(i),                         &
-   &                grid_pct_vglnd_SWF(i),                          &
-   &                grid_pct_vglnd_FM(i),                           &
-   &                grid_pct_vglnd_IM(i),                           &
-   &                grid_pct_vglnd_BM(i),                           &
-   &                grid_pct_vglnd_SM(i),                           &
-   &                grid_FIBS_score(i)
-        
+        read(118,*) dump_flt,                                       &      !  CELLID,
+   &                dump_flt,                                       &      !  DISP, 
+   &                dump_flt,                                       &      !  SPPA, 
+   &                dump_flt,                                       &      !  PAAM2, 
+   &                dump_flt,                                       &      !  TADI2, 
+   &                dump_flt,                                       &      !  PAHE2_Flt, 
+   &                dump_flt,                                       &      !  SPPABI, 
+   &                dump_flt,                                       &      !  PAVA, 
+   &                dump_flt,                                       &      !  HYUM, 
+   &                dump_flt,                                       &      !  BAHABI, 
+   &                dump_flt,                                       &      !  JURO, 
+   &                dump_flt,                                       &      !  ELBA2, 
+   &                dump_flt,                                       &      !  STHE9, 
+   &                dump_flt,                                       &      !  CLMA10, 
+   &                dump_flt,                                       &      !  SPVI3, 
+   &                dump_flt,                                       &      !  SCCA11, 
+   &                grid_pct_water(i),                              &      !  WATER, 
+   &                dump_flt,                                       &      !  DISPBI, 
+   &                dump_flt,                                       &      !  HYUM_Flt, 
+   &                dump_flt,                                       &      !  SALA, 
+   &                grid_pct_upland(i),                             &      !  NOTMOD, 
+   &                dump_flt,                                       &      !  IVFR, 
+   &                dump_flt,                                       &      !  PHAU7, 
+   &                dump_flt,                                       &      !  QUNI, 
+   &                dump_flt,                                       &      !  QULE, 
+   &                dump_flt,                                       &      !  NYAQ2, 
+   &                dump_flt,                                       &      !  SAV, 
+   &                dump_flt,                                       &      !  SANI, 
+   &                dump_flt,                                       &      !  ULAM, 
+   &                dump_flt,                                       &      !  ZIMI, 
+   &                dump_flt,                                       &      !  QULA3, 
+   &                dump_flt,                                       &      !  TYDO, 
+   &                dump_flt,                                       &      !  PAHE2, 
+   &                dump_flt,                                       &      !  UNPA, 
+   &                grid_pct_bare(i),                               &      !  BAREGRND, 
+   &                dump_flt,                                       &      !  BAHA, 
+   &                dump_flt,                                       &      !  QUVI, 
+   &                dump_flt,                                       &      !  SPAL, 
+   &                dump_flt,                                       &      !  MOCE2, 
+   &                dump_flt,                                       &      !  ELBA2_Flt, 
+   &                dump_flt,                                       &      !  SOSE, 
+   &                dump_flt,                                       &      !  SALA2, 
+   &                dump_flt,                                       &      !  QUTE, 
+   &                dump_flt,                                       &      !  AVGE,
+   &                grid_pct_dead_flt(i),                           &      !  DEAD_FLT,
+   &                grid_pct_vglnd_BLHF(i),                         &      !  Bottomland Hardwood 
+   &                grid_pct_vglnd_SWF(i),                          &      !  Swamp 
+   &                grid_pct_vglnd_FM(i),                           &      !  Fresh
+   &                grid_pct_vglnd_IM(i),                           &      !  Intermediate
+   &                grid_pct_vglnd_BM(i),                           &      !  Brackish
+   &                grid_pct_vglnd_SM(i),                           &      !  Saline 
+   &                grid_FIBS_score(i)                                     !  FIBS
     end do
     close(118)
 
