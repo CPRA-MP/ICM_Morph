@@ -7,6 +7,7 @@ module params
     ! generic variables used across all subroutines
     integer,parameter :: sp=selected_real_kind(p=6)                 ! determine single precision kind value   
     integer,parameter :: dp=selected_real_kind(p=13)                ! determine double precision kind value
+    integer :: elapsed_year                                         ! elapsed year of model simulation
     integer :: dem_NoDataVal                                        ! value representing NoData in input XYZ rasters
     integer :: ndem                                                 ! number of DEM pixels in xyzc file
     integer :: ncomp                                                ! number of ICM-Hydro compartments
@@ -24,6 +25,7 @@ module params
     character*100 :: morph_log_file                                 ! file name of text file that logs all Morph print statements - no filepath will save this in executable directory
     character*100 :: dem_file                                       ! file name, with relative path, to DEM XYZ file
     character*100 :: lwf_file                                       ! file name, with relative path, to land/water file that is same resolution and structure as DEM XYZ
+    character*100 :: meer_file                                      ! file name, with relative path, to marsh edge erosion rate file that is same resolution and structure as DEM XYZ
     character*100 :: grid_file                                      ! file name, with relative path, to ICM-LAVegMod grid map file that is same resolution and structure as DEM XYZ
     character*100 :: comp_file                                      ! file name, with relative path, to ICM-Hydro compartment map file that is same resolution and structure as DEM XYZ
     character*100 :: hydro_comp_out_file                            ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro
@@ -35,6 +37,9 @@ module params
     character*100 :: monthly_me_sed_dep_file                        ! file name, with relative path, to compartment summary file with monthly sediment deposition on marsh edge
     character*100 :: veg_out_file                                   ! file name, with relative path, to *vegty.asc+ file saved by ICM-LAVegMod    
     character*100 :: edge_eoy_xyz_file                              ! file name, with relative path, to XYZ raster output file for edge pixels
+    character*100 :: dem_eoy_xyz_file                               ! file name, with relative path, to XYZ raster output file for topobathy DEM
+    character*100 :: lndtyp_eoy_xyz_file                            ! file name, with relative path, to XYZ raster output file for land type
+    character*100 :: lndchng_eoy_xyz_file                           ! file name, with relative path, to XYZ raster output file for land change flag
     character*100 :: grid_summary_eoy_file                          ! file name, with relative path, to summary grid file for end-of-year landscape
     character*100 :: grid_data_file                                 ! file name, with relative path, to summary grid data file used internally by ICM
     character*100 :: grid_depth_file_Gdw                            ! file name, with relative path, to Gadwall depth grid data file used internally by ICM and HSI
@@ -49,10 +54,11 @@ module params
     
     
     
-    ! define variables read in or calculated from xyzc file in subroutine: PREPROCESSING
+    ! define variables read in or calculated from xyz files in subroutine: PREPROCESSING
     integer,dimension(:),allocatable :: dem_x                       ! x-coordinate of DEM pixel (UTM m, zone 15N)
     integer,dimension(:),allocatable :: dem_y                       ! y-coordinate of DEM pixel (UTM m, zone 15N)
     real(sp),dimension(:),allocatable :: dem_z                      ! average elevation of DEM pixel (m NAVD88)
+    real(sp),dimension(:),allocatable :: dem_meer                   ! marsh edge erosion rate of DEM pixel (m / yr)
     integer,dimension(:),allocatable :: dem_comp                    ! ICM-Hydro compartment ID overlaying DEM pixel (-)
     integer,dimension(:),allocatable :: dem_grid                    ! ICM-LAVegMod grid ID overlaying DEM pixel (-)
     integer :: dem_LLx                                              ! lower left X-coordinate of DEM grid

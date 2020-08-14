@@ -22,7 +22,6 @@ subroutine write_output_summaries
     open(unit=904, file = trim(adjustL(grid_depth_file_GwT) ))
     open(unit=905, file = trim(adjustL(grid_depth_file_MtD) ))
     
-    
     ! write headers
     write(900,'(A)') 'gridID,pct_water,pct_flotant,pct_land_veg,pct_land_bare,pct_land_upland_dry,pct_land_upland_wet,pct_vglnd_BLHF,pct_vglnd_SWF,pct_vglnd_FM,pct_vglnd_IM,pct_vglnd_BM,pct_vglnd_SM,FIBS_score'
     write(901,'(A)') 'GRID,MEAN_BED_ELEV,MEAN_LAND_ELEV,PERCENT_LAND_0-100,PERCENT_WETLAND_0-100,PERCENT_WATER_0-100'
@@ -30,9 +29,7 @@ subroutine write_output_summaries
     write(903,'(A)') 'GRID_ID,VALUE_0,VALUE_4,VALUE_8,VALUE_12,VALUE_18,VALUE_22,VALUE_28,VALUE_32,VALUE_36,VALUE_40,VALUE_44,VALUE_78,VALUE_150,VALUE_151'
     write(904,'(A)') 'GRID_ID,VALUE_0,VALUE_6,VALUE_18,VALUE_22,VALUE_26,VALUE_30,VALUE_34,VALUE_100,VALUE_101'
     write(905,'(A)') 'GRID_ID,VALUE_0,VALUE_8,VALUE_30,VALUE_36,VALUE_42,VALUE_46,VALUE_50,VALUE_56,VALUE_57'
-    
-    
-
+ 
     do i = 1,ngrid
 
         ! calculate some local tabulations on land area to be used in output files
@@ -71,45 +68,46 @@ subroutine write_output_summaries
    &                100.0*grid_pct_water(i)
         
         ! Grid based edge file passed into ICM-HSI reports percentages from 0-100 instead of 0-1    
-        write(902,1902) i,100.0*grid_pct_edge(i)
+        write(902,1902) i,                          &
+   &                100.0*grid_pct_edge(i)
         
         write(903,1903) i,                          &
-   &        grid_gadwl_dep(i,1),                    &
-   &        grid_gadwl_dep(i,2),                    &
-   &        grid_gadwl_dep(i,3),                    &
-   &        grid_gadwl_dep(i,4),                    &
-   &        grid_gadwl_dep(i,5),                    &
-   &        grid_gadwl_dep(i,6),                    &
-   &        grid_gadwl_dep(i,7),                    &
-   &        grid_gadwl_dep(i,8),                    &
-   &        grid_gadwl_dep(i,9),                    &
-   &        grid_gadwl_dep(i,10),                   &
-   &        grid_gadwl_dep(i,11),                   &
-   &        grid_gadwl_dep(i,12),                   &
-   &        grid_gadwl_dep(i,13),                   &
-   &        grid_gadwl_dep(i,14)
+   &                grid_gadwl_dep(i,1),            &
+   &                grid_gadwl_dep(i,2),            &
+   &                grid_gadwl_dep(i,3),            &
+   &                grid_gadwl_dep(i,4),            &
+   &                grid_gadwl_dep(i,5),            &
+   &                grid_gadwl_dep(i,6),            &
+   &                grid_gadwl_dep(i,7),            &
+   &                grid_gadwl_dep(i,8),            &
+   &                grid_gadwl_dep(i,9),            &
+   &                grid_gadwl_dep(i,10),           &
+   &                grid_gadwl_dep(i,11),           &
+   &                grid_gadwl_dep(i,12),           &
+   &                grid_gadwl_dep(i,13),           &
+   &                grid_gadwl_dep(i,14)
         
         write(904,1904) i,                          &
-   &        grid_gwteal_dep(i,1),                   &
-   &        grid_gwteal_dep(i,2),                   &
-   &        grid_gwteal_dep(i,3),                   &
-   &        grid_gwteal_dep(i,4),                   &
-   &        grid_gwteal_dep(i,5),                   &
-   &        grid_gwteal_dep(i,6),                   &
-   &        grid_gwteal_dep(i,7),                   &
-   &        grid_gwteal_dep(i,8),                   &
-   &        grid_gwteal_dep(i,9)
+   &                grid_gwteal_dep(i,1),           &
+   &                grid_gwteal_dep(i,2),           &
+   &                grid_gwteal_dep(i,3),           &
+   &                grid_gwteal_dep(i,4),           &
+   &                grid_gwteal_dep(i,5),           &
+   &                grid_gwteal_dep(i,6),           &
+   &                grid_gwteal_dep(i,7),           &
+   &                grid_gwteal_dep(i,8),           &
+   &                grid_gwteal_dep(i,9)
         
         write(905,1904) i,                          &
-   &        grid_motduck_dep(i,1),                  &
-   &        grid_motduck_dep(i,2),                  &
-   &        grid_motduck_dep(i,3),                  &
-   &        grid_motduck_dep(i,4),                  &
-   &        grid_motduck_dep(i,5),                  &
-   &        grid_motduck_dep(i,6),                  &
-   &        grid_motduck_dep(i,7),                  &
-   &        grid_motduck_dep(i,8),                  &
-   &        grid_motduck_dep(i,9)
+   &                grid_motduck_dep(i,1),          &
+   &                grid_motduck_dep(i,2),          &
+   &                grid_motduck_dep(i,3),          &
+   &                grid_motduck_dep(i,4),          &
+   &                grid_motduck_dep(i,5),          &
+   &                grid_motduck_dep(i,6),          &
+   &                grid_motduck_dep(i,7),          &
+   &                grid_motduck_dep(i,8),          &
+   &                grid_motduck_dep(i,9)
     
     end do
     
@@ -134,9 +132,18 @@ subroutine write_output_summaries
     !write(908,*) 'there is no header for this file'
     
     do i = 1,ncomp
-        write(906,1906) i,comp_water_z(i),comp_wetland_z(i),comp_edge_area(i)
-        write(907,1907) i,comp_pct_water(i)/100.0
-        write(908,1907) i,comp_pct_upland(i)/100.0
+        
+        write(906,1906) i,                          &
+   &                comp_water_z(i),                &
+   &                comp_wetland_z(i),              &
+   &                comp_edge_area(i)
+        
+        write(907,1907) i,                          &
+   &                comp_pct_water(i)
+        
+        write(908,1907) i,                          &
+   &                comp_pct_upland(i)
+    
     end do
     
     close(906)

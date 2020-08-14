@@ -96,6 +96,18 @@ subroutine preprocessing
         read(1113,*) dump_int,dump_int,dem_lndtyp(i)
     end do
     close(1113)
+   
+    
+    ! read marsh edge erosion rate map file into arrays
+    write(  *,*) ' - reading in marsh edge erosion rate map data'
+    write(000,*) ' - reading in marsh edge erosion rate map data'
+  
+    open(unit=1114, file=trim(adjustL(meer_file)))    
+!    read(1114,*) dump_txt        ! dump header
+    do i = 1,ndem 
+        read(1114,*) dump_int,dump_int,dem_meer(i)
+    end do
+    close(1114)
     
     
     ! read ICM-Hydro compartment output file into arrays

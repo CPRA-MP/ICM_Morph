@@ -8,8 +8,6 @@ subroutine edge_delineation
     ! This subroutine will examine the lndtyp classification for 9 pixels at a time - for the 8 pixels surrounding pixel d0.
     ! The moving window map looks like:
     !
-    !
-    !
     !   Index Map      dem_lndtyp      Land/Water    Land/Edge/Water      dem_edge
     !  ~~~~~~~~~~~     ~~~~~~~~~~~     ~~~~~~~~~~~     ~~~~~~~~~~~        ~~~~~~~~~~~
     !   d1  d2  d3      1   1   1       L   L   L       L   L   L          0   0   0
@@ -27,9 +25,9 @@ subroutine edge_delineation
     implicit none
     
     ! local variables
-    integer :: ic                                                   ! iterator over DEM columns
-    integer :: ir                                                   ! iterator over DEM columns
-    integer :: d0,d1,d2,d3,d4,d5,d6,d7,d8                           ! DEM index values used in 9-pixel moving window
+    integer :: ic                                                       ! iterator over DEM columns
+    integer :: ir                                                       ! iterator over DEM columns
+    integer :: d0,d1,d2,d3,d4,d5,d6,d7,d8                               ! DEM index values used in 9-pixel moving window
 
     write(  *,*) ' - identifying marsh edge pixels'
     write(000,*) ' - identifying marsh edge pixels'
@@ -37,21 +35,22 @@ subroutine edge_delineation
     ! initialize edge flag for each DEM pixel to zero
     dem_edge = 0
     
-    ! loop over mapped array of pixel index valuesl
+    ! loop over mapped array of pixel index values
+    ! this will not allow any pixel on the outside border of the raster be classified as edge
     do ic = 2,n_dem_col-1
         do ir = 2,n_dem_row-1
             d0 = dem_index_mapped(ic, ir)
-            if (dem_lndtyp(d0) /= dem_NoDataVal) then                  ! check if dem_lndtyp is assigned
-                if (dem_lndtyp(d0) < 4) then                           ! if not upland (dem_lntyp=4) nor flotant (dem_lntyp=45)
-                    if (dem_lndtyp(d0) /= 2) then                      ! and if not water - then pixel is vegetated or nonvegetated wetland
-                        d1 = dem_index_mapped(ic-1, ir+1)
-                        if (dem_lndtyp(d1) == 2) then                  ! if need to check for neighboring water - use if else so that loop is ended as soon as bordering water is found
-                            dem_edge(d0) = 1
-                        else 
-                            d2 = dem_index_mapped(ic  , ir+1)
+            if (dem_lndtyp(d0) /= dem_NoDataVal) then                   ! check if dem_lndtyp is assigned - if not, pixel is skipped
+                if (dem_lndtyp(d0) < 4) then                            ! if not upland (dem_lntyp=4) nor flotant (dem_lntyp=45)
+                    if (dem_lndtyp(d0) /= 2) then                       ! and if not water - then pixel is vegetated or nonvegetated wetland
+                        d1 = dem_index_mapped(ic-1, ir+1)               ! grab DEM pixel index for first neighbor, d1
+                        if (dem_lndtyp(d1) == 2) then                   ! if neighbor, d1, is water then 
+                            dem_edge(d0) = 1                            ! set edge value for d0 to 1
+                        else                                            ! if first neighbor is not water, check second neighbor, d2 and so on.
+                            d2 = dem_index_mapped(ic  , ir+1)           ! use of else statements will stop the moving window at the first instance where d0 is set to edge
                             if(dem_lndtyp(d2) == 2) then
                                 dem_edge(d0) = 1
-                            else
+                            else                                        
                                 d3 = dem_index_mapped(ic+1, ir  )
                                 if(dem_lndtyp(d3) == 2) then
                                     dem_edge(d0) = 1
@@ -88,5 +87,6 @@ subroutine edge_delineation
             end if           
         end do 
     end do
+    
     return
 end

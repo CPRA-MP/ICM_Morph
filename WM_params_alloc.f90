@@ -18,6 +18,7 @@ subroutine params_alloc
     allocate(dem_x(ndem))
     allocate(dem_y(ndem))
     allocate(dem_z(ndem))
+    allocate(dem_meer(ndem))
     allocate(dem_comp(ndem))
     allocate(dem_grid(ndem))
     allocate(dem_lndtyp(ndem))

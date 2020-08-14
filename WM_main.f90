@@ -34,6 +34,7 @@ program main
     morph_log_file =            'D:\MP2023\morph_test\_ICM-Morph_runlog.log'
     dem_file =                  'D:\MP2023\morph_test\input\morph_test_DEM30.xyz'
     lwf_file =                  'D:\MP2023\morph_test\input\morph_test_LWF30.xyz'
+    meer_file =                 'D:\MP2023\morph_test\input\morph_test_MEE30.xyz'
     comp_file =                 'D:\MP2023\morph_test\input\morph_test_ICMcomp.xyz'
     grid_file =                 'D:\MP2023\morph_test\input\morph_test_ICMgrid.xyz'
     hydro_comp_out_file =       'D:\MP2023\morph_test\input\compartment_out_2015.csv'
@@ -46,6 +47,9 @@ program main
     monthly_me_sed_dep_file =   'D:\MP2023\morph_test\input\compartment_monthly_sed_dep_edge.csv'
     !  output files
     edge_eoy_xyz_file =         'D:\MP2023\morph_test\output\edge_eoy_2015.xyz'
+    dem_eoy_xyz_file =          'D:\MP2023\morph_test\output\tbdem_eoy_2015.xyz'
+    lndtyp_eoy_xyz_file =       'D:\MP2023\morph_test\output\lndtyp_eoy_2015.xyz'
+    lndchng_eoy_xyz_file =       'D:\MP2023\morph_test\output\lndchng_eoy_2015.xyz'
     grid_summary_eoy_file =     'D:\MP2023\morph_test\output\grid_summary_eoy_2015.csv'
     grid_data_file =            'D:\MP2023\morph_test\output\grid_data_500m_2015.csv'
     grid_depth_file_Gdw =       'D:\MP2023\morph_test\output\GadwallDepths_cm_2015.csv'
@@ -56,8 +60,7 @@ program main
     comp_wat_file =             'D:\MP2023\morph_test\output\PctWater_2015.csv'
     comp_upl_file =             'D:\MP2023\morph_test\output\PctUpland_2015.csv'
     
-    
-    
+    elapsed_year = 1            ! elapsed year of model run 
     dem_res = 30                ! XY resolution of DEM (meters)
     dem_NoDataVal = -9999       ! value representing nodata in input rasters and XYZ files
     
