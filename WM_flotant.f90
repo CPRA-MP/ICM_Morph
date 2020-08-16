@@ -48,7 +48,7 @@ subroutine flotant
     grid_flt_all = 0
     do i = 1,ndem
         g = dem_grid(i)
-        if (dem_lndtyp(i) == 3) then                                ! check if DEM pixel is classified as flotant marsh in input landscape
+        if (dem_lndtyp(i) == 5) then                                ! check if DEM pixel is classified as flotant marsh in input landscape
             grid_flt_all(g) = grid_flt_all(g) + 1    
         end if
     end do

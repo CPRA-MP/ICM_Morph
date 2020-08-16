@@ -14,6 +14,8 @@ module params
     integer :: ngrid                                                ! number of ICM-LAVegMod grid cells
     integer :: neco                                                 ! number of ecoregions used to summarize data
     integer :: dem_res                                              ! XY resolution of DEM (m)
+    integer :: grid_ndem_mx                                          ! maximum number of DEM pixels within a grid cell
+    integer :: comp_ndem_mx                                          ! maximum number of DEM pixels within a ICM-Hydro compartment
     integer :: nlt                                                  ! number of landtype classification
                                                                     ! **** nlt must equal the number of classifications in dem_lndtyp variable defined below****
 
@@ -118,7 +120,8 @@ module params
     ! define variables read in or calculated from vegtype ICM-LAVegMod summary file in subroutine: PREPROCESSING
     real(sp),dimension(:),allocatable :: grid_pct_water             ! percent of ICM_LAVegMod grid cell that is water
     real(sp),dimension(:),allocatable :: grid_pct_upland            ! percent of ICM-LAVegMod grid cell that is upland/developed (e.g., NotMod) and is too high and dry for wetland vegetation
-    real(sp),dimension(:),allocatable :: grid_pct_bare              ! percent of ICM-LAVegMod grid cell that is non-vegetated wetland (bare ground)
+    real(sp),dimension(:),allocatable :: grid_pct_bare_old          ! percent of ICM-LAVegMod grid cell that is non-vegetated wetland and was bare in previous year (old bare ground)
+    real(sp),dimension(:),allocatable :: grid_pct_bare_new          ! percent of ICM-LAVegMod grid cell that is non-vegetated wetland and is newly bare during current year (new bare ground)
     real(sp),dimension(:),allocatable :: grid_pct_dead_flt          ! percent of ICM_LAVegMod grid cell that converted from flotant marsh to water during year
     real(sp),dimension(:),allocatable :: grid_pct_vglnd_BLHF        ! percent of vegetated land that is bottomland hardwood forest
     real(sp),dimension(:),allocatable :: grid_pct_vglnd_SWF         ! percent of vegetated land that is swamp forest
@@ -151,12 +154,15 @@ module params
                                                                     !                0 = no change
                                                                     !                1 = conversion from open water to land eligible for vegetation
 
+    ! define global variables used in subroutine:: MAP_BAREGROUND
+    integer,dimension(:),allocatable :: dem_bg_flag                 ! Bareground type classification of pixel (0 = non bareground; 1 = old bareground; 2 = new bareground)
 
     
     
     ! define global variables that are used summarizing end-of-year landscape
     real(sp),dimension(:),allocatable :: grid_pct_upland_dry        ! percent of ICM-LAVegMod grid cell that is upland and is higher than any inundation that would be considered appropriate for wetlands
     real(sp),dimension(:),allocatable :: grid_pct_upland_wet        ! percent of ICM-LAVegMod grid cell that is upland but is within inundation range of wetlands
+    real(sp),dimension(:),allocatable :: grid_pct_bare              ! percent of ICM-LAVegMod grid cell that is non-vegetated wetland at end of year
     real(sp),dimension(:),allocatable :: grid_pct_flt               ! percent of ICM-LAVegMod grid cell that is flotant marsh
     real(sp),dimension(:),allocatable :: grid_pct_edge              ! percent of ICM-LAVegMod grid cell that is edge
     real(sp),dimension(:),allocatable :: grid_bed_z                 ! mean elevation of water pixels within each ICM-LAVegMod grid cell
@@ -178,4 +184,4 @@ module params
     integer :: n_dem_row                                            ! number of rows (e.g. range in Y) in DEM when mapped
     integer,dimension(:,:),allocatable :: dem_index_mapped          ! DEM grid IDs, mapped
     
-end module params
+end module params   

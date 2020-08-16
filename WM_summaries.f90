@@ -26,14 +26,14 @@ subroutine summaries
     integer :: lt                                                   ! local copy of landtype classification of pixel
     integer :: z                                                    ! local copy of elevation of pixel
     integer :: e                                                    ! local copy of edge identification for pixel
-    integer,dimension(:,:),allocatable :: grid_counts                    ! local array for counting number of pixels per classification in each ICM-LAVegMod grid cell - second dimension is number of landscape properties summed per cell
-    real(sp),dimension(:,:),allocatable :: grid_elv_sums                 ! local array for summing pixel elevations in each ICM-LAVegMod grid cell to be used for averaging - second dimension is number of landscape properties summed per cell
-    integer,dimension(:),allocatable :: grid_counts_edge               ! local array for counting number of edge pixels in each ICM-LAVegMod grid cell
+    integer,dimension(:,:),allocatable :: grid_counts               ! local array for counting number of pixels per classification in each ICM-LAVegMod grid cell - second dimension is number of landscape properties summed per cell
+    real(sp),dimension(:,:),allocatable :: grid_elv_sums            ! local array for summing pixel elevations in each ICM-LAVegMod grid cell to be used for averaging - second dimension is number of landscape properties summed per cell
+    integer,dimension(:),allocatable :: grid_counts_edge            ! local array for counting number of edge pixels in each ICM-LAVegMod grid cell
     integer :: grid_counts_land                                     ! local count of all pixels that are used in average elevation of land within each ICM-LAVegMod grid cell
     real(sp) :: grid_elv_sums_land                                  ! local sum of all elevation values used in calculating average elevation of land within each ICM-LAVegMod grid cell
-    integer,dimension(:,:),allocatable :: comp_counts                    ! local array for counting number of pixels per classification in each ICM-Hydro compartments - second dimension corresponds with landtype classification (see PARAMS for definition)
-    real(sp),dimension(:,:),allocatable :: comp_elv_sums                 ! local array for summing pixel elevations in each ICM-Hydro compartments to be used for averaging- second dimension corresponds with landtype classification (see PARAMS for definition)
-    integer,dimension(:),allocatable :: comp_counts_edge               ! local array for counting number of edge pixels in each ICM-Hydro compartment
+    integer,dimension(:,:),allocatable :: comp_counts               ! local array for counting number of pixels per classification in each ICM-Hydro compartments - second dimension corresponds with landtype classification (see PARAMS for definition)
+    real(sp),dimension(:,:),allocatable :: comp_elv_sums            ! local array for summing pixel elevations in each ICM-Hydro compartments to be used for averaging- second dimension corresponds with landtype classification (see PARAMS for definition)
+    integer,dimension(:),allocatable :: comp_counts_edge            ! local array for counting number of edge pixels in each ICM-Hydro compartment
     integer :: comp_counts_land                                     ! local count of all pixels that are used in average elevation of land within each ICM-Hydro compartment
     real(sp) :: comp_elv_sums_land                                  ! local sum of all elevation values used in calculating average elevation of land within each ICM-Hydro compartment
  

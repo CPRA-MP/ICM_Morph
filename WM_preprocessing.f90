@@ -64,6 +64,10 @@ subroutine preprocessing
     end do
     close(1110)
     
+    ! set variables that hold maximum count per grid/compartment for later array allocation sizes
+    grid_ndem_mx = maxval(grid_ndem_all)
+    comp_ndem_mx = maxval(comp_ndem_all)
+    
     ! calculate number of rows and columns in mapped DEM from X-Y ranges determined above
     n_dem_col = 1+(dem_URx - dem_LLx)/dem_res
     n_dem_row = 1+(dem_URy - dem_LLy)/dem_res
@@ -119,7 +123,7 @@ subroutine preprocessing
     
     open(unit=1115, file=trim(adjustL(comp_eco_file)))
     read(1115,*) dump_txt                            ! dump header
-    do i = 1,ncomp
+    do i = 1,neco
         read(1115,*) dump_int,               &       ! ICM-Hydro_comp
    &                 comp_eco(i),            &       ! ecoregion number 
    &                 dump_txt,               &       ! ecoregion code
@@ -345,72 +349,76 @@ subroutine preprocessing
     ! initialize grid data arrays to 0.0
     grid_pct_water = 0.0
     grid_pct_upland = 0.0
-    grid_pct_bare = 0.0
+    grid_pct_bare_old = 0.0
+    grid_pct_bare_new = 0.0
     grid_pct_dead_flt = 0.0
     grid_bed_z = 0.0
     grid_land_z = 0.0
     
     open(unit=118, file=trim(adjustL(veg_out_file)))
-    read(118,*) dump_txt        ! dump header
+    do i = 1,622
+        read(118,*) dump_txt        ! dump header
+    end do
     do i = 1,ngrid
-        read(118,*) dump_flt,                                       &      !  CELLID,
-   &                dump_flt,                                       &      !  DISP, 
-   &                dump_flt,                                       &      !  SPPA, 
-   &                dump_flt,                                       &      !  PAAM2, 
-   &                dump_flt,                                       &      !  TADI2, 
-   &                dump_flt,                                       &      !  PAHE2_Flt, 
-   &                dump_flt,                                       &      !  SPPABI, 
-   &                dump_flt,                                       &      !  PAVA, 
-   &                dump_flt,                                       &      !  HYUM, 
-   &                dump_flt,                                       &      !  BAHABI, 
-   &                dump_flt,                                       &      !  JURO, 
-   &                dump_flt,                                       &      !  ELBA2, 
-   &                dump_flt,                                       &      !  STHE9, 
-   &                dump_flt,                                       &      !  CLMA10, 
-   &                dump_flt,                                       &      !  SPVI3, 
-   &                dump_flt,                                       &      !  SCCA11, 
-   &                grid_pct_water(i),                              &      !  WATER, 
-   &                dump_flt,                                       &      !  DISPBI, 
-   &                dump_flt,                                       &      !  HYUM_Flt, 
-   &                dump_flt,                                       &      !  SALA, 
-   &                grid_pct_upland(i),                             &      !  NOTMOD, 
-   &                dump_flt,                                       &      !  IVFR, 
-   &                dump_flt,                                       &      !  PHAU7, 
-   &                dump_flt,                                       &      !  QUNI, 
-   &                dump_flt,                                       &      !  QULE, 
-   &                dump_flt,                                       &      !  NYAQ2, 
-   &                dump_flt,                                       &      !  SAV, 
-   &                dump_flt,                                       &      !  SANI, 
-   &                dump_flt,                                       &      !  ULAM, 
-   &                dump_flt,                                       &      !  ZIMI, 
-   &                dump_flt,                                       &      !  QULA3, 
-   &                dump_flt,                                       &      !  TYDO, 
-   &                dump_flt,                                       &      !  PAHE2, 
-   &                dump_flt,                                       &      !  UNPA, 
-   &                grid_pct_bare(i),                               &      !  BAREGRND, 
-   &                dump_flt,                                       &      !  BAHA, 
-   &                dump_flt,                                       &      !  QUVI, 
-   &                dump_flt,                                       &      !  SPAL, 
-   &                dump_flt,                                       &      !  MOCE2, 
-   &                dump_flt,                                       &      !  ELBA2_Flt, 
-   &                dump_flt,                                       &      !  SOSE, 
-   &                dump_flt,                                       &      !  SALA2, 
-   &                dump_flt,                                       &      !  QUTE, 
-   &                dump_flt,                                       &      !  AVGE,
-   &                grid_pct_dead_flt(i),                           &      !  DEAD_FLT,
-   &                grid_pct_vglnd_BLHF(i),                         &      !  Bottomland Hardwood 
-   &                grid_pct_vglnd_SWF(i),                          &      !  Swamp 
-   &                grid_pct_vglnd_FM(i),                           &      !  Fresh
-   &                grid_pct_vglnd_IM(i),                           &      !  Intermediate
-   &                grid_pct_vglnd_BM(i),                           &      !  Brackish
-   &                grid_pct_vglnd_SM(i),                           &      !  Saline 
-   &                grid_FIBS_score(i)                                     !  FFIBS
+        read(118,*) dump_flt,                                       &      ! CELLID, 
+   &                dump_flt,                                       &      ! NYAQ2, 
+   &                dump_flt,                                       &      ! SANI, 
+   &                dump_flt,                                       &      ! TADI2, 
+   &                dump_flt,                                       &      ! ELBA2_Flt, 
+   &                dump_flt,                                       &      ! PAHE2_Flt, 
+   &                dump_flt,                                       &      ! PAHE2, 
+   &                dump_flt,                                       &      ! BAREGRND_Flt,
+   &                dump_flt,                                       &      ! DEAD_Flt, 
+   &                dump_flt,                                       &      ! COES, 
+   &                dump_flt,                                       &      ! MOCE2, 
+   &                dump_flt,                                       &      ! SALA2, 
+   &                dump_flt,                                       &      ! ZIMI, 
+   &                dump_flt,                                       &      ! CLMA10, 
+   &                dump_flt,                                       &      ! ELCE, 
+   &                dump_flt,                                       &      ! POPU5, 
+   &                dump_flt,                                       &      ! SALA, 
+   &                dump_flt,                                       &      ! IVFR, 
+   &                dump_flt,                                       &      ! PAVA, 
+   &                dump_flt,                                       &      ! PHAU7, 
+   &                dump_flt,                                       &      ! SCCA11, 
+   &                dump_flt,                                       &      ! TYDO, 
+   &                dump_flt,                                       &      ! SCAM6, 
+   &                dump_flt,                                       &      ! SCRO5, 
+   &                dump_flt,                                       &      ! SPPA, 
+   &                dump_flt,                                       &      ! SPCY, 
+   &                dump_flt,                                       &      ! DISP, 
+   &                dump_flt,                                       &      ! JURO, 
+   &                dump_flt,                                       &      ! AVGE, 
+   &                dump_flt,                                       &      ! SPAL, 
+   &                grid_pct_bare_old(i),                           &      ! BAREGRND_OLD,
+   &                grid_pct_bare_new(i),                           &      ! BAREGRND_NEW,
+   &                grid_pct_upland(i),                             &      ! NOTMOD, 
+   &                grid_pct_water(i),                              &      ! WATER, 
+   &                dump_flt,                                       &      ! SAV, 
+   &                dump_flt,                                       &      ! QULA3, 
+   &                dump_flt,                                       &      ! QULE, 
+   &                dump_flt,                                       &      ! QUNI, 
+   &                dump_flt,                                       &      ! QUTE, 
+   &                dump_flt,                                       &      ! QUVI, 
+   &                dump_flt,                                       &      ! ULAM, 
+   &                dump_flt,                                       &      ! BAHABI, 
+   &                dump_flt,                                       &      ! DISPBI, 
+   &                dump_flt,                                       &      ! PAAM2, 
+   &                dump_flt,                                       &      ! SOSE, 
+   &                dump_flt,                                       &      ! SPPABI,                               
+   &                dump_flt,                                       &      ! SPVI3,                               
+   &                dump_flt,                                       &      ! STHE9,                               
+   &                dump_flt,                                       &      ! UNPA,                                
+   &                grid_FIBS_score(i),                             &      ! FFIBS, 
+   &                grid_pct_vglnd_BLHF(i),                         &      ! pL_BF, 
+   &                grid_pct_vglnd_SWF(i),                          &      ! pL_SF, 
+   &                grid_pct_vglnd_FM(i),                           &      ! pL_FM, 
+   &                grid_pct_vglnd_IM(i),                           &      ! pL_IM, 
+   &                grid_pct_vglnd_BM(i),                           &      ! pL_BM, 
+   &                grid_pct_vglnd_SM(i),                           &      ! pL_SM, 
+   &                grid_pct_dead_flt(i)                                   ! Dead_Flt
     end do
     close(118)
-    
-    
-
-    
     
     return
 end
