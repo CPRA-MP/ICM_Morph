@@ -47,7 +47,7 @@ subroutine update_landtype
                 if(dem_z(i) > stg_av_yr(c)) then                    ! check if pixel is higher than mean water level
                     dem_lndtyp(i) = 1                               ! if so, define barrier island pixel as land
                 else
-                    dem_lndtyp(i) = 1                               ! otherwise, barrier island pixel is water
+                    dem_lndtyp(i) = 2                               ! otherwise, barrier island pixel is water
                 end if    
             end if
         end if

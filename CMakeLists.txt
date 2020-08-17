@@ -56,10 +56,26 @@ INCLUDE(${CMAKE_SOURCE_DIR}/cmake/architecture.cmake)
 ###########################################################################
 # ICM_Morph
 ###########################################################################
-ADD_EXECUTABLE( morph_v${ICMMORPH_VERSION_STRING} WM_inundation.f90
+ADD_EXECUTABLE( morph_v${ICMMORPH_VERSION_STRING} WM_edge_delineation.f90
+                                                  WM_edge_erosion.f90
+                                                  WM_flotant.f90
+                                                  WM_inundation_depths.f90
+                                                  WM_inundation_HSI_bins.f90
+                                                  WM_inundation_thresholds.f90
                                                   WM_main.f90
+                                                  WM_map_bareground.f90
+                                                  WM_mineral_deposition.f90
+                                                  WM_organic_accretion.f90
                                                   WM_params.f90
                                                   WM_params_alloc.f90
-                                                  WM_preprocessing.f90)
+                                                  WM_preprocessing.f90
+                                                  WM_set_io.f90
+                                                  WM_summaries.f90
+                                                  WM_update_elevation.f90
+                                                  WM_update_landtype.f90
+                                                  WM_write_output_rasters.f90
+                                                  WM_write_output_summaries.f90
 SET_TARGET_PROPERTIES(morph_v${ICMMORPH_VERSION_STRING} PROPERTIES Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/CMakeFiles/mod)
 SET_TARGET_PROPERTIES(morph_v${ICMMORPH_VERSION_STRING} PROPERTIES COMPILE_FLAGS "${Fortran_LINELENGTH_FLAG} ${Fortran_COMPILER_SPECIFIC_FLAG}" )
+
+

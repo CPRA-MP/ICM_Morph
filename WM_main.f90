@@ -71,6 +71,7 @@ program main
     lnd_change_flag = 0                             ! initialize land change flag for each DEM pixel to zero  
     
     call flotant
+    call edge_erosion
     call map_bareground
     call inundation_thresholds
     call update_elevation

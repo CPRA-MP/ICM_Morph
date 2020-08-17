@@ -5,8 +5,8 @@ module params
     implicit none
 
     ! generic variables used across all subroutines
-    integer,parameter :: sp=selected_real_kind(p=6)                 ! determine single precision kind value   
-    integer,parameter :: dp=selected_real_kind(p=13)                ! determine double precision kind value
+    integer,parameter :: sp=selected_real_kind(p=6)                 ! determine compiler KIND value for 4-byte (single precision) floating point real numbers
+    integer,parameter :: dp=selected_real_kind(p=15)                ! determine compiler KIND value for 8-byte (double precision) floating point real numbers
     integer :: elapsed_year                                         ! elapsed year of model simulation
     integer :: dem_NoDataVal                                        ! value representing NoData in input XYZ rasters
     integer :: ndem                                                 ! number of DEM pixels in master DEM
