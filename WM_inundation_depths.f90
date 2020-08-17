@@ -52,10 +52,11 @@ subroutine inundation_depths
         wse = wse_by_comp(c)                                        ! wse_by_comp is passed into this subroutine
         
         dem_inun_dep(i,tp) = wse - z
-        write(*,*) i,c,z,wse,comp_ndem_wet(c,tp)
     
         if (wse > z) then        
-            write(*,*) 'inside'
+            comp_ndem_wet(c,tp) = 1
+            grid_ndem_wet(g,tp) = 1
+            
             !comp_ndem_wet(c,tp) = comp_ndem_wet(c,tp) + 1
             !grid_ndem_wet(g,tp) = grid_ndem_wet(g,tp)  + 1
         end if
