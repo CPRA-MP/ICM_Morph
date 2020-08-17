@@ -56,10 +56,6 @@ program main
     call params_alloc
     call preprocessing
 
-    dem_inun_dep  = 0.0                               ! initialize arrays to 0
-    comp_ndem_wet =   0                               ! initialize arrays to 0
-    grid_ndem_wet =   0                               ! initialize arrays to 0
-
     do tp = 1,14
         call inundation_depths
     end do
