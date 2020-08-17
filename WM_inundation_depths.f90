@@ -45,7 +45,7 @@ subroutine inundation_depths(tp)
         z = dem_z(i)
         c = dem_comp(i)
         g = dem_grid(i)
-        wse = wse_by_comp(c)            ! wse_by_comp is passed into this subroutine
+        wse = wse_by_comp(c)                                        ! wse_by_comp is passed into this subroutine
         
         dem_inun_dep(i,tp) = wse - z
 
@@ -53,9 +53,7 @@ subroutine inundation_depths(tp)
             comp_ndem_wet(c,tp) = comp_ndem_wet(c,tp) + 1
             grid_ndem_wet(g,tp) = grid_ndem_wet(g,tp) + 1
         end if
-        
     end do
 
     return
-
 end

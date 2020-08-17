@@ -81,6 +81,24 @@ subroutine write_output_rasters
     close(803)    
     
     
+    
+    write(  *,*) ' - writing output raster XYZ file for elevation change'
+    write(000,*) ' - writing output raster XYZ file for elevation change'
+    
+    open(unit=804, file = trim(adjustL(dz_eoy_xyz_file) ))
+    ! write headers
+    ! write(800,'(A)') 'X    Y   dZ_cm'                    ! no header neededin XYZ raster format
+ 
+    do i = 1,ndem
+        if (dem_z(i) /= dem_NoDataVal) then
+            rasval_int = dem_dz_cm(i)    
+        else
+            rasval_int = dem_NoDataVal
+        end if
+        write(804,1801) dem_x(i), dem_y(i),rasval_flt
+    end do
+    close(804)    
+    
      
 
     

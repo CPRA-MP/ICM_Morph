@@ -41,8 +41,8 @@ subroutine edge_delineation
         do ir = 2,n_dem_row-1
             d0 = dem_index_mapped(ic, ir)
             if (dem_lndtyp(d0) /= dem_NoDataVal) then                   ! check if dem_lndtyp is assigned - if not, pixel is skipped
-                if (dem_lndtyp(d0) < 4) then                            ! if not upland (dem_lntyp=4) nor flotant (dem_lntyp=45)
-                    if (dem_lndtyp(d0) /= 2) then                       ! and if not water - then pixel is vegetated or nonvegetated wetland
+                if (dem_lndtyp(d0) < 4) then                            ! if not upland (dem_lntyp=4) nor flotant (dem_lntyp=5)
+                    if (dem_lndtyp(d0) /= 2) then                       ! and if not water - then pixel is vegetated or nonvegetated wetland (dem_lndtype= 1 & 3, respectively)
                         d1 = dem_index_mapped(ic-1, ir+1)               ! grab DEM pixel index for first neighbor, d1
                         if (dem_lndtyp(d1) == 2) then                   ! if neighbor, d1, is water then 
                             dem_edge(d0) = 1                            ! set edge value for d0 to 1

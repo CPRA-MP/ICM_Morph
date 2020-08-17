@@ -18,15 +18,16 @@ subroutine map_bareground
     ! *
     ! * This subroutine could be optimized by putting a sort algorithm (e.g., heapsort, mergesort, etc.) in the minimum elevation
     ! * check. Currently, each grid cell has an array with a list of pixel index values and an array with the respective elevation.
-    ! * These elevation arrays are used to find the minval elevation of each array.
-    ! * The minval is checked a number of times equal to the number of bareground pixels in the grid cell.
-    ! * Once an elevation has been identified as a minimum, that pixel index is cataloged, and then the temporary elevation in the 
-    ! * grid array is set to a max value that will not be identified as the minval in subsequent checks.
+    ! * These elevation arrays are used to find the minval elevation of each array on a series of loops.
+    ! * The array is looped over to find minval for the number bareground pixels in the grid cell.
+    ! * Once an elevation has been identified as a minval on one loop, that pixel index is cataloged, and then the temporary elevation in the 
+    ! * grid array is set to a max value that will not be identified as the minval in subsequent loops.
     ! * While this works, the array size never gets smaller as minvals are identified, they are just re-set to default high values.
     ! * A smarter sort algorithm could reduce the array as minvals are cataloged and ultimately reduce the number of iterations.
     ! * Regardless, these loops are set to stop as soon as enough pixels have been identified to meet the number required 
-    ! * as defined by the percent bareground values in the grid cell. Also, the loops are never entered if a grid cell does not have
-    ! * any bareground to start with.
+    ! * as defined by the percent bareground values in the grid cell. 
+    ! * 
+    ! * Also, the loops are never entered if a grid cell does not haveany bareground to start with.
     ! *
     ! *************************
     

@@ -1,0 +1,46 @@
+C:\OSGeo4W64\bin> .\gdal_translate.exe -ot Float32 -a_nodata -9999 D:\MP2023\morph_test\MPM2017_S00_G000_C000_U00_V00_SLA_I_00_00_W_dem30.img D:\MP2023\morph_test\MPM2017_S00_G000_C000_U00_V00_SLA_I_00_00_W_dem30.xyz
+
+2017 DEM structure:
+dem_res:     30
+col:      20879
+row:       9090
+ndem: 189790110
+
+img size:   739.920 MB
+xyz size:  5495.600 MB (NoData = 0)
+
+
+memory test 1:
+2 integer 1d arrays (ndem)
+1 single precision 1d array (ndem)
+startup memory use:         0.6 MB    
+allocated memory use:       0.6 MB 
+initialized memory use:  2172.5 MB
+final memory use:        2172.5 MB
+
+memory test 2:
+2 integer 1d arrays (ndem)
+1 single precision 1d array (ndem)
+1 single precision 2d array (ndem,14)
+startup memory use:         0.6 MB    
+allocated memory use:       0.6 MB 
+initialized memory use: 12308.2 MB
+final memory use:       12308.2 MB
+
+
+memory test 3:
+3 integer 1d arrays (ndem)
+1 integer 2d array (ndem,14)
+startup memory use:         0.6 MB    
+allocated memory use:       0.6 MB 
+initialized memory use: 12308.2 MB
+final memory use:       12308.2 MB
+
+memory test 4:
+2 integer 1d arrays (ndem)
+1 double precision 1d array (ndem)
+1 integer 2d array (ndem,14)
+startup memory use:         0.6 MB    
+allocated memory use:       0.6 MB 
+initialized memory use: 13032.4 MB
+final memory use:       13032.4 MB

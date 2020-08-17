@@ -21,6 +21,7 @@ subroutine set_io
     dsub_file =                 'D:\MP2023\morph_test\input\deep_subsidence_mm.xyz'
     ssub_file =                 'D:\MP2023\morph_test\input\ecoregion_shallow_subsidence_mm.csv'        
     act_del_file =              'D:\MP2023\morph_test\input\compartment_active_delta.csv'
+    eco_omar_file =             'D:\MP2023\morph_test\input\ecoregion_organic_matter_accum.csv'
     comp_eco_file =             'D:\MP2023\morph_test\input\compartment_ecoregion.csv' 
     hydro_comp_out_file =       'D:\MP2023\morph_test\input\compartment_out_2015.csv'
     prv_hydro_comp_out_file =   'D:\MP2023\morph_test\input\compartment_out_2014.csv'     
@@ -30,12 +31,13 @@ subroutine set_io
     monthly_ow_sed_dep_file =   'D:\MP2023\morph_test\input\compartment_monthly_sed_dep_wat.csv'
     monthly_mi_sed_dep_file =   'D:\MP2023\morph_test\input\compartment_monthly_sed_dep_interior.csv'
     monthly_me_sed_dep_file =   'D:\MP2023\morph_test\input\compartment_monthly_sed_dep_edge.csv'
-    
+    bi_dem_xyz_file =           'D:\MP2023\morph_test\input\ICM_BI-DEM_TBDEM30.xyz'
     
     !  output files
     morph_log_file =            'D:\MP2023\morph_test\_ICM-Morph_runlog.log'
     edge_eoy_xyz_file =         'D:\MP2023\morph_test\output\edge_eoy_2015.xyz'
     dem_eoy_xyz_file =          'D:\MP2023\morph_test\output\tbdem_eoy_2015.xyz'
+    dz_eoy_xyz_file =           'D:\MP2023\morph_test\output\dz_cm_eoy_2015.xyz'
     lndtyp_eoy_xyz_file =       'D:\MP2023\morph_test\output\lndtyp_eoy_2015.xyz'
     lndchng_eoy_xyz_file =      'D:\MP2023\morph_test\output\lndchng_eoy_2015.xyz'
     grid_summary_eoy_file =     'D:\MP2023\morph_test\output\grid_summary_eoy_2015.csv'

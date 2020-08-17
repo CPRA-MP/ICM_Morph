@@ -4,10 +4,14 @@ subroutine preprocessing
     implicit none
     
     ! local variables
-    integer :: i                    ! iterator
-    integer :: i_col                ! X-coordinate converted to column number of mapped DEM
-    integer :: i_row                ! Y-coordinate converted to row number of mapped DEM
-
+    integer :: i                        ! iterator
+    integer :: i_col                    ! X-coordinate converted to column number of mapped DEM
+    integer :: i_row                    ! Y-coordinate converted to row number of mapped DEM
+    integer :: dem_x_bi                 ! local variable to read in X-coord of ICM-BI-DEM interpolated point
+    integer :: dem_y_bi                 ! local variable to read in Y-coord of ICM-BI-DEM interpolated point
+    integer :: col_lookup               ! local variable to find DEM pixel index corresponding to ICM-BI-DEM interpolated point
+    integer :: row_lookup               ! local variable to find DEM pixel index corresponding to ICM-BI-DEM interpolated point
+    integer :: dem_i                    ! local variable that determined DEM pixel index corresponding to ICM-BI-DEM pixel location
 
     ! read pixel-to-compartment mapping file into arrays
     write(  *,*) ' - reading in DEM-pixel-to-compartment map data'
@@ -174,7 +178,7 @@ subroutine preprocessing
     do i = 1,neco
         read(1118,*) dump_int,                  &       ! ecoregion number
    &                dump_txt,                   &       ! ecoregion abbreviation
-   &                dump_txt,                  &       ! 25th %ile shallow subsidence rate (mm/yr) - positive is downward
+   &                dump_txt,                   &        ! 25th %ile shallow subsidence rate (mm/yr) - positive is downward
    &                dump_flt,                   &       ! 50th %ile shallow subsidence rate (mm/yr) - positive is downward
    &                er_shsb(i),                 &       ! 75th %ile shallow subsidence rate (mm/yr) - positive is downward
    &                dump_flt,                   &       ! 25th %ile shallow subsidence rate (mm/yr) - positive is downward
@@ -182,7 +186,16 @@ subroutine preprocessing
     end do
     close(1118) 
 
-        
+    ! read polder area map file into arrays
+    write(  *,*) ' - reading in polder map data'
+    write(000,*) ' - reading in polder map data'
+  
+    open(unit=1119, file=trim(adjustL(pldr_file)))    
+!    read(1119,*) dump_txt        ! dump header
+    do i = 1,ndem 
+        read(1119,*) dump_int,dump_int,dem_pldr(i)
+    end do
+    close(1119)    
      
     
     ! read ICM-Hydro compartment output file into arrays
@@ -419,6 +432,60 @@ subroutine preprocessing
    &                grid_pct_dead_flt(i)                                   ! Dead_Flt
     end do
     close(118)
+
+    
+    ! read ICM-LAVegMod grid output file into arrays
+    write(  *,*) ' - reading in ecoregion orgranic accumulation tables'
+    write(000,*) ' - reading in ecoregion orgranic accumulation tables'
+    
+    open(unit=119, file=trim(adjustL(eco_omar_file)))
+    read(119,*) dump_txt        ! dump header
+    
+    do i=1,neco                               
+        read(119,*) dump_int,                                       &      ! er_n,
+   &                dump_txt,                                       &      ! er,
+   &                dump_flt,                                       &      ! SwampOrgAccum_g_cm^-2_yr^-1_lower,
+   &                er_omar(i,1),                                   &      ! SwampOrgAccum_g_cm^-2_yr^-1_median,
+   &                dump_flt,                                       &      ! SwampOrgAccum_g_cm^-2_yr^-1_upper,
+   &                dump_flt,                                       &      ! FreshOrgAccum_g_cm^-2_yr^-1_lower,
+   &                er_omar(i,2),                                   &      ! FreshOrgAccum_g_cm^-2_yr^-1_median,
+   &                dump_flt,                                       &      ! FreshOrgAccum_g_cm^-2_yr^-1_upper,
+   &                dump_flt,                                       &      ! InterOrgAccum_g_cm^-2_yr^-1_lower,
+   &                er_omar(i,3),                                   &      ! InterOrgAccum_g_cm^-2_yr^-1_median,
+   &                dump_flt,                                       &      ! InterOrgAccum_g_cm^-2_yr^-1_upper,
+   &                dump_flt,                                       &      ! BrackOrgAccum_g_cm^-2_yr^-1_lower,
+   &                er_omar(i,4),                                   &      ! BrackOrgAccum_g_cm^-2_yr^-1_median,
+   &                dump_flt,                                       &      ! BrackOrgAccum_g_cm^-2_yr^-1_upper,
+   &                dump_flt,                                       &      ! SalineOrgAccum_g_cm^-2_yr^-1_lower,
+   &                er_omar(i,5),                                   &      ! SalineOrgAccum_g_cm^-2_yr^-1_median,
+   &                dump_flt,                                       &      ! SalineOrgAccum_g_cm^-2_yr^-1_upper,
+   &                dump_flt,                                       &      ! ActiveFreshOrgAccum_g_cm^-2_yr^-1_lower,
+   &                er_omar(i,6),                                   &      ! ActiveFreshOrgAccum_g_cm^-2_yr^-1_median,
+   &                dump_flt                                               ! ActiveFreshOrgAccum_g_cm^-2_yr^-1_upper
+    end do                                                                 
+    close(119)                                                             
+                                                                           
+    ! read ICM-BI-DEM area map file into arrays
+    write(  *,*) ' - reading in ICM-BI-DEM and mapping lookup to main DEM'
+    write(000,*) ' - reading in ICM-BI-DEM and mapping lookup to main DEM'
+
+    dem_to_bidem = dem_NoDataVal                                            ! initialize DEM-to-ICM-BI-DEM map lookup array to NoData
+
+    open(unit=120, file=trim(adjustL(bi_dem_xyz_file)))    
+!    read(120,*) dump_txt        ! dump header
+    do i = 1,ndem_bi
+        read(120,*) dem_x_bi, dem_y_bi, dem_z_bi(i)
+   
+        col_lookup = 1+(dem_x_bi - dem_LLx)/dem_res                         ! find column number in mapped DEM that corresponds to BI-DEM X-coord
+        row_lookup = 1+(dem_y_bi - dem_LLy)/dem_res                         ! find row number in mapped DEM that corresponds to BI-DEM Y-coord
+        dem_i = dem_index_mapped(col_lookup,row_lookup)                     ! find index number of DEM pixel that corresponds to BI-DEM XY-coordinates
+        dem_to_bidem(dem_i) = i
+    
+    end do    
+    close(120)    
+    
+    
+    
     
     return
 end
