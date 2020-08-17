@@ -38,7 +38,7 @@ subroutine inundation_depths(tp)
     else
         write(  *,*) ' - calculating inundation for current year, month: ' , tp
         write(000,*) ' - calculating inundation for current year, month: ' , tp
-        wse_by_comp = stg_av_mons(1:ncomp,tp)
+        wse_by_comp = stg_av_mons(:,tp)
     end if
     
     do i = 1,ndem
