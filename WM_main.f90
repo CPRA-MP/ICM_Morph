@@ -24,7 +24,7 @@ program main
     implicit none
 
     ! local variables
-    integer :: tp                                   ! local variable for time period to use for calculation (1-12=month; 13=current year annual; 14=previous year annual)
+!    integer :: tp                                   ! local variable for time period to use for calculation (1-12=month; 13=current year annual; 14=previous year annual)
     integer,dimension(8) :: dtvalues                ! variable to store date time values
     
     call date_and_time(VALUES=dtvalues)             ! grab simulation start time
@@ -61,7 +61,7 @@ program main
     grid_ndem_wet =   0                               ! initialize arrays to 0
 
     do tp = 1,14
-        call inundation_depths(tp) 
+        call inundation_depths
     end do
     
     call edge_delineation

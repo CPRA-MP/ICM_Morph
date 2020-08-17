@@ -17,6 +17,7 @@ module params
     integer :: dem_res                                              ! XY resolution of DEM (m)
     integer :: grid_ndem_mx                                         ! maximum number of DEM pixels within a grid cell
     integer :: comp_ndem_mx                                         ! maximum number of DEM pixels within a ICM-Hydro compartment
+    integer :: tp                                                   ! flag to indicate which timeperiod to use for inundation calculations (1-12=month; 13 = annual)
     integer :: nlt                                                  ! number of landtype classification
                                                                     ! **** nlt must equal the number of classifications in dem_lndtyp variable defined below****
 
