@@ -18,7 +18,8 @@ subroutine inundation_depths
     integer :: i                                    ! iterator
     integer :: c                                    ! local compartment ID variable
     integer :: g                                    ! local grid ID variable
-!    integer :: tp                                   ! flag to indicate which timeperiod to use for inundation calculations (1-12=month; 13 = annual)
+    integer :: cwc,gwc                              ! counter flag for updating
+    !    integer :: tp                                   ! flag to indicate which timeperiod to use for inundation calculations (1-12=month; 13 = annual)
     real(sp) :: wse_by_comp(ncomp)                  ! local array with WSE data (one value for each ICM-Hydro compartment) to use in calculations 
     real(sp) :: z                                   ! local elevation variable
     real(sp) :: wse                                 ! local water surface elevation variable
@@ -52,9 +53,11 @@ subroutine inundation_depths
         
         dem_inun_dep(i,tp) = wse - z
         write(*,*) i,c,z,wse,comp_ndem_wet(c,tp)
+        cwc = comp_ndem_wet(c,tp)
+        gwc = grid_ndem_wet(g,tp) 
         if (wse > z) then        
-            comp_ndem_wet(c,tp) = comp_ndem_wet(c,tp) + 1
-            grid_ndem_wet(g,tp) = grid_ndem_wet(g,tp) + 1
+            comp_ndem_wet(c,tp) = cwc + 1
+            grid_ndem_wet(g,tp) = gwc + 1
         end if
     end do
 
