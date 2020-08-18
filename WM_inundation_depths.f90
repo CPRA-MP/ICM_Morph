@@ -45,6 +45,10 @@ subroutine inundation_depths
         wse_by_comp = stg_av_mons(:,tp)
     end if
     
+    do i = 1,ncomp
+        write(*,*) i,comp_ndem_wet(i,1)
+    end do
+        
     do i = 1,ndem
         z = dem_z(i)
         c = dem_comp(i)
