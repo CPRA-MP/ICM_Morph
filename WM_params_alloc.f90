@@ -95,7 +95,7 @@ subroutine params_alloc
     ! allocate memory for global variables calculated in subroutine: INUNDATION_DEPTHS
     allocate(dem_inun_dep(ndem,14))
     allocate(comp_ndem_wet(ncomp,14))
-    allocate(grid_ndem_wet(ncomp,14))
+    allocate(grid_ndem_wet(ngrid,14))
     
     ! allocate memory for global variables calculated in subroutine: ORGANIC_ACCRETION & MINERAL_ACCRETION
     allocate(org_accr_cm(ndem))
