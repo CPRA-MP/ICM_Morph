@@ -44,10 +44,7 @@ subroutine inundation_depths
         write(000,*) ' - calculating inundation for current year, month: ' , tp
         wse_by_comp = stg_av_mons(:,tp)
     end if
-    
-    do i = 1,ncomp
-        write(*,*) i,comp_ndem_wet(i,1)
-    end do
+
         
     do i = 1,ndem
         z = dem_z(i)
@@ -56,7 +53,7 @@ subroutine inundation_depths
         wse = wse_by_comp(c)                                        ! wse_by_comp is passed into this subroutine
         
         dem_inun_dep(i,tp) = wse - z
-    
+        write(*,*) i,c,comp_ndem_wet(c,1)
         if (wse > z) then        
             
             !comp_ndem_wet(c,tp) = comp_ndem_wet(c,tp) + 1
