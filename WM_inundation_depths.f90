@@ -54,7 +54,7 @@ subroutine inundation_depths
         
         dem_inun_dep(i,tp) = wse - z
         if (wse > z) then        
-            write(*,*) comp_ndem_wet(1,1)      
+            write(*,*) comp_ndem_wet(946,1)      
             !comp_ndem_wet(c,tp) = comp_ndem_wet(c,tp) + 1
             !grid_ndem_wet(g,tp) = grid_ndem_wet(g,tp)  + 1
         end if
