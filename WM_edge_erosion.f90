@@ -33,16 +33,20 @@ subroutine edge_erosion
     integer :: mee_yr_increment                                                         ! number of years necessary to erode one DEM pixel - function of  MEE rate & DEM resolution
     real(sp) :: yr_ratio                                                                ! elapsed model year divided by number of years needed for edge erosion - when this ratio is a whole number, the edge erosion occurs
     real(sp) :: dec                                                                     ! decimal portion of yr_ratio
-
+    real(sp) :: meer                                                                    ! local variable for marsh edge erosion rate of pixel
     do i = 1,ndem
-        if (dem_edge(i) == 1) then                                                      ! check if DEM pixel is edge
-            mee_yr_increment = ceiling(float(dem_res) / max(1e-10,dem_meer(i)) )        ! calculate number of years needed to erode one DEM pixel for given rate; ceiling results in a pixel that needs 24.5 years to erode to be eroded during year 25
-            yr_ratio = float(elapsed_year) / float(mee_yr_increment)
-            dec = int(yr_ratio) - yr_ratio
-            if( dec == 0) then
-                lnd_change_flag(i) = -3                                                 ! lnd_change_flag = -3 for conversion from marsh edge to open water due to erosion
+        meer = dem_meer(i)
+        if (meer /= dem_NoDataVal) then
+            if (meer > 0.0) then
+                if (dem_edge(i) == 1) then                                              ! check if DEM pixel is edge
+                    mee_yr_increment = ceiling(float(dem_res) / meer )                  ! calculate number of years needed to erode one DEM pixel for given rate; ceiling results in a pixel that needs 24.5 years to erode to be eroded during year 25
+                    yr_ratio = float(elapsed_year) / float(mee_yr_increment)
+                    dec = int(yr_ratio) - yr_ratio
+                    if( dec == 0) then
+                        lnd_change_flag(i) = -3                                         ! lnd_change_flag = -3 for conversion from marsh edge to open water due to erosion
+                    end if
+                end if
             end if
-            
         end if
     end do
         

@@ -19,16 +19,11 @@ subroutine inundation_depths
     integer :: c                                    ! local compartment ID variable
     integer :: g                                    ! local grid ID variable
     integer :: cwc,gwc                              ! counter flag for updating
-    !    integer :: tp                                   ! flag to indicate which timeperiod to use for inundation calculations (1-12=month; 13 = annual)
     real(sp) :: wse_by_comp(ncomp)                  ! local array with WSE data (one value for each ICM-Hydro compartment) to use in calculations 
     real(sp) :: z                                   ! local elevation variable
     real(sp) :: wse                                 ! local water surface elevation variable
     
-    dem_inun_dep(:,tp)  = 0.0                       ! initialize arrays for tp to 0
-    comp_ndem_wet(:,tp) =   0                       ! initialize arrays for tp to 0
-    grid_ndem_wet(:,tp) =   0                       ! initialize arrays for tp to 0
-    
-    ! tp=13 uses current year annual mean stage to calculate inundation    
+      ! tp=13 uses current year annual mean stage to calculate inundation    
     if (tp == 13) then
         write(  *,*) ' - calculating inundation for current year'
         write(000,*) ' - calculating inundation for current year'
@@ -45,17 +40,21 @@ subroutine inundation_depths
         wse_by_comp = stg_av_mons(:,tp)
     end if
 
-        
     do i = 1,ndem
         z = dem_z(i)
-        c = dem_comp(i)
-        g = dem_grid(i)
-        wse = wse_by_comp(c)                                        ! wse_by_comp is passed into this subroutine
-        
-        dem_inun_dep(i,tp) = wse - z
-        if (wse > z) then        
-            comp_ndem_wet(c,tp) = comp_ndem_wet(c,tp) + 1  
-            grid_ndem_wet(g,tp) = grid_ndem_wet(g,tp) + 1
+        if (z /= dem_NoDataVal) then                                    ! if pixel has elevation data
+            c = dem_comp(i)                     
+            if (c /= dem_NoDataVal) then                                ! if pixel has compartment data
+                wse = wse_by_comp(c)                                    ! calculate inundation depth
+                dem_inun_dep(i,tp) = wse - z
+                if (wse > z) then                                       ! if pixel is inundated             
+                    comp_ndem_wet(c,tp) = comp_ndem_wet(c,tp) + 1       ! add to count of wet pixels in ICM-Hydro compartment
+                    g = dem_grid(i)             
+                    if (g /= dem_NoDataVal) then                        ! if pixel has grid data
+                        grid_ndem_wet(g,tp) = grid_ndem_wet(g,tp) + 1   ! add to count of wet pixels in ICM-LAVegMod grid cell
+                    end if
+                end if
+            end if
         end if
     end do
 

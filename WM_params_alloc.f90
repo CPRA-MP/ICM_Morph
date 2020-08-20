@@ -2,19 +2,6 @@ subroutine params_alloc
     
     use params
     implicit none 
-
-    neco =        30                ! number of ecoregions
-    ndem =    279045                ! number of DEM pixels - will be an array dimension for all DEM-level data
-    ndem_bi =      0                ! number of pixels in interpolated ICM-BI-DEM XYZ that overlap primary DEM
-    ncomp =      946                ! number of ICM-Hydro compartments - will be an array dimension for all compartment-level data
-    ngrid =   187553                ! number of ICM-LAVegMod grid cells - will be an array dimension for all gridd-level data
-    nlt =          5                ! number of landtype classification
-                                    ! ****must correspond with dem_lndtyp variable defined in PARAMS****
-                                    !               1 = vegetated wetland
-                                    !               2 = water
-                                    !               3 = unvegetated wetland/new subaerial unvegetated mudflat (e.g., bare ground)
-                                    !               4 = developed land/upland/etc. that are not modeled in ICM-LAVegMod
-                                    !               5 = flotant marsh
     
     ! allocate memory for variables read in or calculated from xyzc DEM file in subroutine: PREPROCESSING
     allocate(dem_x(ndem))

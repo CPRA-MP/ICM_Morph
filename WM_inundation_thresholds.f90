@@ -19,12 +19,6 @@ subroutine inundation_thresholds
     real(sp) :: sal_yr                                              ! local variable for salinity at DEM pixel from current year mean salinity
     real(sp) :: dep_prev_yr                                         ! local variable for inundation depth over DEM pixel from previous year mean stage
     real(sp) :: sal_prev_yr                                         ! local variable for salinity at DEM pixel from previous year mean salinity
-    real(sp) :: Z                                                   ! Z-value for quantile (Z=1.96 is 97.5th percentile)
-    real(sp) :: B0                                                  ! coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-    real(sp) :: B1                                                  ! coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-    real(sp) :: B2                                                  ! coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-    real(sp) :: B3                                                  ! coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-    real(sp) :: B4                                                  ! coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
     real(sp) :: MuDepth                                             ! mean depth for given salinity value from quantile regression - for current year  (see App. A of MP2023 Wetland Vegetation Model Improvement report)
     real(sp) :: SigmaDepth                                          ! st dev depth for given salinity value from quantile regression - for current year  (see App. A of MP2023 Wetland Vegetation Model Improvement report)
     real(sp) :: DepthThreshold_Wet                                  ! too wet for vegetation - depth threshold for given Z and given salinity value from quantile regression - for current year
@@ -32,27 +26,12 @@ subroutine inundation_thresholds
     real(sp) :: MuDepth_prv                                         ! mean depth for given salinity value from quantile regression - for previous year
     real(sp) :: SigmaDepth_prv                                      ! st dev depth for given salinity value from quantile regression - for previous year      
     real(sp) :: DepthThreshold_Wet_prv                              ! too wet for vegetation - depth threshold for given Z and given salinity value from quantile regression - for previous year
-    real(sp) :: ht_abv_mwl_est                                      ! elevation (meters) , relative to annual mean water level, at which point vegetation can establish
     integer,dimension(:),allocatable :: grid_n_upland_wet           ! local count of number of upland pixels in ICM-LAVegMod grid cell that are wet enough for wetland vegetation
     integer,dimension(:),allocatable :: grid_n_upland_dry           ! local count of number of upland pixels in ICM-LAVegMod grid cell that too dry for wetland vegetation
     
     allocate(grid_n_upland_wet(ngrid))
     allocate(grid_n_upland_dry(ngrid))
-    
-    ! parameters from quantile fit of CRMS annual mean inundation and salinity depth
-    ! see ICM-LAVegMod documentation from 2023 updates for analysis and theory
-    Z = 2.57                    ! z=+2.57 for 99.5th %ile   z=-2.57 for 5th %ile 
-   !Z = 1.96                    ! z=+1.96 for 95th %ile     z=-1.96 for 5th %ile 
-    B0 = 0.0058                 ! quantile regression coefficient (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-    B1 = -0.00207               ! quantile regression coefficient (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-    B2 = 0.0809                 ! quantile regression coefficient (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-    B3 = 0.0892                 ! quantile regression coefficient (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-    B4 = -0.19                  ! quantile regression coefficient (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-    
-    ! elevation (meters) , relative to annual mean water level, at which point vegetation can establish
-    ! see ICM-LAVegMod documentation from 2023 updates for analysis and theory
-    ht_abv_mwl_est = 0.10
-    
+
     
     ! initialize upland wet/dry counting arrays to zero
     grid_n_upland_wet = 0
@@ -92,7 +71,7 @@ subroutine inundation_thresholds
                 if (dem_lndtyp(i) == 1) then
                     MuDepth = B0 + B1*sal_yr
                     SigmaDepth = B2 + B3*exp(B4*sal_yr)
-                    DepthThreshold_Wet =  MuDepth  + Z*SigmaDepth
+                    DepthThreshold_Wet =  MuDepth  + ptile_Z*SigmaDepth
                     
                     ! if current year inundation is above threshold, check previous year            
                     if (dep_yr >= DepthThreshold_Wet) then
@@ -101,7 +80,7 @@ subroutine inundation_thresholds
                         
                         MuDepth_prv = B0 + B1*sal_prev_yr
                         SigmaDepth_prv = B2 + B3*exp(B4*sal_prev_yr)
-                        DepthThreshold_Wet_prv =  MuDepth_prv  + Z*SigmaDepth_prv
+                        DepthThreshold_Wet_prv =  MuDepth_prv  + ptile_Z*SigmaDepth_prv
                         
                         ! if both current year and previous year have inundation above threshold, set flag to collapse land
                         if (dep_prev_yr >= DepthThreshold_Wet_prv) then
@@ -123,7 +102,7 @@ subroutine inundation_thresholds
                 else if (dem_lndtyp(i) == 5) then
                     MuDepth = B0 + B1*sal_yr
                     SigmaDepth = B2 + B3*exp(B4*sal_yr)
-                    DepthThreshold_Dry =  MuDepth - Z*SigmaDepth
+                    DepthThreshold_Dry =  MuDepth - ptile_Z*SigmaDepth
                     
                     if (dep_yr >= DepthThreshold_Dry) then
                         grid_n_upland_wet(g) = grid_n_upland_wet(g) + 1 

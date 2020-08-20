@@ -31,7 +31,6 @@ subroutine update_landtype
     write(000,*) ' - updating landtype at end of current year'
 
     do i = 1,ndem
-        c = dem_comp(i)
         if (dem_pldr(i) == 0) then                                  ! only update landtype for pixels outside of polders
             if (dem_to_bidem(i) == dem_NoDataVal) then              ! if pixel is not within ICM-BI-DEM sub-domain, use land change flag to update landscape
                 if (lnd_change_flag(i) == 1) then                   ! convert water to new land mudflat eligible for vegetation establishment next year
@@ -44,10 +43,13 @@ subroutine update_landtype
                     dem_lndtyp(i) = 2
                 end if
             else                                                    ! if pixel is in ICM-BI-DEM
-                if(dem_z(i) > stg_av_yr(c)) then                    ! check if pixel is higher than mean water level
-                    dem_lndtyp(i) = 1                               ! if so, define barrier island pixel as land
-                else
-                    dem_lndtyp(i) = 2                               ! otherwise, barrier island pixel is water
+                c = dem_comp(i)
+                if (c /= dem_NoDataVal) then
+                    if(dem_z(i) > stg_av_yr(c)) then                ! check if pixel is higher than mean water level
+                        dem_lndtyp(i) = 1                           ! if so, define barrier island pixel as land
+                    else
+                        dem_lndtyp(i) = 2                           ! otherwise, barrier island pixel is water
+                    end if
                 end if    
             end if
         end if

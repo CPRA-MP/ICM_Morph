@@ -7,48 +7,61 @@ module params
     ! generic variables used across all subroutines
     integer,parameter :: sp=selected_real_kind(p=6)                 ! determine compiler KIND value for 4-byte (single precision) floating point real numbers
     integer,parameter :: dp=selected_real_kind(p=15)                ! determine compiler KIND value for 8-byte (double precision) floating point real numbers
+    character*3000 :: dump_txt                                      ! dummy variable to use for skipping lines in input files
+    integer :: dump_int                                             ! dummy variable to use for data in input files
+    real(sp) :: dump_flt                                            ! dummy variable to use for data in input files
+    integer :: tp                                                   ! flag to indicate which timeperiod to use for inundation calculations (1-12=month; 13 = annual)
+
+    ! I/O settings in subroutine: SET_IO
+    integer :: start_year                                           ! first year of model run
     integer :: elapsed_year                                         ! elapsed year of model simulation
+    integer :: dem_res                                              ! XY resolution of DEM (meters)
     integer :: dem_NoDataVal                                        ! value representing NoData in input XYZ rasters
     integer :: ndem                                                 ! number of DEM pixels in master DEM
     integer :: ndem_bi                                              ! number of pixels in interpolated ICM-BI-DEM XYZ that overlap primary DEM
     integer :: ncomp                                                ! number of ICM-Hydro compartments
     integer :: ngrid                                                ! number of ICM-LAVegMod grid cells
     integer :: neco                                                 ! number of ecoregions used to summarize data
-    integer :: dem_res                                              ! XY resolution of DEM (m)
     integer :: grid_ndem_mx                                         ! maximum number of DEM pixels within a grid cell
     integer :: comp_ndem_mx                                         ! maximum number of DEM pixels within a ICM-Hydro compartment
-    integer :: tp                                                   ! flag to indicate which timeperiod to use for inundation calculations (1-12=month; 13 = annual)
     integer :: nlt                                                  ! number of landtype classification
-                                                                    ! **** nlt must equal the number of classifications in dem_lndtyp variable defined below****
-
+    real(sp) :: ht_abv_mwl_est                                      ! elevation (meters) , relative to annual mean water level, at which point vegetation can establish
+    real(sp) :: ptile_Z                                             ! Z-value for quantile (Z=1.96 is 97.5th percentile)
+    real(sp) :: B0                                                  ! beta-0 coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    real(sp) :: B1                                                  ! beta-1 coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    real(sp) :: B2                                                  ! beta-2 coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    real(sp) :: B3                                                  ! beta-3 coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    real(sp) :: B4                                                  ! beta-4 coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    real(sp) :: ow_bd                                               ! bulk density of open water body bed material (g/cm3)
+    real(sp) :: om_k1                                               ! organic matter self-packing density  of wetland soils (g/cm3)
+    real(sp) :: mn_k2                                               ! mineral sediment self-packing density of wetland soils (g/cm3)
+    real(sp),dimension(:),allocatable :: FIBS_intvals               ! local array that stores FIBS values used to interpolate between **allocated in SET_IO instead of PARAMS_ALLOC**
+    real(sp) :: mc_depth_threshold                                  ! water depth threshold (meters) defining deep water area to be excluded from marsh creation projects footprint
     
-    character*3000 :: dump_txt                                      ! dummy variable to use for skipping lines in input files
-    integer :: dump_int                                             ! dummy variable to use for data in input files
-    real(sp) :: dump_flt                                            ! dummy variable to use for data in input files
-    
-    ! I/O files in subroutine: MAIN
-    character*100 :: morph_log_file                                 ! file name of text file that logs all Morph print statements - no filepath will save this in executable directory
+    ! input files in subroutine: SET_IO
     character*100 :: dem_file                                       ! file name, with relative path, to DEM XYZ file
     character*100 :: lwf_file                                       ! file name, with relative path, to land/water file that is same resolution and structure as DEM XYZ
     character*100 :: meer_file                                      ! file name, with relative path, to marsh edge erosion rate file that is same resolution and structure as DEM XYZ
     character*100 :: pldr_file                                      ! file name, with relative path, to polder file that is same resolution and structure as DEM XYZ (0=non-poldered pixel; 1=pixel within a polder)
-    character*100 :: grid_file                                      ! file name, with relative path, to ICM-LAVegMod grid map file that is same resolution and structure as DEM XYZ
     character*100 :: comp_file                                      ! file name, with relative path, to ICM-Hydro compartment map file that is same resolution and structure as DEM XYZ
+    character*100 :: grid_file                                      ! file name, with relative path, to ICM-LAVegMod grid map file that is same resolution and structure as DEM XYZ
     character*100 :: dsub_file                                      ! file name, with relative path, to deep subsidence rate map file that is same resolution and structure as DEM XYZ (mm/yr; positive values are for downward VLM)
     character*100 :: ssub_file                                      ! file name, with relative path, to shallow subsidence table with statistics by ecoregion (mm/yr; positive values are for downward VLM)
     character*100 :: act_del_file                                   ! file name, with relative path, to lookup table that identifies whether an ICM-Hydro compartment is assigned as an 'active delta' site for use with Fresh Marsh organic accretion
     character*100 :: eco_omar_file                                  ! file name, with relative path, to lookup table of organic accumulation rates by marsh type/ecoregion
     character*100 :: comp_eco_file                                  ! file name, with relative path, to lookup table that assigns an ecoregion to each ICM-Hydro compartment    
-    character*100 :: bi_dem_xyz_file                                ! file name, with relative path, to XYZ DEM file for ICM-BI-DEM model domain - XY resolution must be snapped to XY resolution of main DEM
-    
     character*100 :: hydro_comp_out_file                            ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro
     character*100 :: prv_hydro_comp_out_file                        ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro for previous year
+    character*100 :: veg_out_file                                   ! file name, with relative path, to *vegty.asc+ file saved by ICM-LAVegMod    
     character*100 :: monthly_mean_stage_file                        ! file name, with relative path, to compartment summary file with monthly mean water levels
     character*100 :: monthly_max_stage_file                         ! file name, with relative path, to compartment summary file with monthly maximum water levels 
     character*100 :: monthly_ow_sed_dep_file                        ! file name, with relative path, to compartment summary file with monthly sediment deposition in open water
     character*100 :: monthly_mi_sed_dep_file                        ! file name, with relative path, to compartment summary file with monthly sediment deposition on interior marsh
     character*100 :: monthly_me_sed_dep_file                        ! file name, with relative path, to compartment summary file with monthly sediment deposition on marsh edge
-    character*100 :: veg_out_file                                   ! file name, with relative path, to *vegty.asc+ file saved by ICM-LAVegMod    
+    character*100 :: bi_dem_xyz_file                                ! file name, with relative path, to XYZ DEM file for ICM-BI-DEM model domain - XY resolution must be snapped to XY resolution of main DEM
+    
+    ! output files in subroutine: SET_IO
+    character*100 :: morph_log_file                                 ! file name of text file that logs all Morph print statements - no filepath will save this in executable directory
     character*100 :: edge_eoy_xyz_file                              ! file name, with relative path, to XYZ raster output file for edge pixels
     character*100 :: dem_eoy_xyz_file                               ! file name, with relative path, to XYZ raster output file for topobathy DEM
     character*100 :: dz_eoy_xyz_file                                ! file name, with relative path, to XYZ raster output file for elevation change raster
@@ -63,9 +76,6 @@ module params
     character*100 :: comp_elev_file                                 ! file name, with relative path, to elevation summary compartment file used internally by ICM
     character*100 :: comp_wat_file                                  ! file name, with relative path, to percent water summary compartment file used internally by ICM
     character*100 :: comp_upl_file                                  ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
-    
-    
-    
     
     ! define variables read in or calculated from xyz files in subroutine: PREPROCESSING
     integer,dimension(:),allocatable ::  dem_x                      ! x-coordinate of DEM pixel (UTM m, zone 15N)
@@ -168,7 +178,6 @@ module params
     ! define global variables used in subroutine: MAP_BAREGROUND
     integer,dimension(:),allocatable :: dem_bg_flag                 ! Bareground type classification of pixel (0 = non bareground; 1 = old bareground; 2 = new bareground)
 
-    
     ! define global variables used in subrtoue: ORGANIC_ACCRETION & MINERAL_ACCRETION
     real(sp),dimension(:),allocatable :: org_accr_cm                ! annual organic matter accretion (cm) for each DEM pixel
     real(sp),dimension(:),allocatable :: min_accr_cm                ! annual mineral sedmient accretion (cm) for each DEM pixel
@@ -191,8 +200,6 @@ module params
     integer,dimension(:,:),allocatable :: grid_gadwl_dep            ! area in each ICM-LAVegMod grid cell that is classified for each of the 14 depths used in the Gadwall HSI
     integer,dimension(:,:),allocatable :: grid_gwteal_dep           ! area in each ICM-LAVegMod grid cell that is classified for each of the 9 depths used in the Greenwinged Teal HSI
     integer,dimension(:,:),allocatable :: grid_motduck_dep          ! area in each ICM-LAVegMod grid cell that is classified for each of the 9 depths used in the Mottled Duck HSI
-    
-    
     real(sp),dimension(:),allocatable :: comp_pct_water             ! percent of ICM-Hydro compartment that is open water
     real(sp),dimension(:),allocatable :: comp_pct_wetland           ! percent of ICM-Hydro compartment that is wetland (attached vegetated + flotant_ + non-vegetated)
     real(sp),dimension(:),allocatable :: comp_pct_upland            ! percent of ICM-Hydro compartment that is upland (not modeled in ICM-LAVegMod)

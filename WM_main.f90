@@ -24,13 +24,12 @@ program main
     implicit none
 
     ! local variables
-!    integer :: tp                                   ! local variable for time period to use for calculation (1-12=month; 13=current year annual; 14=previous year annual)
     integer,dimension(8) :: dtvalues                ! variable to store date time values
+    character*15 :: dtstr
     
     call date_and_time(VALUES=dtvalues)             ! grab simulation start time
-    call set_io     
-
-    open(unit=000, file=morph_log_file)             ! open log file for writing
+    write(dtstr,8888) dtvalues(1),dtvalues(2),dtvalues(3),'_',dtvalues(5),dtvalues(6),dtvalues(7)
+    open(unit=000, file=trim(adjustL('_ICM-Morph_runlog_')//dtstr//trim('.log')))
     
     write(  *,*)
     write(  *,*) '*************************************************************'
@@ -39,7 +38,7 @@ program main
     write(  *,*) '****                                                     ****'
     write(  *,*) '*************************************************************'
     write(  *,*)
-    write(  *,8888) ' Started ICM-Morph simulation at: ',dtvalues(1),dtvalues(2),dtvalues(3),dtvalues(5),':',dtvalues(6),':',dtvalues(7)
+    write(  *,*) ' Started ICM-Morph simulation at: ',dtstr
     write(  *,*)
 
     write(000,*)
@@ -49,14 +48,17 @@ program main
     write(000,*) '****                                                     ****'
     write(000,*) '*************************************************************'    
     write(000,*)
-    write(000,8888) ' Started ICM-Morph simulation at: ',dtvalues(1),dtvalues(2),dtvalues(3),dtvalues(5),':',dtvalues(6),':',dtvalues(7)
+    write(000,*) ' Started ICM-Morph simulation at: ',dtstr
     write(000,*)
 
-    
+    call set_io                                     ! input/output settings - must be run BEFORE parameter allocation   
     call params_alloc
     call preprocessing
 
     do tp = 1,14
+        dem_inun_dep(:,tp)  = 0.0                       ! initialize arrays for tp to 0
+        comp_ndem_wet(:,tp) =   0                       ! initialize arrays for tp to 0
+        grid_ndem_wet(:,tp) =   0                       ! initialize arrays for tp to 0
         call inundation_depths
     end do
     
@@ -77,19 +79,20 @@ program main
     call write_output_summaries
     call write_output_rasters
     call date_and_time(VALUES=dtvalues)             ! grab simulation end time
+    write(dtstr,8888) dtvalues(1),dtvalues(2),dtvalues(3),'_',dtvalues(5),dtvalues(6),dtvalues(7)
 
     
     write(  *,*)
-    write(  *,8888) ' Ended ICM-Morph simulation at: ',dtvalues(1),dtvalues(2),dtvalues(3),dtvalues(5),':',dtvalues(6),':',dtvalues(7)
+    write(  *,*) ' Ended ICM-Morph simulation at: ',dtstr
     write(  *,*)
     
     write(000,*)
-    write(000,8888) ' Ended ICM-Morph simulation at: ',dtvalues(1),dtvalues(2),dtvalues(3),dtvalues(5),':',dtvalues(6),':',dtvalues(7)
+    write(000,*) ' Ended ICM-Morph simulation at: ',dtstr
     write(000,*)
     close(000)
 
 
-8888    format(a,I4.4,I2.2,I2.2,1x,I2.2,a,I2.2,a,I2.2)
+8888    format(I4.4,I2.2,I2.2,a,I2.2,I2.2,I2.2)
 
     
 end program
