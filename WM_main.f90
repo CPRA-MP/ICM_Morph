@@ -26,8 +26,9 @@ program main
     ! local variables
     integer,dimension(8) :: dtvalues                ! variable to store date time values
     
-    character*17 :: dtstrf,dtstr                    ! string to hold formatted datetime
-    
+    character*17 :: dtstrf                    ! string to hold formatted datetime
+    character*19 :: dtstr                    ! string to hold formatted datetime
+
     call date_and_time(VALUES=dtvalues)             ! grab simulation start time
     write(dtstrf,8888) dtvalues(1),dtvalues(2),dtvalues(3),'_',dtvalues(5),'.',dtvalues(6),'.',dtvalues(7)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),'_',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
