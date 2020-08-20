@@ -15,12 +15,12 @@ subroutine write_output_summaries
     write(  *,*) ' - writing end-of-year grid summary files'
     write(000,*) ' - writing end-of-year grid summary files'
     
-    open(unit=900, file = trim(adjustL(grid_summary_eoy_file) ))
-    open(unit=901, file = trim(adjustL(grid_data_file) ))
-    open(unit=902, file = trim(adjustL(grid_pct_edge_file) ))
-    open(unit=903, file = trim(adjustL(grid_depth_file_Gdw) ))
-    open(unit=904, file = trim(adjustL(grid_depth_file_GwT) ))
-    open(unit=905, file = trim(adjustL(grid_depth_file_MtD) ))
+    open(unit=900, file = trim(adjustL('output/'//grid_summary_eoy_file) ))
+    open(unit=901, file = trim(adjustL('output/'//grid_data_file) ))
+    open(unit=902, file = trim(adjustL('output/'//grid_pct_edge_file) ))
+    open(unit=903, file = trim(adjustL('output/'//grid_depth_file_Gdw) ))
+    open(unit=904, file = trim(adjustL('output/'//grid_depth_file_GwT) ))
+    open(unit=905, file = trim(adjustL('output/'//grid_depth_file_MtD) ))
     
     ! write headers
     write(900,'(A)') 'gridID,pct_water,pct_flotant,pct_land_veg,pct_land_bare,pct_land_upland_dry,pct_land_upland_wet,pct_vglnd_BLHF,pct_vglnd_SWF,pct_vglnd_FM,pct_vglnd_IM,pct_vglnd_BM,pct_vglnd_SM,FIBS_score'
@@ -122,9 +122,9 @@ subroutine write_output_summaries
     write(  *,*) ' - writing end-of-year compartment data files'
     write(000,*) ' - writing end-of-year compartment data files'
     
-    open(unit=906, file = trim(adjustL(comp_elev_file)))
-    open(unit=907, file = trim(adjustL(comp_wat_file)))
-    open(unit=908, file = trim(adjustL(comp_upl_file)))
+    open(unit=906, file = trim(adjustL('output/'//comp_elev_file)))
+    open(unit=907, file = trim(adjustL('output/'//comp_wat_file)))
+    open(unit=908, file = trim(adjustL('output/'//comp_upl_file)))
     
     ! write headers
     write(906,'(A)') 'ICM_ID,MEAN_BED_ELEV,MEAN_MARSH_ELEV,MARSH_EDGE_AREA'
