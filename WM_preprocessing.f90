@@ -445,6 +445,8 @@ subroutine preprocessing
     write(  *,*) ' - reading in ecoregion orgranic accumulation tables'
     write(000,*) ' - reading in ecoregion orgranic accumulation tables'
     
+    er_omar = 0.0
+    
     open(unit=119, file=trim(adjustL('input/'//eco_omar_file)))
     read(119,*) dump_txt        ! dump header
     
