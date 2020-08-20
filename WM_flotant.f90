@@ -70,13 +70,14 @@ subroutine flotant
     do i = 1,ndem
         if (dem_lndtyp(i) == 5) then                                ! dem_lndtyp = 5 for flotant marsh
             g = dem_grid(i)
-            if (grid_dead_flt_killed_cntr(g) < grid_dead_flt_all(g)) then
-                
-                lnd_change_flag(i) = -2                             ! lnd_change_flag = -2 for conversion from flotant marsh mat to open water
-                
-                grid_dead_flt_killed_cntr(g) = grid_dead_flt_killed_cntr(g) + 1
-                grid_flt_all(g) = max(0,grid_flt_all(g)-1)
-            
+            if (g /= dem_NoDataVal) then
+                if (grid_dead_flt_killed_cntr(g) < grid_dead_flt_all(g)) then
+                    
+                    lnd_change_flag(i) = -2                             ! lnd_change_flag = -2 for conversion from flotant marsh mat to open water
+                    
+                    grid_dead_flt_killed_cntr(g) = grid_dead_flt_killed_cntr(g) + 1
+                    grid_flt_all(g) = max(0,grid_flt_all(g)-1)
+                end if
             end if
         end if
     end do

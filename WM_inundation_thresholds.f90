@@ -41,75 +41,79 @@ subroutine inundation_thresholds
         if (dem_to_bidem(i) == dem_NoDataVal) then                      ! only proceed if pixel is not within barrier island domain
             ! set local copies of grid and compartment numbers
             c = dem_comp(i)
-            g = dem_grid(i)
-            
-            ! reset local variables to zero for loop
-            MuDepth = 0.0
-            SigmaDepth = 0.0
-            DepthThreshold_Wet = 0.0
-            DepthThreshold_Dry = 0.0 
-            dep_yr = 0.0
-            sal_yr = 0.0
-            MuDepth_prv = 0.0
-            SigmaDepth_prv = 0.0
-            DepthThreshold_Wet_prv = 0.0
-            dep_prev_yr = 0.0
-            sal_prev_yr = 0.0  
-            
-            ! set local copies of depth and salinity variable for current year
-            dep_yr = dem_inun_dep(i,13)
-            sal_yr = sal_av_yr(c)
-            
-            
-            ! check here to see if lnd_change_flag has been change by any other subroutines,
-            ! if so, skip ahead to not overwrite previously run land change functions (e.g. edge erosion)
-            ! this flag is added to any subroutine that alters lnd_change_flag so that the priority of land change
-            ! is purely a function of the order in which the subroutines are called in MAIN
-            
-            if (lnd_change_flag(i) == 0) then
-                ! if vegetated land - check for inundation stress
-                if (dem_lndtyp(i) == 1) then
-                    MuDepth = B0 + B1*sal_yr
-                    SigmaDepth = B2 + B3*exp(B4*sal_yr)
-                    DepthThreshold_Wet =  MuDepth  + ptile_Z*SigmaDepth
+            if (c /= dem_NoDataVal) then
+                g = dem_grid(i)
+                if (g /= dem_NoDataVal) then
+                
+                    ! reset local variables to zero for loop
+                    MuDepth = 0.0
+                    SigmaDepth = 0.0
+                    DepthThreshold_Wet = 0.0
+                    DepthThreshold_Dry = 0.0 
+                    dep_yr = 0.0
+                    sal_yr = 0.0
+                    MuDepth_prv = 0.0
+                    SigmaDepth_prv = 0.0
+                    DepthThreshold_Wet_prv = 0.0
+                    dep_prev_yr = 0.0
+                    sal_prev_yr = 0.0  
                     
-                    ! if current year inundation is above threshold, check previous year            
-                    if (dep_yr >= DepthThreshold_Wet) then
-                        dep_prev_yr = dem_inun_dep(i,14)
-                        sal_prev_yr = sal_av_prev_yr(c)
+                    ! set local copies of depth and salinity variable for current year
+                    dep_yr = dem_inun_dep(i,13)
+                    sal_yr = sal_av_yr(c)
+                    
+                    
+                    ! check here to see if lnd_change_flag has been change by any other subroutines,
+                    ! if so, skip ahead to not overwrite previously run land change functions (e.g. edge erosion)
+                    ! this flag is added to any subroutine that alters lnd_change_flag so that the priority of land change
+                    ! is purely a function of the order in which the subroutines are called in MAIN
+                    
+                    if (lnd_change_flag(i) == 0) then
+                        ! if vegetated land - check for inundation stress
+                        if (dem_lndtyp(i) == 1) then
+                            MuDepth = B0 + B1*sal_yr
+                            SigmaDepth = B2 + B3*exp(B4*sal_yr)
+                            DepthThreshold_Wet =  MuDepth  + ptile_Z*SigmaDepth
+                            
+                            ! if current year inundation is above threshold, check previous year            
+                            if (dep_yr >= DepthThreshold_Wet) then
+                                dep_prev_yr = dem_inun_dep(i,14)
+                                sal_prev_yr = sal_av_prev_yr(c)
+                                
+                                MuDepth_prv = B0 + B1*sal_prev_yr
+                                SigmaDepth_prv = B2 + B3*exp(B4*sal_prev_yr)
+                                DepthThreshold_Wet_prv =  MuDepth_prv  + ptile_Z*SigmaDepth_prv
+                                
+                                ! if both current year and previous year have inundation above threshold, set flag to collapse land
+                                if (dep_prev_yr >= DepthThreshold_Wet_prv) then
+                                    lnd_change_flag(i) = -1                         ! lnd_change_flag = -1 for conversion from vegetated wetland to open water
+                                end if
+                            end if
                         
-                        MuDepth_prv = B0 + B1*sal_prev_yr
-                        SigmaDepth_prv = B2 + B3*exp(B4*sal_prev_yr)
-                        DepthThreshold_Wet_prv =  MuDepth_prv  + ptile_Z*SigmaDepth_prv
+                        ! if water - check if current year elevation is above MWL by depth threshold defining whether vegetation can establish
+                        else if (dem_lndtyp(i) == 2) then
+                            if (dep_yr < ht_abv_mwl_est) then
+                                dep_prev_yr = dem_inun_dep(i,14)
+                                ! if both current year and previous year have elevation above threshold for establishment, convert water to land eligible for vegetation
+                                if (dep_prev_yr < ht_abv_mwl_est) then
+                                    lnd_change_flag(i) = 1                          ! lnd_change_flag = 1 for conversion from open water to land eligible for vegetation
+                                end if
+                            end if
+                            
+                        ! if upland - check if inundation would allow for wetland vegetation to establish
+                        else if (dem_lndtyp(i) == 5) then
+                            MuDepth = B0 + B1*sal_yr
+                            SigmaDepth = B2 + B3*exp(B4*sal_yr)
+                            DepthThreshold_Dry =  MuDepth - ptile_Z*SigmaDepth
+                            
+                            if (dep_yr >= DepthThreshold_Dry) then
+                                grid_n_upland_wet(g) = grid_n_upland_wet(g) + 1 
+                            else
+                                grid_n_upland_dry(g) = grid_n_upland_dry(g) + 1
+                            end if
                         
-                        ! if both current year and previous year have inundation above threshold, set flag to collapse land
-                        if (dep_prev_yr >= DepthThreshold_Wet_prv) then
-                            lnd_change_flag(i) = -1                         ! lnd_change_flag = -1 for conversion from vegetated wetland to open water
                         end if
                     end if
-                
-                ! if water - check if current year elevation is above MWL by depth threshold defining whether vegetation can establish
-                else if (dem_lndtyp(i) == 2) then
-                    if (dep_yr < ht_abv_mwl_est) then
-                        dep_prev_yr = dem_inun_dep(i,14)
-                        ! if both current year and previous year have elevation above threshold for establishment, convert water to land eligible for vegetation
-                        if (dep_prev_yr < ht_abv_mwl_est) then
-                            lnd_change_flag(i) = 1                          ! lnd_change_flag = 1 for conversion from open water to land eligible for vegetation
-                        end if
-                    end if
-                    
-                ! if upland - check if inundation would allow for wetland vegetation to establish
-                else if (dem_lndtyp(i) == 5) then
-                    MuDepth = B0 + B1*sal_yr
-                    SigmaDepth = B2 + B3*exp(B4*sal_yr)
-                    DepthThreshold_Dry =  MuDepth - ptile_Z*SigmaDepth
-                    
-                    if (dep_yr >= DepthThreshold_Dry) then
-                        grid_n_upland_wet(g) = grid_n_upland_wet(g) + 1 
-                    else
-                        grid_n_upland_dry(g) = grid_n_upland_dry(g) + 1
-                    end if
-                
                 end if
             end if
         end if
