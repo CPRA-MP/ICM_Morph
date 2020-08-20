@@ -64,8 +64,12 @@ subroutine preprocessing
         end if
         
         ! count number of DEM pixels within each ICM-Hydro compartment & ICM-LAVegMod grid cells
-        comp_ndem_all(dem_comp(i)) =  comp_ndem_all(dem_comp(i)) + 1
-        grid_ndem_all(dem_grid(i)) =  grid_ndem_all(dem_grid(i)) + 1
+        if (dem_comp(i) /= dem_NoDataVal) then
+            comp_ndem_all(dem_comp(i)) =  comp_ndem_all(dem_comp(i)) + 1
+        end if
+        if (dem_grid(i) /= dem_NoDataVal) then
+            grid_ndem_all(dem_grid(i)) =  grid_ndem_all(dem_grid(i)) + 1
+        end if
     end do
     close(1110)
     
@@ -128,7 +132,7 @@ subroutine preprocessing
     
     open(unit=1115, file=trim(adjustL('input/'//comp_eco_file)))
     read(1115,*) dump_txt                            ! dump header
-    do i = 1,neco
+    do i = 1,ncomp
         read(1115,*) dump_int,               &       ! ICM-Hydro_comp
    &                 comp_eco(i),            &       ! ecoregion number 
    &                 dump_txt,               &       ! ecoregion code
