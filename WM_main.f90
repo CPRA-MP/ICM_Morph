@@ -62,8 +62,7 @@ program main
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),'_',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'Preprocessing subroutine ended at: ',dtstr
     write(000,*) 'Preprocessing subroutine ended at: ',dtstr
-    write(  *,*) 
-    write(000,*) 
+
     
     do tp = 1,14
         dem_inun_dep(:,tp)  = 0.0                       ! initialize arrays for tp to 0
@@ -75,32 +74,28 @@ program main
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'Inundation Depths subroutine ended at: ',dtstr
     write(000,*) 'Inundation Depths subroutine ended at: ',dtstr
-    write(  *,*) 
-    write(000,*) 
+
     
     call edge_delineation
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'Edge Delineation subroutine ended at: ',dtstr
     write(000,*) 'Edge Delineation subroutine ended at: ',dtstr
-    write(  *,*) 
-    write(000,*) 
+
     
     call mineral_deposition
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'Mineral Deposition subroutine ended at: ',dtstr
     write(000,*) 'Mineral Deposition subroutine ended at: ',dtstr
-    write(  *,*) 
-    write(000,*) 
+
     
     call organic_accretion
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'Organic Accretion subroutine ended at: ',dtstr
     write(000,*) 'Organic Accretion subroutine ended at: ',dtstr
-    write(  *,*) 
-    write(000,*) 
+
     
     lnd_change_flag = 0                             ! initialize land change flag for each DEM pixel to zero  
     
@@ -109,80 +104,69 @@ program main
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'Flotant Marsh subroutine ended at: ',dtstr
     write(000,*) 'Flotant Marsh subroutine ended at: ',dtstr
-    write(  *,*) 
-    write(000,*) 
+ 
     
     call edge_erosion
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'Edge Erosion subroutine ended at: ',dtstr
     write(000,*) 'Edge Erosion subroutine ended at: ',dtstr    
-    write(  *,*) 
-    write(000,*) 
-    
+
     call map_bareground
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'Map Bareground subroutine ended at: ',dtstr
     write(000,*) 'Map Bareground subroutine ended at: ',dtstr    
-    write(  *,*) 
-    write(000,*) 
+ 
     
     call inundation_thresholds
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'Inundation Thresholds subroutine ended at: ',dtstr
     write(000,*) 'Inundation Thresholds subroutine ended at: ',dtstr    
-    write(  *,*) 
-    write(000,*) 
+
     
     call update_elevation
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'Update Elevation subroutine ended at: ',dtstr
     write(000,*) 'Update Elevation subroutine ended at: ',dtstr       
-    write(  *,*) 
-    write(000,*) 
+
     
     call update_landtype
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'Update Landtype subroutine ended at: ',dtstr
     write(000,*) 'Update Landtype subroutine ended at: ',dtstr    
-    write(  *,*) 
-    write(000,*) 
+
     
     call inundation_HSI_bins
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'HSI Inundation subroutine ended at: ',dtstr
     write(000,*) 'HSI Inundation subroutine ended at: ',dtstr    
-    write(  *,*) 
-    write(000,*) 
+ 
     
     call summaries
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'Summaries subroutine ended at: ',dtstr
     write(000,*) 'Summaries subroutine ended at: ',dtstr  
-    write(  *,*) 
-    write(000,*) 
+ 
     
     call write_output_summaries
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'Write Output subroutine ended at: ',dtstr
     write(000,*) 'Write Output subroutine ended at: ',dtstr    
-    write(  *,*) 
-    write(000,*) 
+
     
     call write_output_rasters
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'Write Raster Output subroutine ended at: ',dtstr
     write(000,*) 'Write Raster Output subroutine ended at: ',dtstr    
-    write(  *,*) 
-    write(000,*) 
+
 
     
     write(  *,*)
