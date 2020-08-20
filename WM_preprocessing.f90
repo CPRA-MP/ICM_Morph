@@ -156,16 +156,18 @@ subroutine preprocessing
     
     ! initialize grid data arrays to 0.0
     dem_dpsb = 0.0
-    
-    open(unit=1117, file=trim(adjustL('input/'//dsub_file)))
-    !read(1117,*) dump_txt                               ! dump header
-    do i = 1,ndem
-        read(1117,*) dump_int,dump_int,dem_dpsb(i)      ! X, Y, deep subsidence
-        if (dem_dpsb(i) == dem_NoDataVal) then          ! set to zero if no data
-            dem_dpsb(i) = 0.0
-        end if
-    end do
-    close(1117)
+    write(  *,*) '  ****** MISSING RASTER -  hard-coding to 1.0 mm/yr ******'
+    write(000,*) '  ****** MISSING RASTER -  hard-coding to 1.0 mm/yr ******'
+    dem_dpsb = 1.0
+!    open(unit=1117, file=trim(adjustL('input/'//dsub_file)))
+!    !read(1117,*) dump_txt                               ! dump header
+!    do i = 1,ndem
+!        read(1117,*) dump_int,dump_int,dem_dpsb(i)      ! X, Y, deep subsidence
+!        if (dem_dpsb(i) == dem_NoDataVal) then          ! set to zero if no data
+!            dem_dpsb(i) = 0.0
+!        end if
+!    end do
+!    close(1117)
     
     ! read in shallow subsidence lookup table
     write(  *,*) ' - reading in shallow subsidence statistics by ecoregion'
