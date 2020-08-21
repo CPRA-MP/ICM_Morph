@@ -160,15 +160,20 @@ program main
     write(  *,*) 'Write Output subroutine ended at: ',dtstr
     write(000,*) 'Write Output subroutine ended at: ',dtstr    
 
-    
-    call write_output_rasters
-    call date_and_time(VALUES=dtvalues)
-    write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
-    write(  *,*) 'Write Raster Output subroutine ended at: ',dtstr
-    write(000,*) 'Write Raster Output subroutine ended at: ',dtstr    
+    if (binary_out == 1) then    
+        call write_output_binary_rasters
+        call date_and_time(VALUES=dtvalues)
+        write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
+        write(  *,*) 'Write Binary Raster Output subroutine ended at: ',dtstr
+        write(000,*) 'Write Binary Raster Output subroutine ended at: ',dtstr    
+    else
+        call write_output_asci_rasters
+        call date_and_time(VALUES=dtvalues)
+        write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
+        write(  *,*) 'Write ASCI Raster Output subroutine ended at: ',dtstr
+        write(000,*) 'Write ASCI Raster Output subroutine ended at: ',dtstr 
+    end if
 
-
-    
     write(  *,*)
     write(  *,*) 'Ended ICM-Morph simulation at: ',dtstr
     write(  *,*)

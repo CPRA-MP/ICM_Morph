@@ -17,23 +17,36 @@ subroutine preprocessing
     write(  *,*) ' - reading in DEM-pixel-to-compartment map data'
     write(000,*) ' - reading in DEM-pixel-to-compartment map data'
    
-
-    open(unit=1111, file=trim(adjustL(('input/'//comp_file))))
-!    read(1111,*) dump_txt        ! dump header
-    do i = 1,ndem
-        read(1111,*) dump_int,dump_int,dem_comp(i)
-    end do
+    if (binary_in == 1) then
+        write(  *,*) '   - using binary file'
+        write(000,*) '   - using binary file'
+        open(unit=1111, file=trim(adjustL(('input/'//comp_file//'.b'))))
+        read(1111) dem_comp
+    else
+        open(unit=1111, file=trim(adjustL(('input/'//comp_file))))
+!        read(1111,*) dump_txt        ! dump header
+        do i = 1,ndem
+            read(1111,*) dump_int,dump_int,dem_comp(i)
+        end do
+    end if
     close(1111)
  
     ! read pixel-to-grid mapping file into arrays
     write(  *,*) ' - reading in DEM-pixel-to-grid cell map data'
     write(000,*) ' - reading in DEM-pixel-to-grid cell map data'
-  
-    open(unit=1112, file=trim(adjustL('input/'//grid_file)))
-!    read(1112,*) dump_txt        ! dump header
-    do i = 1,ndem    
-        read(1112,*) dump_int,dump_int,dem_grid(i)
-    end do
+    
+    if (binary_in == 1) then
+        write(  *,*) '   - using binary file'
+        write(000,*) '   - using binary file'
+        open(unit=1112, file=trim(adjustL('input/'//grid_file//'.b')))
+        read(1112) dem_grid
+    else
+        open(unit=1112, file=trim(adjustL('input/'//grid_file)))
+    !    read(1112,*) dump_txt        ! dump header
+        do i = 1,ndem    
+            read(1112,*) dump_int,dump_int,dem_grid(i)
+        end do
+    end if
     close(1112)
 
     
@@ -41,16 +54,34 @@ subroutine preprocessing
     write(  *,*) ' - reading in DEM data'
     write(000,*) ' - reading in DEM data'
 
+    if (binary_in == 1) then
+        write(  *,*) '   - using binary files'
+        write(000,*) '   - using binary files'
+        
+        open(unit=11100, file=trim(adjustL('output/raster_x_coord.b')))         ! binary filename for x-coordinate is hard-set in WRITE_OUTPUT_RASTERS_BIN - it is not read in via SET_IO
+        read(11100) dem_x
+        close(11100) 
+        
+        open(unit=111000, file=trim(adjustL('output/raster_y_coord.b')))         ! binary filename for y-coordinate is hard-set in WRITE_OUTPUT_RASTERS_BIN - it is not read in via SET_IO
+        read(111000) dem_y       
+        close(111000)
+        
+        open(unit=1110, file=trim(adjustL('input/'//dem_file//'.b')))
+        read(1110) dem_z
+    else   
+        open(unit=1110, file=trim(adjustL('input/'//dem_file)))
+        ! read(1110,*) dump_txt        ! dump header
+        do i = 1,ndem
+            read(1110,*) dem_x(i),dem_y(i),dem_z(i)
+        end do
+    end if
+    close(1110)
+
     grid_ndem_all = 0                   ! before looping through all DEM pixels, initialize counter array to zero
     comp_ndem_all = 0                   ! before looping through all DEM pixels, initialize counter array to zero    
-
     
-    open(unit=1110, file=trim(adjustL('input/'//dem_file)))
-   
-!    read(1110,*) dump_txt        ! dump header
+    ! determine lower left and upper right corners of DEM grid
     do i = 1,ndem
-        read(1110,*) dem_x(i),dem_y(i),dem_z(i)
-        ! determine lower left and upper right corners of DEM grid
         if (i == 1) then
             dem_LLx = dem_x(i)
             dem_LLy = dem_y(i)
@@ -71,7 +102,6 @@ subroutine preprocessing
             grid_ndem_all(dem_grid(i)) =  grid_ndem_all(dem_grid(i)) + 1
         end if
     end do
-    close(1110)
     
     ! set variables that hold maximum count per grid/compartment for later array allocation sizes
     grid_ndem_mx = maxval(grid_ndem_all)
@@ -102,24 +132,37 @@ subroutine preprocessing
     ! read LWF map file into arrays
     write(  *,*) ' - reading in land-water map data'
     write(000,*) ' - reading in land-water map data'
-  
-    open(unit=1113, file=trim(adjustL('input/'//lwf_file)))    
-!    read(1113,*) dump_txt        ! dump header
-    do i = 1,ndem 
-        read(1113,*) dump_int,dump_int,dem_lndtyp(i)
-    end do
+    
+    if (binary_in == 1) then
+        write(  *,*) '   - using binary file'
+        write(000,*) '   - using binary file'
+        open(unit=1113, file=trim(adjustL('input/'//lwf_file//'.b')))
+        read(1113) dem_lndtyp
+    else
+        open(unit=1113, file=trim(adjustL('input/'//lwf_file)))
+        !    read(1113,*) dump_txt        ! dump header
+        do i = 1,ndem 
+            read(1113,*) dump_int,dump_int,dem_lndtyp(i)
+        end do
+    end if
     close(1113)
    
     
     ! read marsh edge erosion rate map file into arrays
     write(  *,*) ' - reading in marsh edge erosion rate map data'
     write(000,*) ' - reading in marsh edge erosion rate map data'
-  
-    open(unit=1114, file=trim(adjustL('input/'//meer_file)))    
-!    read(1114,*) dump_txt        ! dump header
-    do i = 1,ndem 
-        read(1114,*) dump_int,dump_int,dem_meer(i)
-    end do
+    if (binary_in == 1) then
+        write(  *,*) '   - using binary file'
+        write(000,*) '   - using binary file'
+        open(unit=1114, file=trim(adjustL('input/'//meer_file//'.b')))  
+        read(1114) dem_meer
+    else    
+        open(unit=1114, file=trim(adjustL('input/'//meer_file)))    
+        ! read(1114,*) dump_txt        ! dump header
+        do i = 1,ndem 
+            read(1114,*) dump_int,dump_int,dem_meer(i)
+        end do
+    end if
     close(1114)
     
     
@@ -163,14 +206,22 @@ subroutine preprocessing
     write(  *,*) '  ****** MISSING RASTER -  hard-coding to 1.0 mm/yr ******'
     write(000,*) '  ****** MISSING RASTER -  hard-coding to 1.0 mm/yr ******'
     dem_dpsb = 1.0
-!    open(unit=1117, file=trim(adjustL('input/'//dsub_file)))
-!    !read(1117,*) dump_txt                               ! dump header
-!    do i = 1,ndem
-!        read(1117,*) dump_int,dump_int,dem_dpsb(i)      ! X, Y, deep subsidence
-!        if (dem_dpsb(i) == dem_NoDataVal) then          ! set to zero if no data
-!            dem_dpsb(i) = 0.0
-!        end if
-!    end do
+    
+!    if (binary_in == 1) then
+!        write(  *,*) '   - using binary file'
+!        write(000,*) '   - using binary file'
+!        open(unit=1117, file=trim(adjustL('input/'//dsub_file//'.b')))
+!        read(1117) dem_dpsb
+!    else
+!        open(unit=1117, file=trim(adjustL('input/'//dsub_file)))
+!        !read(1117,*) dump_txt                               ! dump header
+!        do i = 1,ndem
+!             read(1117,*) dump_int,dump_int,dem_dpsb(i)      ! X, Y, deep subsidence
+!            if (dem_dpsb(i) == dem_NoDataVal) then          ! set to zero if no data
+!                dem_dpsb(i) = 0.0
+!            end if
+!        end do
+!    end if
 !    close(1117)
     
     ! read in shallow subsidence lookup table
@@ -196,12 +247,18 @@ subroutine preprocessing
     ! read polder area map file into arrays
     write(  *,*) ' - reading in polder map data'
     write(000,*) ' - reading in polder map data'
-  
-    open(unit=1119, file=trim(adjustL('input/'//pldr_file)))    
+    if (binary_in == 1) then
+        write(  *,*) '   - using binary file'
+        write(000,*) '   - using binary file'  
+        open(unit=1119, file=trim(adjustL('input/'//pldr_file//'.b')))
+        read(1119) dem_pldr
+    else    
+        open(unit=1119, file=trim(adjustL('input/'//pldr_file)))    
 !    read(1119,*) dump_txt        ! dump header
-    do i = 1,ndem 
-        read(1119,*) dump_int,dump_int,dem_pldr(i)
-    end do
+        do i = 1,ndem 
+            read(1119,*) dump_int,dump_int,dem_pldr(i)
+        end do
+    end if
     close(1119)    
      
     

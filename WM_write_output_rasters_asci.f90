@@ -1,4 +1,4 @@
-subroutine write_output_rasters
+subroutine write_output_asci_rasters
     ! subroutine that writes output rasters
     
 

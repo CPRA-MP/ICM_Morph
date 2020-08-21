@@ -39,6 +39,8 @@ module params
     real(sp) :: mc_depth_threshold                                  ! water depth threshold (meters) defining deep water area to be excluded from marsh creation projects footprint
     
     ! input files in subroutine: SET_IO
+    integer :: binary_in                                            ! read input raster datas from binary files (1) or from ASCI XYZ files (0)
+    integer :: binary_out                                           ! write raster datas to binary format only (1) or to ASCI XYZ files (0)
     character*100 :: dem_file                                       ! file name, with relative path, to DEM XYZ file
     character*100 :: lwf_file                                       ! file name, with relative path, to land/water file that is same resolution and structure as DEM XYZ
     character*100 :: meer_file                                      ! file name, with relative path, to marsh edge erosion rate file that is same resolution and structure as DEM XYZ
