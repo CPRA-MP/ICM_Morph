@@ -20,10 +20,10 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'
-        open(unit=1111, file='output/'//trim(adjustL(edge_eoy_xyz_file))//'.b')
+        open(unit=1111, file=trim(adjustL(edge_eoy_xyz_file))//'.b')
         read(1111) dem_comp
     else
-        open(unit=1111, file=trim(adjustL(('input/'//comp_file))))
+        open(unit=1111, file=trim(adjustL((comp_file))))
 !        read(1111,*) dump_txt        ! dump header
         do i = 1,ndem
             read(1111,*) dump_int,dump_int,dem_comp(i)
@@ -38,10 +38,10 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'
-        open(unit=1112, file='input/'//trim(adjustL(grid_file))//'.b')
+        open(unit=1112, file=trim(adjustL(grid_file))//'.b')
         read(1112) dem_grid
     else
-        open(unit=1112, file=trim(adjustL('input/'//grid_file)))
+        open(unit=1112, file=trim(adjustL(grid_file)))
     !    read(1112,*) dump_txt        ! dump header
         do i = 1,ndem    
             read(1112,*) dump_int,dump_int,dem_grid(i)
@@ -58,18 +58,18 @@ subroutine preprocessing
         write(  *,*) '   - using binary files'
         write(000,*) '   - using binary files'
         
-        open(unit=11100, file=trim(adjustL('output/raster_x_coord.b')))         ! binary filename for x-coordinate is hard-set in WRITE_OUTPUT_RASTERS_BIN - it is not read in via SET_IO
+        open(unit=11100, file=trim(adjustL('raster_x_coord.b')))         ! binary filename for x-coordinate is hard-set in WRITE_OUTPUT_RASTERS_BIN - it is not read in via SET_IO
         read(11100) dem_x
         close(11100) 
         
-        open(unit=111000, file=trim(adjustL('output/raster_y_coord.b')))         ! binary filename for y-coordinate is hard-set in WRITE_OUTPUT_RASTERS_BIN - it is not read in via SET_IO
+        open(unit=111000, file=trim(adjustL('raster_y_coord.b')))         ! binary filename for y-coordinate is hard-set in WRITE_OUTPUT_RASTERS_BIN - it is not read in via SET_IO
         read(111000) dem_y       
         close(111000)
         
-        open(unit=1110, file='input/'//trim(adjustL(dem_file))//'.b')
+        open(unit=1110, file=trim(adjustL(dem_file))//'.b')
         read(1110) dem_z
     else   
-        open(unit=1110, file=trim(adjustL('input/'//dem_file)))
+        open(unit=1110, file=trim(adjustL(dem_file)))
         ! read(1110,*) dump_txt        ! dump header
         do i = 1,ndem
             read(1110,*) dem_x(i),dem_y(i),dem_z(i)
@@ -136,10 +136,10 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'
-        open(unit=1113, file='input/'//trim(adjustL(lwf_file))//'.b')
+        open(unit=1113, file=trim(adjustL(lwf_file))//'.b')
         read(1113) dem_lndtyp
     else
-        open(unit=1113, file=trim(adjustL('input/'//lwf_file)))
+        open(unit=1113, file=trim(adjustL(lwf_file)))
         !    read(1113,*) dump_txt        ! dump header
         do i = 1,ndem 
             read(1113,*) dump_int,dump_int,dem_lndtyp(i)
@@ -154,10 +154,10 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'
-        open(unit=1114, file='input/'//trim(adjustL(meer_file))//'.b')
+        open(unit=1114, file=trim(adjustL(meer_file))//'.b')
         read(1114) dem_meer
     else    
-        open(unit=1114, file=trim(adjustL('input/'//meer_file)))    
+        open(unit=1114, file=trim(adjustL(meer_file)))    
         ! read(1114,*) dump_txt        ! dump header
         do i = 1,ndem 
             read(1114,*) dump_int,dump_int,dem_meer(i)
@@ -173,7 +173,7 @@ subroutine preprocessing
     ! initialize grid data arrays to 0.0
     comp_eco = 0.0
     
-    open(unit=1115, file=trim(adjustL('input/'//comp_eco_file)))
+    open(unit=1115, file=trim(adjustL(comp_eco_file)))
     read(1115,*) dump_txt                            ! dump header
     do i = 1,ncomp
         read(1115,*) dump_int,               &       ! ICM-Hydro_comp
@@ -190,7 +190,7 @@ subroutine preprocessing
     ! initialize grid data arrays to 0.0
     comp_act_dlt = 0.0
     
-    open(unit=1116, file=trim(adjustL('input/'//act_del_file)))
+    open(unit=1116, file=trim(adjustL(act_del_file)))
     read(1116,*) dump_txt                               ! dump header
     do i = 1,ncomp
         read(1116,*) dump_int,comp_act_dlt(i)           ! compartment ID, active delta flag
@@ -231,7 +231,7 @@ subroutine preprocessing
     ! initialize table to 0.0
     er_shsb = 0.0
     
-    open(unit=1118, file=trim(adjustL('input/'//ssub_file)))
+    open(unit=1118, file=trim(adjustL(ssub_file)))
     read(1118,*) dump_txt                               ! dump header
     do i = 1,neco
         read(1118,*) dump_int,                  &       ! ecoregion number
@@ -250,10 +250,10 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'  
-        open(unit=1119, file=trim(adjustL('input/'//pldr_file//'.b')))
+        open(unit=1119, file=trim(adjustL(pldr_file//'.b')))
         read(1119) dem_pldr
     else    
-        open(unit=1119, file=trim(adjustL('input/'//pldr_file)))    
+        open(unit=1119, file=trim(adjustL(pldr_file)))    
 !    read(1119,*) dump_txt        ! dump header
         do i = 1,ndem 
             read(1119,*) dump_int,dump_int,dem_pldr(i)
@@ -266,7 +266,7 @@ subroutine preprocessing
     write(  *,*) ' - reading in annual ICM-Hydro compartment-level output'
     write(000,*) ' - reading in annual ICM-Hydro compartment-level output'
     
-    open(unit=112, file=trim(adjustL('input/'//hydro_comp_out_file)))
+    open(unit=112, file=trim(adjustL(hydro_comp_out_file)))
     
     read(112,*) dump_txt        ! dump header
     do i = 1,ncomp
@@ -297,7 +297,7 @@ subroutine preprocessing
     write(  *,*) ' - reading in previous year annual ICM-Hydro compartment-level output'
     write(000,*) ' - reading in previous year annual ICM-Hydro compartment-level output'
     
-    open(unit=1120, file=trim(adjustL('input/'//prv_hydro_comp_out_file)))
+    open(unit=1120, file=trim(adjustL(prv_hydro_comp_out_file)))
     
     read(1120,*) dump_txt        ! dump header
     do i = 1,ncomp
@@ -328,11 +328,11 @@ subroutine preprocessing
     write(  *,*) ' - reading in monthly ICM-Hydro compartment-level output'
     write(000,*) ' - reading in monthly ICM-Hydro compartment-level output'
 
-    open(unit=113, file=trim(adjustL('input/'//monthly_mean_stage_file)))
-    open(unit=114, file=trim(adjustL('input/'//monthly_max_stage_file)))
-    open(unit=115, file=trim(adjustL('input/'//monthly_ow_sed_dep_file)))
-    open(unit=116, file=trim(adjustL('input/'//monthly_mi_sed_dep_file)))
-    open(unit=117, file=trim(adjustL('input/'//monthly_me_sed_dep_file)))
+    open(unit=113, file=trim(adjustL(monthly_mean_stage_file)))
+    open(unit=114, file=trim(adjustL(monthly_max_stage_file)))
+    open(unit=115, file=trim(adjustL(monthly_ow_sed_dep_file)))
+    open(unit=116, file=trim(adjustL(monthly_mi_sed_dep_file)))
+    open(unit=117, file=trim(adjustL(monthly_me_sed_dep_file)))
     
     read(113,*) dump_txt        ! dump header
     read(114,*) dump_txt        ! dump header
@@ -432,7 +432,7 @@ subroutine preprocessing
     grid_bed_z = 0.0
     grid_land_z = 0.0
     
-    open(unit=118, file=trim(adjustL('input/'//veg_out_file)))
+    open(unit=118, file=trim(adjustL(veg_out_file)))
     do i = 1,622
         read(118,*) dump_txt        ! dump header
     end do
@@ -504,7 +504,7 @@ subroutine preprocessing
     
     er_omar = 0.0
     
-    open(unit=119, file=trim(adjustL('input/'//eco_omar_file)))
+    open(unit=119, file=trim(adjustL(eco_omar_file)))
     read(119,*) dump_txt        ! dump header
     
     do i=1,neco                               
@@ -537,7 +537,7 @@ subroutine preprocessing
 
     dem_to_bidem = dem_NoDataVal                                            ! initialize DEM-to-ICM-BI-DEM map lookup array to NoData
 
-    open(unit=120, file=trim(adjustL('input/'//bi_dem_xyz_file)))    
+    open(unit=120, file=trim(adjustL(bi_dem_xyz_file)))    
 !    read(120,*) dump_txt        ! dump header
     do i = 1,ndem_bi
         read(120,*) dem_x_bi, dem_y_bi, dem_z_bi(i)
