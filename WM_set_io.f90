@@ -40,6 +40,8 @@ subroutine set_io
     read(001,*) mc_depth_threshold,dump_txt
 
     ! input files
+    read(001,*) binary_in
+    read(001,*) binary_out
     read(001,*) dem_file,dump_txt
     read(001,*) lwf_file,dump_txt
     read(001,*) meer_file,dump_txt
