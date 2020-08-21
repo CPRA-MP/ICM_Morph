@@ -20,7 +20,7 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'
-        open(unit=1111, file=trim(adjustL(edge_eoy_xyz_file))//'.b')
+        open(unit=1111, file=trim(adjustL(comp_file))//'.b')
         read(1111) dem_comp
     else
         open(unit=1111, file=trim(adjustL((comp_file))))
