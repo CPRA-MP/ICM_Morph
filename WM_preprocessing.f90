@@ -20,7 +20,7 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'
-        open(unit=1111, file=trim(adjustL(('input/'//comp_file//'.b'))))
+        open(unit=1111, file='output/'//trim(adjustL(edge_eoy_xyz_file))//'.b')
         read(1111) dem_comp
     else
         open(unit=1111, file=trim(adjustL(('input/'//comp_file))))
@@ -38,7 +38,7 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'
-        open(unit=1112, file=trim(adjustL('input/'//grid_file//'.b')))
+        open(unit=1112, file='input/'//trim(adjustL(grid_file))//'.b')
         read(1112) dem_grid
     else
         open(unit=1112, file=trim(adjustL('input/'//grid_file)))
@@ -66,7 +66,7 @@ subroutine preprocessing
         read(111000) dem_y       
         close(111000)
         
-        open(unit=1110, file=trim(adjustL('input/'//dem_file//'.b')))
+        open(unit=1110, file='input/'//trim(adjustL(dem_file))//'.b')
         read(1110) dem_z
     else   
         open(unit=1110, file=trim(adjustL('input/'//dem_file)))
@@ -136,7 +136,7 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'
-        open(unit=1113, file=trim(adjustL('input/'//lwf_file//'.b')))
+        open(unit=1113, file='input/'//trim(adjustL(lwf_file))//'.b')
         read(1113) dem_lndtyp
     else
         open(unit=1113, file=trim(adjustL('input/'//lwf_file)))
@@ -154,7 +154,7 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'
-        open(unit=1114, file=trim(adjustL('input/'//meer_file//'.b')))  
+        open(unit=1114, file='input/'//trim(adjustL(meer_file))//'.b')
         read(1114) dem_meer
     else    
         open(unit=1114, file=trim(adjustL('input/'//meer_file)))    
