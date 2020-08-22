@@ -8,7 +8,7 @@ subroutine set_io
     
     allocate(FIBS_intvals(6))
 
-    open(unit=001, file=trim(adjustL('./input_params.csv')))
+    open(unit=001, file=trim(adjustL('./geomorph/input_params.csv')))
  
     ! settings
     read(001,*) start_year,dump_txt
