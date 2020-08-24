@@ -54,29 +54,52 @@ INCLUDE(${CMAKE_SOURCE_DIR}/cmake/architecture.cmake)
 
 
 ###########################################################################
+#...Enable/Disable netCDF functionality
+OPTION(ENABLE_OUTPUT_NETCDF "Enable netCDF output formats" OFF)
+IF(ENABLE_OUTPUT_NETCDF)
+    SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+    SET(NETCDF_F90 "YES")
+    FIND_PACKAGE(NetCDF)
+    IF(NOT NETCDF_FOUND)
+        MESSAGE(SEND_ERROR "Could not locate NetCDF. Try setting the command line flag -DNETCDF_DIR=[path]")
+    ENDIF()
+ENDIF()
+###########################################################################
+
+
+###########################################################################
 # ICM_Morph
 ###########################################################################
-ADD_EXECUTABLE( morph_v${ICMMORPH_VERSION_STRING} WM_edge_delineation.f90
-                                                  WM_edge_erosion.f90
-                                                  WM_flotant.f90
-                                                  WM_inundation_depths.f90
-                                                  WM_inundation_HSI_bins.f90
-                                                  WM_inundation_thresholds.f90
-                                                  WM_main.f90
-                                                  WM_map_bareground.f90
-                                                  WM_mineral_deposition.f90
-                                                  WM_organic_accretion.f90
-                                                  WM_params.f90
-                                                  WM_params_alloc.f90
-                                                  WM_preprocessing.f90
-                                                  WM_set_io.f90
-                                                  WM_summaries.f90
-                                                  WM_update_elevation.f90
-                                                  WM_update_landtype.f90
-                                                  WM_write_output_asci_rasters.f90
-                                                  WM_write_output_binary_rasters.f90
-                                                  WM_write_output_summaries.f90)
-SET_TARGET_PROPERTIES(morph_v${ICMMORPH_VERSION_STRING} PROPERTIES Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/CMakeFiles/mod)
-SET_TARGET_PROPERTIES(morph_v${ICMMORPH_VERSION_STRING} PROPERTIES COMPILE_FLAGS "${Fortran_LINELENGTH_FLAG} ${Fortran_COMPILER_SPECIFIC_FLAG}" )
+SET( MORPH morph_v${ICMMORPH_VERSION_STRING} )
+ADD_EXECUTABLE( ${MORPH} WM_edge_delineation.f90
+                         WM_edge_erosion.f90
+                         WM_flotant.f90
+                         WM_inundation_depths.f90
+                         WM_inundation_HSI_bins.f90
+                         WM_inundation_thresholds.f90
+                         WM_main.f90
+                         WM_map_bareground.f90
+                         WM_mineral_deposition.f90
+                         WM_organic_accretion.f90
+                         WM_params.f90
+                         WM_params_alloc.f90
+                         WM_preprocessing.f90
+                         WM_set_io.f90
+                         WM_summaries.f90
+                         WM_update_elevation.f90
+                         WM_update_landtype.f90
+                         WM_write_output_asci_rasters.f90
+                         WM_write_output_binary_rasters.f90
+                         WM_write_output_summaries.f90
+                         WM_write_output_netcdf_rasters.f90 
+                         WM_netcdf.F90 )
+SET_TARGET_PROPERTIES( ${MORPH} PROPERTIES Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/CMakeFiles/mod)
+SET_TARGET_PROPERTIES( ${MORPH} PROPERTIES COMPILE_FLAGS "${Fortran_LINELENGTH_FLAG} ${Fortran_COMPILER_SPECIFIC_FLAG}" )
+
+IF(ENABLE_OUTPUT_NETCDF)
+    TARGET_COMPILE_DEFINITIONS( ${MORPH} PRIVATE ICM_NETCDF )
+    TARGET_INCLUDE_DIRECTORIES( ${MORPH} PRIVATE ${NETCDF_INCLUDE_DIRS})
+    TARGET_LINK_LIBRARIES( ${MORPH} PRIVATE ${NETCDF_LIBRARIES})
+ENDIF()
 
 
