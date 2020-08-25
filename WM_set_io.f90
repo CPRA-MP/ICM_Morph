@@ -43,7 +43,7 @@ subroutine set_io
     read(001,*) binary_out
 
     read(001,*) dem_file,dump_txt
-    write(*,*) dem_file
+
     read(001,*) lwf_file,dump_txt
     read(001,*) meer_file,dump_txt
     read(001,*) pldr_file,dump_txt 
@@ -51,14 +51,13 @@ subroutine set_io
     read(001,*) grid_file,dump_txt      
     read(001,*) dsub_file,dump_txt
     read(001,*) ssub_file,dump_txt
-    write(*,*) ssub_file
+
     read(001,*) act_del_file,dump_txt
     read(001,*) eco_omar_file,dump_txt
     read(001,*) comp_eco_file,dump_txt
     read(001,*) hydro_comp_out_file,dump_txt
     read(001,*) prv_hydro_comp_out_file,dump_txt
     read(001,*) veg_out_file,dump_txt
-    write(*,*) veg_out_file
     read(001,*) monthly_mean_stage_file,dump_txt
     read(001,*) monthly_max_stage_file,dump_txt
     read(001,*) monthly_ow_sed_dep_file,dump_txt
