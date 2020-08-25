@@ -31,19 +31,17 @@ subroutine set_io
     read(001,*) ow_bd,dump_txt
     read(001,*) om_k1,dump_txt
     read(001,*) mn_k2,dump_txt
-    write(*,*) 'hello ', mn_k2
     read(001,*) FIBS_intvals(1),dump_txt
     read(001,*) FIBS_intvals(2),dump_txt
     read(001,*) FIBS_intvals(3),dump_txt
     read(001,*) FIBS_intvals(4),dump_txt
     read(001,*) FIBS_intvals(5),dump_txt
     read(001,*) FIBS_intvals(6),dump_txt
-    write(*,*) 'hello1'
     read(001,*) mc_depth_threshold,dump_txt
-    write(*,*) 'hello2'
     ! input files
     read(001,*) binary_in
     read(001,*) binary_out
+    write(*,*) 'h',binary_out
     read(001,*) dem_file,dump_txt
     read(001,*) lwf_file,dump_txt
     read(001,*) meer_file,dump_txt
