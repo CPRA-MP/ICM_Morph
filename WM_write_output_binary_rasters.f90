@@ -40,13 +40,13 @@ subroutine write_output_binary_rasters
     
     write(  *,*) ' - writing output raster binary file for X-coordinate'
     write(000,*) ' - writing output raster binary file for X-coordinate'
-    open(unit=805, file = trim(adjustL('output/raster_x_coord.b'))//'.b',form='unformatted')
+    open(unit=805, file = trim(adjustL('geomorph/output/raster_x_coord.b')),form='unformatted')
     write(805) dem_x
     close(805)  
     
     write(  *,*) ' - writing output raster binary file for Y-coordinate'
     write(000,*) ' - writing output raster binary file for Y-coordinate'
-    open(unit=806, file = trim(adjustL('output/raster_x_coord.b') ),form='unformatted')
+    open(unit=806, file = trim(adjustL('geomorph/output/raster_y_coord.b')),form='unformatted')
     write(806) dem_y
     close(806)  
     
