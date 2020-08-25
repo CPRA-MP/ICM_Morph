@@ -123,8 +123,8 @@ subroutine write_output_summaries
     write(000,*) ' - writing end-of-year compartment data files'
     
     open(unit=906, file = trim(adjustL(comp_elev_file)))
-    open(unit=907, file = trim(adjustL(//comp_wat_file)))
-    open(unit=908, file = trim(adjustL(//comp_upl_file)))
+    open(unit=907, file = trim(adjustL(comp_wat_file)))
+    open(unit=908, file = trim(adjustL(comp_upl_file)))
     
     ! write headers
     write(906,'(A)') 'ICM_ID,MEAN_BED_ELEV,MEAN_MARSH_ELEV,MARSH_EDGE_AREA'
