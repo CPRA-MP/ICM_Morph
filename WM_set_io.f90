@@ -43,7 +43,6 @@ subroutine set_io
     read(001,*) binary_out
 
     read(001,*) dem_file,dump_txt
-
     read(001,*) lwf_file,dump_txt
     read(001,*) meer_file,dump_txt
     read(001,*) pldr_file,dump_txt 
@@ -51,7 +50,6 @@ subroutine set_io
     read(001,*) grid_file,dump_txt      
     read(001,*) dsub_file,dump_txt
     read(001,*) ssub_file,dump_txt
-
     read(001,*) act_del_file,dump_txt
     read(001,*) eco_omar_file,dump_txt
     read(001,*) comp_eco_file,dump_txt
@@ -64,7 +62,7 @@ subroutine set_io
     read(001,*) monthly_mi_sed_dep_file,dump_txt
     read(001,*) monthly_me_sed_dep_file,dump_txt
     read(001,*) bi_dem_xyz_file,dump_txt
-    write(*,*) bi_dem_xyz_file
+
     !  output files     
     read(001,*) edge_eoy_xyz_file,dump_txt
     read(001,*) dem_eoy_xyz_file,dump_txt
@@ -73,7 +71,6 @@ subroutine set_io
     read(001,*) lndchng_eoy_xyz_file,dump_txt
     read(001,*) grid_summary_eoy_file,dump_txt
     read(001,*) grid_data_file,dump_txt
-    write(*,*) grid_data_file
     read(001,*) grid_depth_file_Gdw,dump_txt
     read(001,*) grid_depth_file_GwT,dump_txt
     read(001,*) grid_depth_file_MtD,dump_txt
