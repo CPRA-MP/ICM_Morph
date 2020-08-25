@@ -453,7 +453,7 @@ subroutine preprocessing
    &                dump_flt,                                       &      ! PAHE2_Flt, 
    &                dump_flt,                                       &      ! PAHE2, 
    &                dump_flt,                                       &      ! BAREGRND_Flt,
-   &                dump_flt,                                       &      ! DEAD_Flt, 
+   &                grid_pct_dead_flt(i),                           &      ! DEAD_Flt, 
    &                dump_flt,                                       &      ! COES, 
    &                dump_flt,                                       &      ! MOCE2, 
    &                dump_flt,                                       &      ! SALA2, 
@@ -500,8 +500,8 @@ subroutine preprocessing
    &                grid_pct_vglnd_FM(i),                           &      ! pL_FM, 
    &                grid_pct_vglnd_IM(i),                           &      ! pL_IM, 
    &                grid_pct_vglnd_BM(i),                           &      ! pL_BM, 
-   &                grid_pct_vglnd_SM(i),                           &      ! pL_SM, 
-   &                grid_pct_dead_flt(i)                                   ! Dead_Flt
+   &                grid_pct_vglnd_SM(i)                                   ! pL_SM, 
+
     end do
     close(118)
 
