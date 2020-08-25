@@ -433,9 +433,17 @@ subroutine preprocessing
     grid_land_z = 0.0
     
     open(unit=118, file=trim(adjustL(veg_out_file)))
-    do i = 1,622
-        read(118,*) dump_txt        ! dump header
+
+    do i = 1,6
+        read(118,*) dump_txt        ! dump ASCI grid header rows    
     end do
+
+    do i = 1,615
+        read(118,*) dump_txt        ! dump ASCI grid
+    end do
+
+    read(118,1234) dump_txt         ! dump column header row ! format 1234 must match structure of veg_out_file column headers
+
     do i = 1,ngrid
         read(118,*) dump_flt,                                       &      ! CELLID, 
    &                dump_flt,                                       &      ! NYAQ2, 
@@ -550,8 +558,7 @@ subroutine preprocessing
     end do    
     close(120)    
     
-    
-    
+1234    format(A,54(',',A))
     
     return
 end
