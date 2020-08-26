@@ -75,6 +75,7 @@ ADD_EXECUTABLE( morph_v${ICMMORPH_VERSION_STRING} WM_edge_delineation.f90
                                                   WM_update_landtype.f90
                                                   WM_write_output_asci_rasters.f90
                                                   WM_write_output_binary_rasters.f90
+                                                  WM_write_output_QAQCpoints.f90
                                                   WM_write_output_summaries.f90)
 SET_TARGET_PROPERTIES(morph_v${ICMMORPH_VERSION_STRING} PROPERTIES Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/CMakeFiles/mod)
 SET_TARGET_PROPERTIES(morph_v${ICMMORPH_VERSION_STRING} PROPERTIES COMPILE_FLAGS "${Fortran_LINELENGTH_FLAG} ${Fortran_COMPILER_SPECIFIC_FLAG}" )
