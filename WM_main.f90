@@ -160,6 +160,13 @@ program main
     write(  *,*) 'Write Output subroutine ended at: ',dtstr
     write(000,*) 'Write Output subroutine ended at: ',dtstr    
 
+    call write_output_QAQC_points
+    call date_and_time(VALUES=dtvalues)
+    write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
+    write(  *,*) 'Write Output subroutine ended at: ',dtstr
+    write(000,*) 'Write Output subroutine ended at: ',dtstr  
+    
+    
     if (binary_out == 1) then    
         call write_output_binary_rasters
         call date_and_time(VALUES=dtvalues)

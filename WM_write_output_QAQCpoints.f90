@@ -1,4 +1,4 @@
-subroutine write_output_QAQCpoints
+subroutine write_output_QAQC_points
     ! Subroutine that writes output files with data at QAQC points.
     ! There will be a separate file for each QAQC point
     ! The file will be opened in 'write' mode during the first year (which will overwrite)
