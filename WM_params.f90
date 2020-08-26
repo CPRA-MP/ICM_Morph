@@ -109,8 +109,6 @@ module params
     integer :: dem_LLy                                              ! lower left Y-coordinate of DEM grid
     integer :: dem_URx                                              ! upper right X-coordinate of DEM grid
     integer :: dem_URy                                              ! upper right Y-coordinate of DEM grid
-    integer,dimension(:),allocatable :: dem_col                     ! same as dem_x but use column number instead of X coordinate
-    integer,dimension(:),allocatable :: dem_row                     ! same as dem_y but use column number instead of Y coordinate
     integer,dimension(:),allocatable :: comp_ndem_all               ! number of DEM pixels within each ICM-Hydro compartment (-)
     integer,dimension(:),allocatable :: grid_ndem_all               ! number of DEM pixels within each ICM-LAVegMod grid cell (-)                                                         
     integer,dimension(:),allocatable :: dem_lndtyp                  ! Land type classification of DEM pixel

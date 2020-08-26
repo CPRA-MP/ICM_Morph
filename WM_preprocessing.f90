@@ -116,8 +116,6 @@ subroutine preprocessing
     
     ! initialize arrays to 0
     dem_index_mapped = 0
-    dem_col = 0
-    dem_row = 0
     
     ! loop through DEM and map pixel ID (i) to structured DEM map
     ! also save vector arrays that convert X and Y coordinate arrays into row and column arrays (searchable by DEM pixel ID, i)
@@ -125,8 +123,6 @@ subroutine preprocessing
         i_col = 1+(dem_x(i) - dem_LLx)/dem_res
         i_row = 1+(dem_y(i) - dem_LLy)/dem_res
         dem_index_mapped(i_col,i_row) = i
-        dem_col(i) = i_col
-        dem_row(i) = i_row
     end do
 
     ! read LWF map file into arrays
