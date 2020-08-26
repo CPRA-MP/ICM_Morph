@@ -50,6 +50,17 @@ subroutine write_output_binary_rasters
     write(806) dem_y
     close(806)  
     
+    write(  *,*) ' - writing output raster binary file for compartment map'
+    write(000,*) ' - writing output raster binary file for compartment map'
+    open(unit=807, file=trim(adjustL(comp_file))//'.b',form='unformatted')
+    write(807) dem_comp
+    close(807)
+    
+    write(  *,*) ' - writing output raster binary file for grid map'
+    write(000,*) ' - writing output raster binary file for grid map'
+    open(unit=808, file=trim(adjustL(grid_file))//'.b',form='unformatted')
+    write(808) dem_grid
+    close(808)
     
     return
 end
