@@ -115,7 +115,7 @@ subroutine preprocessing
     call dem_params_alloc(n_dem_col,n_dem_row)
     
     ! initialize arrays to 0
-    dem_index_mapped = 0
+    !dem_index_mapped = 0
     
     ! loop through DEM and map pixel ID (i) to structured DEM map
     ! also save vector arrays that convert X and Y coordinate arrays into row and column arrays (searchable by DEM pixel ID, i)
