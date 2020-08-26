@@ -58,11 +58,11 @@ subroutine preprocessing
         write(  *,*) '   - using binary files'
         write(000,*) '   - using binary files'
         
-        open(unit=11100, file=trim(adjustL('raster_x_coord.b')),form='unformatted')         ! binary filename for x-coordinate is hard-set in WRITE_OUTPUT_RASTERS_BIN - it is not read in via SET_IO
+        open(unit=11100, file=trim(adjustL('geomorph/output/raster_x_coord.b')),form='unformatted')         ! binary filename for x-coordinate is hard-set in WRITE_OUTPUT_RASTERS_BIN - it is not read in via SET_IO
         read(11100) dem_x
         close(11100) 
         
-        open(unit=111000, file=trim(adjustL('raster_y_coord.b')),form='unformatted')         ! binary filename for y-coordinate is hard-set in WRITE_OUTPUT_RASTERS_BIN - it is not read in via SET_IO
+        open(unit=111000, file=trim(adjustL('geomorph/output/raster_y_coord.b')),form='unformatted')         ! binary filename for y-coordinate is hard-set in WRITE_OUTPUT_RASTERS_BIN - it is not read in via SET_IO
         read(111000) dem_y       
         close(111000)
         
