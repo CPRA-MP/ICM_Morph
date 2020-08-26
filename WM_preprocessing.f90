@@ -20,7 +20,7 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'
-        open(unit=1111, file=trim(adjustL(comp_file))//'.b')
+        open(unit=1111, file=trim(adjustL(comp_file))//'.b',form='unformatted')
         read(1111) dem_comp
     else
         open(unit=1111, file=trim(adjustL((comp_file))))
@@ -38,7 +38,7 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'
-        open(unit=1112, file=trim(adjustL(grid_file))//'.b')
+        open(unit=1112, file=trim(adjustL(grid_file))//'.b',form='unformatted')
         read(1112) dem_grid
     else
         open(unit=1112, file=trim(adjustL(grid_file)))
@@ -58,15 +58,15 @@ subroutine preprocessing
         write(  *,*) '   - using binary files'
         write(000,*) '   - using binary files'
         
-        open(unit=11100, file=trim(adjustL('raster_x_coord.b')))         ! binary filename for x-coordinate is hard-set in WRITE_OUTPUT_RASTERS_BIN - it is not read in via SET_IO
+        open(unit=11100, file=trim(adjustL('raster_x_coord.b')),form='unformatted')         ! binary filename for x-coordinate is hard-set in WRITE_OUTPUT_RASTERS_BIN - it is not read in via SET_IO
         read(11100) dem_x
         close(11100) 
         
-        open(unit=111000, file=trim(adjustL('raster_y_coord.b')))         ! binary filename for y-coordinate is hard-set in WRITE_OUTPUT_RASTERS_BIN - it is not read in via SET_IO
+        open(unit=111000, file=trim(adjustL('raster_y_coord.b')),form='unformatted')         ! binary filename for y-coordinate is hard-set in WRITE_OUTPUT_RASTERS_BIN - it is not read in via SET_IO
         read(111000) dem_y       
         close(111000)
         
-        open(unit=1110, file=trim(adjustL(dem_file))//'.b')
+        open(unit=1110, file=trim(adjustL(dem_file))//'.b',form='unformatted')
         read(1110) dem_z
     else   
         open(unit=1110, file=trim(adjustL(dem_file)))
@@ -136,7 +136,7 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'
-        open(unit=1113, file=trim(adjustL(lwf_file))//'.b')
+        open(unit=1113, file=trim(adjustL(lwf_file))//'.b',form='unformatted')
         read(1113) dem_lndtyp
     else
         open(unit=1113, file=trim(adjustL(lwf_file)))
@@ -154,7 +154,7 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'
-        open(unit=1114, file=trim(adjustL(meer_file))//'.b')
+        open(unit=1114, file=trim(adjustL(meer_file))//'.b',form='unformatted')
         read(1114) dem_meer
     else    
         open(unit=1114, file=trim(adjustL(meer_file)))    
@@ -250,7 +250,7 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'  
-        open(unit=1119, file=trim(adjustL(pldr_file//'.b')))
+        open(unit=1119, file=trim(adjustL(pldr_file//'.b')),form='unformatted')
         read(1119) dem_pldr
     else    
         open(unit=1119, file=trim(adjustL(pldr_file)))    
@@ -423,7 +423,7 @@ subroutine preprocessing
     write(  *,*) ' - reading in ICM-LAVegMod grid-level output'
     write(000,*) ' - reading in ICM-LAVegMod grid-level output'
     
-    ! initialize grid data arrays to 0.0
+    ! initialize grid data arrays
     grid_pct_water = 0.0
     grid_pct_upland = 0.0
     grid_pct_bare_old = 0.0
@@ -431,6 +431,7 @@ subroutine preprocessing
     grid_pct_dead_flt = 0.0
     grid_bed_z = 0.0
     grid_land_z = 0.0
+    grid_FIBS_score = dem_NoDataVal
     
     open(unit=118, file=trim(adjustL(veg_out_file)))
 

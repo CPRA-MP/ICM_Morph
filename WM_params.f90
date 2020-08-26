@@ -79,6 +79,11 @@ module params
     character*100 :: comp_wat_file                                  ! file name, with relative path, to percent water summary compartment file used internally by ICM
     character*100 :: comp_upl_file                                  ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
     
+    ! QAQC save point information in subroutine: SET_IO
+    integer :: nqaqc                                                ! number of QAQC points for reporting - as listed in qaqc_site_list_file
+    character*100 :: qaqc_site_list_file                            ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
+    character*100 :: fnc_tag                                        ! file naming convention tag
+    
     ! define variables read in or calculated from xyz files in subroutine: PREPROCESSING
     integer,dimension(:),allocatable ::  dem_x                      ! x-coordinate of DEM pixel (UTM m, zone 15N)
     integer,dimension(:),allocatable ::  dem_y                      ! y-coordinate of DEM pixel (UTM m, zone 15N)

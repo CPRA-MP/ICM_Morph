@@ -78,7 +78,12 @@ subroutine set_io
     read(001,*) comp_elev_file,dump_txt
     read(001,*) comp_wat_file,dump_txt
     read(001,*) comp_upl_file,dump_txt
-
+    
+    ! QAQC save point information
+    read(001,*) nqaqc                    
+    read(001,*) qaqc_site_list_file
+    read(001,*) fnc_tag
+    
     close(001)
 
     return
