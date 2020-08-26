@@ -246,7 +246,7 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'  
-        open(unit=1119, file=trim(adjustL(pldr_file//'.b')),form='unformatted')
+        open(unit=1119, file=trim(adjustL(pldr_file))//'.b',form='unformatted')
         read(1119) dem_pldr
     else    
         open(unit=1119, file=trim(adjustL(pldr_file)))    
