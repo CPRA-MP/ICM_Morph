@@ -81,11 +81,10 @@ subroutine preprocessing
     
     close(1110)
     
-    do i=1,ndem
-        write(*,*) minval(dem_z),maxval(dem_z)
-        pause
-    end do
-
+        
+    write(*,*) 'elevation after reading in'
+    write(*,*) minval(dem_z),maxval(dem_z)
+    pause
 
     grid_ndem_all = 0                   ! before looping through all DEM pixels, initialize counter array to zero
     comp_ndem_all = 0                   ! before looping through all DEM pixels, initialize counter array to zero    
