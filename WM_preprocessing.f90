@@ -82,10 +82,8 @@ subroutine preprocessing
     close(1110)
     
     do i=1,ndem
-        if (dem_z(i) > 100) then
-            write(*,*) i,dem_z(i)
-            pause
-        end if
+        write(*,*) minval(dem_z),maxval(dem_z)
+        pause
     end do
 
 
