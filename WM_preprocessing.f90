@@ -53,7 +53,10 @@ subroutine preprocessing
     ! read xyz file into arrays
     write(  *,*) ' - reading in DEM data'
     write(000,*) ' - reading in DEM data'
-
+    dem_x = 0
+    dem_y = 0
+    dem_z = 0.0
+    
     if (binary_in == 1) then
         write(  *,*) '   - using binary files'
         write(000,*) '   - using binary files'
@@ -75,7 +78,16 @@ subroutine preprocessing
             read(1110,*) dem_x(i),dem_y(i),dem_z(i)
         end do
     end if
+    
     close(1110)
+    
+    do i=1,ndem
+        if (dem_z(i) > 100) then
+            write(*,*) i,dem_z(i)
+            pause
+        end if
+    end do
+
 
     grid_ndem_all = 0                   ! before looping through all DEM pixels, initialize counter array to zero
     comp_ndem_all = 0                   ! before looping through all DEM pixels, initialize counter array to zero    

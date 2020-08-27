@@ -46,7 +46,7 @@ subroutine write_output_QAQC_points
    &               site_y,                           &
    &               qaqc_filetag
         write(site_no_text,'(I4.4)') site_no
-        qaqc_file = trim(adjustL(fnc_tag))//"_QAQC_"//trim(adjustL(site_no_text))//"_"//trim(adjustL(qaqc_filetag))
+        qaqc_file = trim(adjustL(fnc_tag))//"_QAQC_"//trim(adjustL(site_no_text))//"_"//trim(adjustL(qaqc_filetag))//'.csv'
         
         ! open site-specific QAQC file, if not first year then open in 'append' mode
         if (elapsed_year == 1) then
