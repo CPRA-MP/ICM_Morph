@@ -76,5 +76,9 @@ subroutine update_elevation
         end if
     end do
     
+    write(*,*) 'elevation after update'
+    write(*,*) minval(dem_z),maxval(dem_z)
+    pause
+    
     return
 end

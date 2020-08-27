@@ -78,14 +78,8 @@ subroutine preprocessing
             read(1110,*) dem_x(i),dem_y(i),dem_z(i)
         end do
     end if
-    
-    close(1110)
-    
-        
-    write(*,*) 'elevation after reading in'
-    write(*,*) minval(dem_z),maxval(dem_z)
-    pause
 
+    close(1110)
     grid_ndem_all = 0                   ! before looping through all DEM pixels, initialize counter array to zero
     comp_ndem_all = 0                   ! before looping through all DEM pixels, initialize counter array to zero    
     
