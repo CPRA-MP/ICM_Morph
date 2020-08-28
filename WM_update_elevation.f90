@@ -66,8 +66,7 @@ subroutine update_elevation
                         end if 
                     end if
                     
-                    dem_z(i) = dem_z(i) + 0.05
-                    !dem_z(i) = dem_z(i) + dz_cm/100.0                           ! dz_cm is in cm, DEM is in meters
+                    dem_z(i) = dem_z(i) + dz_cm/100.0                           ! dz_cm is in cm, DEM is in meters
                     dem_dz_cm(i) = dz_cm                                        ! update dZ array for writing output file
                 
                 else        
@@ -82,6 +81,10 @@ subroutine update_elevation
     write(*,*)
     write(*,*)
     write(*,*)
+    write(*,*) 'shallow sub: [',minval(er_shsb),maxval(er_shsb),']'
+    write(*,*) 'deep sub: [',minval(dem_dpsb),maxval(dem_dpsb),']'
+    write(*,*) 'min accr: [',minval(min_accr_cm),maxval(min_accr_cm),']'
+    write(*,*) 'org accr: [',minval(org_accr_cm),maxval(org_accr_cm),']'
     write(*,*) 'dem z after update elevation: [',minval(dem_z),maxval(dem_z),']'
     write(*,*)
     write(*,*)
