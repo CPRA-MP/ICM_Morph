@@ -36,14 +36,14 @@ subroutine update_elevation
         if (dem_z(i) /= dem_NoDataVal) then
             c = dem_comp(i)
             if (c /= dem_NoDataVal) then
-                if (dem_to_bidem(i) == dem_NoDataVal) then                      ! if pixel is not within barrier island domain            
-                    if (dem_bg_flag(i) == 1) then                               ! lower old bareground pixels
+                if (dem_to_bidem(i) == dem_NoDataVal) then                                          ! if pixel is not within barrier island domain            
+                    if (dem_bg_flag(i) == 1) then                                                   ! lower old bareground pixels
                         dz_cm_lndtyp = -5.0
                     else 
-                        if (lnd_change_flag(i) == -2) then                  ! lower dead flotant pixels to 1 m below mean water level
-                            dz_cm_lndtyp = (dem_z(i) - (stg_av_yr(c)-1.0) )/100.0     
-                        else if (lnd_change_flag(i) == -3) then             ! lower eroded edge pixels to  25 cm below mean water level
-                            dz_cm_lndtyp = (dem_z(i) - (stg_av_yr(c)-0.25) )/100.0     
+                        if (lnd_change_flag(i) == -2) then                                          ! lower dead flotant pixels to 1 m below mean water level
+                            dz_cm_lndtyp = min(0.00,-100.0*( dem_z(i) - (stg_av_yr(c)-1.0) ))       ! if current elevation is already more than 1-m below water level, do not allow for elevation gain
+                        else if (lnd_change_flag(i) == -3) then                                     ! lower eroded edge pixels to  25 cm below mean water level
+                            dz_cm_lndtyp = min(0.00,-100.0*( dem_z(i) - (stg_av_yr(c)-0.25) )) 
                         end if
                     end if
                 
@@ -70,11 +70,21 @@ subroutine update_elevation
                     dem_dz_cm(i) = dz_cm                                        ! update dZ array for writing output file
                 
                 else        
-                    dem_z(i) = dem_z_bi(dem_to_bidem(i))                        ! if in BI-DEM domain,, use ICM-BI-DEM elevation as final elevation
+                    dem_z(i) = dem_z(i)
+                    !dem_z(i) = dem_z_bi(dem_to_bidem(i))                        ! if in BI-DEM domain,, use ICM-BI-DEM elevation as final elevation
                 end if
             end if
         end if
     end do
+    
+    
+    write(*,*)
+    write(*,*)
+    write(*,*)
+    write(*,*) 'dem z after update elevation: [',minval(dem_z),maxval(dem_z),']'
+    write(*,*)
+    write(*,*)
+    write(*,*)
     
 
     

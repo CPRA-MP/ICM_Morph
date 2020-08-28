@@ -128,14 +128,7 @@ subroutine preprocessing
         dem_index_mapped(i_col,i_row) = i
     end do
 
-    write(*,*)
-    write(*,*)
-    write(*,*)
-    write(*,*) 'elevation after read-in dem: [',minval(dem_z),maxval(dem_z),']'
-    write(*,*)
-    write(*,*)
-    write(*,*)
-    
+   
     ! read LWF map file into arrays
     write(  *,*) ' - reading in land-water map data'
     write(000,*) ' - reading in land-water map data'
@@ -513,14 +506,6 @@ subroutine preprocessing
     end do
     close(118)
 
-    write(*,*)
-    write(*,*)
-    write(*,*)
-    write(*,*) 'FIBS after read-in: [',minval(grid_FIBS_score),maxval(grid_FIBS_score),']'
-    write(*,*)
-    write(*,*)
-    write(*,*)
-    
     ! read ICM-LAVegMod grid output file into arrays
     write(  *,*) ' - reading in ecoregion orgranic accumulation tables'
     write(000,*) ' - reading in ecoregion orgranic accumulation tables'
