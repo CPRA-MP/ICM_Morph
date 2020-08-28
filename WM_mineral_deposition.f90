@@ -35,17 +35,20 @@ subroutine mineral_deposition
     do ci = 1,ncomp                                                                 ! update mineral sediment deposition per unit area of interior marsh
         do mni = 1,12                                                               ! by the portion of the marsh that was inundated during each respective month
             if (comp_ndem_wet(ci,mni) /= 0 ) then    
-                sed_dp_mi_mons_corr(ci,mni)  = sed_dp_mi_mons(ci,mni)/(comp_ndem_wet(ci,mni)/comp_ndem_all(ci))
+                sed_dp_mi_mons_corr(ci,mni)  = sed_dp_mi_mons(ci,mni)!/(comp_ndem_wet(ci,mni)/comp_ndem_all(ci))
             end if
         end do
     end do
     
     do ci = 1,ncomp                                                                 ! update mineral sediment deposition per unit area of interior marsh
         do mni = 1,12
-            write(*,*)  ci,mni,sed_dp_mi_mons(ci,mni),comp_ndem_wet(ci,mni),comp_ndem_all(ci),sed_dp_mi_mons_corr(ci,mni),sed_dp_me_mons(ci,mni),sed_dp_ow_mons(ci,mni)
+            write(*,6666 )  ci,mni,sed_dp_mi_mons(ci,mni),comp_ndem_wet(ci,mni),comp_ndem_all(ci),sed_dp_mi_mons_corr(ci,mni),sed_dp_me_mons(ci,mni),sed_dp_ow_mons(ci,mni)
         end do
     end do
-            
+6666 format(2(I0,','),F0.4,',',2(I0,','),2(F0.4,','),F0.4)
+
+     
+                
     do i = 1,ndem
         if (dem_to_bidem(i) == dem_NoDataVal) then                                  ! only proceed if pixel is not within barrier island domain        
             c = dem_comp(i)

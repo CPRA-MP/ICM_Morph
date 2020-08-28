@@ -104,8 +104,8 @@ subroutine write_output_QAQC_points
     end do
     close(42)
 
-42666 format(4(I0,','),3(F0.2,','),I0,',',4(F0.2,','),2(I0,','),F0.2,',',F0.2)  
-    
+42666 format(4(I0,','),3(F0.2,','),I0,',',4(F0.2,','),2(I0,','),F0.2,',',F0.2) 
+     
     
         
         
