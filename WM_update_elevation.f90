@@ -66,11 +66,11 @@ subroutine update_elevation
                         end if 
                     end if
                     
-                    dem_z(i) = dem_z(i) + dz_cm/100.0                           ! dz_cm is in cm, DEM is in meters
+                    !dem_z(i) = dem_z(i) + dz_cm/100.0                           ! dz_cm is in cm, DEM is in meters
                     dem_dz_cm(i) = dz_cm                                        ! update dZ array for writing output file
                 
                 else        
-                    dem_z(i) = dem_z(i)
+                    !dem_z(i) = dem_z(i)
                     !dem_z(i) = dem_z_bi(dem_to_bidem(i))                        ! if in BI-DEM domain,, use ICM-BI-DEM elevation as final elevation
                 end if
             end if
