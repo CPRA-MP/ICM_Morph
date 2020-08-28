@@ -70,8 +70,7 @@ subroutine update_elevation
                     dem_dz_cm(i) = dz_cm                                        ! update dZ array for writing output file
                 
                 else        
-                    !dem_z(i) = dem_z(i)
-                    !dem_z(i) = dem_z_bi(dem_to_bidem(i))                        ! if in BI-DEM domain,, use ICM-BI-DEM elevation as final elevation
+                    dem_z(i) = dem_z_bi(dem_to_bidem(i))                        ! if in BI-DEM domain,, use ICM-BI-DEM elevation as final elevation
                 end if
             end if
         end if
