@@ -83,7 +83,6 @@ subroutine write_output_QAQC_points
             grid_z_out = dem_NoDataVal
             grid_bed_z_out = dem_NoDataVal
         end if
-
         
         write(666,42666)site_no,site_x,site_y,  &       ! QAQC_site_no,X_UTMm,Y_UTMm
    &                    dem_comp(idem),         &       ! Hydro_compID
@@ -104,7 +103,7 @@ subroutine write_output_QAQC_points
     end do
     close(42)
 
-42666 format(4(I0,','),3(F0.2,','),I0,',',4(F0.2,','),2(I0,','),F0.2,',',F0.2) 
+42666 format(4(I0,','),3(F0.2,','),I0,',',4(F0.2,','),I0,',',2(F0.2,','),F0.2) 
      
     
         
