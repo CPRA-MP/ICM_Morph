@@ -36,6 +36,12 @@ module params
     real(sp) :: om_k1                                               ! organic matter self-packing density  of wetland soils (g/cm3)
     real(sp) :: mn_k2                                               ! mineral sediment self-packing density of wetland soils (g/cm3)
     real(sp),dimension(:),allocatable :: FIBS_intvals               ! local array that stores FIBS values used to interpolate between **allocated in SET_IO instead of PARAMS_ALLOC**
+    real(sp) :: min_accretion_limit_cm                              ! upper limit to allowable mineral accretion on the marsh surface during any given year [cm]
+    real(sp) :: ow_accretion_limit_cm                               ! upper limit to allowable accretion on the water bottom during any given year [cm]
+    real(sp) :: ow_erosion_limit_cm                                 ! upper limit to allowable erosion of the water bottom during any given year [cm]
+    real(sp) :: bg_lowerZ_m                                         ! height that bareground is lowered [m]
+    real(sp) :: me_lowerDepth_m                                     ! depth to which eroded marsh edge is lowered to [m]
+    real(sp) :: flt_lowerDepth_m                                    ! depth to which dead floating marsh is lowered to [m]
     real(sp) :: mc_depth_threshold                                  ! water depth threshold (meters) defining deep water area to be excluded from marsh creation projects footprint
     
     ! input files in subroutine: SET_IO
