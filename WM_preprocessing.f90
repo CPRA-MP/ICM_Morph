@@ -12,7 +12,8 @@ subroutine preprocessing
     integer :: col_lookup               ! local variable to find DEM pixel index corresponding to ICM-BI-DEM interpolated point
     integer :: row_lookup               ! local variable to find DEM pixel index corresponding to ICM-BI-DEM interpolated point
     integer :: dem_i                    ! local variable that determined DEM pixel index corresponding to ICM-BI-DEM pixel location
-
+    integer :: en                       ! local variable of ecoregion number used for reading in ecoregion name codes
+    
     ! read pixel-to-compartment mapping file into arrays
     write(  *,*) ' - reading in DEM-pixel-to-compartment map data'
     write(000,*) ' - reading in DEM-pixel-to-compartment map data'
@@ -203,26 +204,26 @@ subroutine preprocessing
     
     ! initialize grid data arrays to 0.0
     dem_dpsb = 0.0
-    write(  *,*) '  ****** MISSING RASTER -  hard-coding to 1.0 mm/yr ******'
-    write(000,*) '  ****** MISSING RASTER -  hard-coding to 1.0 mm/yr ******'
-    dem_dpsb = 1.0
-    
-!    if (binary_in == 1) then
-!        write(  *,*) '   - using binary file'
-!        write(000,*) '   - using binary file'
-!        open(unit=1117, file=trim(adjustL('input/'//dsub_file//'.b')))
-!        read(1117) dem_dpsb
-!    else
-!        open(unit=1117, file=trim(adjustL('input/'//dsub_file)))
-!        !read(1117,*) dump_txt                               ! dump header
-!        do i = 1,ndem
-!             read(1117,*) dump_int,dump_int,dem_dpsb(i)      ! X, Y, deep subsidence
-!            if (dem_dpsb(i) == dem_NoDataVal) then          ! set to zero if no data
-!                dem_dpsb(i) = 0.0
-!            end if
-!        end do
-!    end if
-!    close(1117)
+!    write(  *,*) '  ****** MISSING RASTER -  hard-coding to 1.0 mm/yr ******'
+!    write(000,*) '  ****** MISSING RASTER -  hard-coding to 1.0 mm/yr ******'
+!    dem_dpsb = 1.0
+   
+    if (binary_in == 1) then
+        write(  *,*) '   - using binary file'
+        write(000,*) '   - using binary file'
+        open(unit=1117, file=trim(adjustL('input/'//dsub_file//'.b')))
+        read(1117) dem_dpsb
+    else
+        open(unit=1117, file=trim(adjustL('input/'//dsub_file)))
+        !read(1117,*) dump_txt                               ! dump header
+        do i = 1,ndem
+             read(1117,*) dump_int,dump_int,dem_dpsb(i)      ! X, Y, deep subsidence
+            if (dem_dpsb(i) == dem_NoDataVal) then          ! set to zero if no data
+                dem_dpsb(i) = 0.0
+            end if
+        end do
+    end if
+    close(1117)
     
     ! read in shallow subsidence lookup table
     write(  *,*) ' - reading in shallow subsidence statistics by ecoregion'
@@ -234,9 +235,9 @@ subroutine preprocessing
     open(unit=1118, file=trim(adjustL(ssub_file)))
     read(1118,*) dump_txt                               ! dump header
     do i = 1,neco
-        read(1118,*) dump_int,                  &       ! ecoregion number
-   &                dump_txt,                   &       ! ecoregion abbreviation
-   &                dump_txt,                   &        ! 25th %ile shallow subsidence rate (mm/yr) - positive is downward
+        read(1118,*) en,                        &       ! ecoregion number
+   &                er_codes(en),               &       ! ecoregion abbreviation
+   &                dump_txt,                   &       ! 25th %ile shallow subsidence rate (mm/yr) - positive is downward
    &                dump_flt,                   &       ! 50th %ile shallow subsidence rate (mm/yr) - positive is downward
    &                er_shsb(i),                 &       ! 75th %ile shallow subsidence rate (mm/yr) - positive is downward
    &                dump_flt,                   &       ! 25th %ile shallow subsidence rate (mm/yr) - positive is downward

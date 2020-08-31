@@ -17,22 +17,32 @@ subroutine write_output_QAQC_points
     integer :: site_x                   ! local variable to read in X-coord of QAQC point
     integer :: site_y                   ! local variable to read in Y-coord of QAQC point
     character*300 :: qaqc_filetag       ! text tag to include in output file name for QAQC point
+    integer :: qaqc_flag                ! flag for QAQC site type (1 = ecoregion point; 2 = transect point; 3 = CRMS site; 4 = extra random points)
+    character*300 :: save_dir           ! relative path to save output files
     character*300 :: qaqc_file          ! file name used to write QAQC point output data to
     character*4 :: site_no_text         ! formatted text string for site number
-    
+  
     integer :: i_col                    ! X-coordinate converted to column number of mapped DEM
     integer :: i_row                    ! Y-coordinate converted to row number of mapped DEM
     integer :: col_lookup               ! local variable to find DEM pixel index corresponding to QAQC point
     integer :: row_lookup               ! local variable to find DEM pixel index corresponding to QAQC point
     integer :: idem                     ! local variable that determined DEM pixel index corresponding to QAQC point pixel location
 
+            
+    real(sp) :: shsb                    ! local variable for shallow subsidence - filtered for NoData
+    real(sp) :: dpsb                    ! local variable for deep subsidence - filtered for NoData
+    integer :: econum                   ! local variable for ecoregion number - filtered for NoData 
+    character*10 :: ecotxt              ! local variable for ecoregion text code - filtered for NoData
     real(sp) :: mwl                     ! local variable of mean water level - filtered for NoData
     real(sp) :: mdep                    ! local variable of mineral deposition - calculated from bulk density/self packing density and mineral accretion
     real(sp) :: omar                    ! local variable of mean water level - calculated from self packing density and organic accretion
     real(sp) :: FFIBS                   ! local variable of grid FFIBS score - filtered for NoData
     real(sp) :: grid_z_out              ! local variable of mean land elevation in grid cell - filtered for NoData
     real(sp) :: grid_bed_z_out          ! local variable of mean water bed elevation in grid cell - filtered for NoData
-              
+    
+    
+
+    
     ! write end-of-year data to QAQC file - one file per each point   
     write(  *,*) ' - writing end-of-year QAQC summary files'
     write(000,*) ' - writing end-of-year QAQC summary files'
@@ -41,17 +51,31 @@ subroutine write_output_QAQC_points
     read(42,*) dump_txt         ! skip header row
     
     do i = 1,nqaqc
-        read(42,*) site_no,                          &
-   &               site_x,                           &
-   &               site_y,                           &
-   &               qaqc_filetag
-        write(site_no_text,'(I4.4)') site_no
-        qaqc_file = trim(adjustL(fnc_tag))//"_QAQC_"//trim(adjustL(site_no_text))//"_"//trim(adjustL(qaqc_filetag))//'.csv'
+        read(42,*) site_no,                          &      ! site_no
+   &               site_x,                           &      ! dem_x
+   &               site_y,                           &      ! dem_y	
+   &               qaqc_filetag,                     &      ! qaqc_filetag
+   &               qaqc_flag,                        &      ! qaqc_use
+   &               dump_int,                         &      ! site_x
+   &               dump_int                                 ! site_y
         
+        if (qaqc_flag == 1) then
+            save_dir = 'geomorph/output_qaqc/ecoregion_points'
+        else if (qaqc_flag == 2) then
+            save_dir = 'geomorph/output_qaqc/transect_points'
+        else if (qaqc_flag == 3) then 
+            save_dir = 'geomorph/output_qaqc/CRMS_points'
+        else
+            save_dir = 'geomorph/output_qaqc/random_points'
+        end if
+        
+        write(site_no_text,'(I4.4)') site_no
+        qaqc_file = trim(adjustL(save_dir))//trim(adjustL(fnc_tag))//"_QAQC_"//trim(adjustL(site_no_text))//"_"//trim(adjustL(qaqc_filetag))//'.csv'
+
         ! open site-specific QAQC file, if not first year then open in 'append' mode
         if (elapsed_year == 1) then
-            open(unit=666, file = 'geomorph/output_qaqc/'//trim(adjustL(qaqc_file)))
-            write(666,'(A)')'QAQC_site_no,X_UTMm,Y_UTMm,Hydro_compID,comp_mwl_NAVD88m,pixel_z_NAVD88m,annual_mean_inun_depth_m,pixel_lndtyp,pixel_mnrl_dep_g/cm2-yr,pixel_mnrl_accr_cm,pixel_org_accum_g/cm2-yr,pixel_org_accr_cm,LAVegMod_gridID,grid_FFIBS,grid_land_z_NAVD88m,grid_wat_z_NAVD88m'
+            open(unit=666, file = trim(adjustL(qaqc_file)))
+            write(666,'(A)')'S,G,Ecoregion,QAQC_site_no,X_UTMm,Y_UTMm,Hydro_compID,comp_mwl_NAVD88m,pixel_z_NAVD88m,annual_mean_inun_depth_m,pixel_lndtyp,pixel_mnrl_dep_g/cm2-yr,pixel_mnrl_accr_cm,pixel_org_accum_g/cm2-yr,pixel_org_accr_cm,LAVegMod_gridID,grid_FFIBS,deep_subsidence_mm/yr,shallow_subsidence_mm/yr,grid_land_z_NAVD88m,grid_wat_z_NAVD88m'
         else   
             open(unit=666, file = 'geomorph/output_qaqc/'//trim(adjustL(qaqc_file)),position='append')
         end if
@@ -62,9 +86,16 @@ subroutine write_output_QAQC_points
 
         if (dem_comp(idem) /= dem_NoDataVal) then                           ! since dem_comp is an array pointer, must check if NoData
             mwl = stg_av_yr(dem_comp(idem))
+            econum = comp_eco(dem_comp(idem))
+            ecotxt = trim(adjustL(er_codes(econum)))
+            shsb = er_shsb(econum)
         else
             mwl = dem_NoDataVal
+            econum = dem_NoDataVal
+            ecotxt = 'na'
+            shsb = dem_NoDataVal
         end if
+
         
         if (dem_lndtyp(idem) == 2) then 
             mdep = min_accr_cm(idem)*ow_bd
@@ -72,19 +103,24 @@ subroutine write_output_QAQC_points
             mdep = min_accr_cm(idem)*mn_k2
         end if
                 
-        omar = org_accr_cm(idem)*om_k1
+        omar = org_accr_cm(idem)*om_k1                                      ! calculate omar from accretion and self-packing density - this should match input table by ecoregion
         
         if (dem_grid(idem) /= dem_NoDataVal) then                           ! since dem_grid is an array pointer, must check if NoData
             FFIBS = grid_FIBS_score(dem_grid(idem))
             grid_z_out = grid_land_z(dem_grid(idem))
             grid_bed_z_out = grid_bed_z(dem_grid(idem))
+            dpsb = dem_dpsb(idem)
         else
             FFIBS = dem_NoDataVal
             grid_z_out = dem_NoDataVal
             grid_bed_z_out = dem_NoDataVal
+            dpsb = dem_NoDataVal
         end if
         
-        write(666,42666)site_no,site_x,site_y,  &       ! QAQC_site_no,X_UTMm,Y_UTMm
+        write(666,42666)fnc_tag(1:3),           &       ! S## 
+   &                    fnc_tag(5:8),           &       ! G###
+   &                    ecotxt,                 &       ! ecoregion code
+   &                    site_no,site_x,site_y,  &       ! QAQC_site_no,X_UTMm,Y_UTMm
    &                    dem_comp(idem),         &       ! Hydro_compID
    &                    mwl,                    &       ! comp_mwl_NAVD88m
    &                    dem_z(idem),            &       ! pixel_z_NAVD88m
@@ -96,6 +132,8 @@ subroutine write_output_QAQC_points
    &                    org_accr_cm(idem),      &       ! pixel_org_accr_cm
    &                    dem_grid(idem),         &       ! LAVegMod_gridID
    &                    FFIBS,                  &       ! grid_FFIBS
+   &                    dpsb,                   &       ! deep subsidence
+   &                    shsb,                   &       ! shallow subsidence
    &                    grid_z_out,             &       ! grid_land_z_NAVD88m
    &                    grid_bed_z_out                  ! grid_wat_z_NAVD88m        
         close(666)
@@ -103,7 +141,7 @@ subroutine write_output_QAQC_points
     end do
     close(42)
 
-42666 format(4(I0,','),3(F0.2,','),I0,',',4(F0.2,','),I0,',',2(F0.2,','),F0.2) 
+42666 format(3(A,','),4(I0,','),3(F0.2,','),I0,',',4(F0.2,','),I0,',',4(F0.2,','),F0.2) 
      
     
         

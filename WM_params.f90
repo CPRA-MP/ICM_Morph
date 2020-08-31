@@ -96,7 +96,8 @@ module params
     real(sp),dimension(:),allocatable :: er_shsb                    ! shallow subsidence for ecoregion (mm/yr; positive indicates downward VLM)
     integer,dimension(:),allocatable ::  comp_eco                   ! ecoregion number of ICM-Hydro compartment
     integer,dimension(:),allocatable ::  comp_act_dlt               ! flag indicating whether ICM-Hydro compartment is considered an active delta for fresh marsh organic accretion (0=inactive; 1=active)
-    real(sp),dimension(:,:),allocatable :: er_omar                   ! organic matter accumulation rate by marsh type by ecoregion (g/cm^2/yr)
+    character*10,dimension(:),allocatable :: er_codes              ! array to store ecoregion name codes - array location will correspond to ecoregion number - mucst match 
+    real(sp),dimension(:,:),allocatable :: er_omar                  ! organic matter accumulation rate by marsh type by ecoregion (g/cm^2/yr)
                                                                     ! value for second dimension of array indicates marsh type
                                                                     !               1 = fresh marsh
                                                                     !               2 = intermediate marsh

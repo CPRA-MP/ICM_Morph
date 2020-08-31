@@ -15,6 +15,7 @@ subroutine params_alloc
     allocate(dem_bi_zone(ndem))
     allocate(dem_bi_map(ndem))
     allocate(dem_dpsb(ndem))
+    allocate(er_codes(neco))
     allocate(er_shsb(neco))
     allocate(er_omar(neco,6))
     allocate(comp_eco(ncomp))         
