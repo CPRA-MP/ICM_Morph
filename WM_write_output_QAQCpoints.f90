@@ -60,13 +60,13 @@ subroutine write_output_QAQC_points
    &               dump_int                                 ! site_y
         
         if (qaqc_flag == 1) then
-            save_dir = 'geomorph/output_qaqc/ecoregion_points'
+            save_dir = 'geomorph/output_qaqc/ecoregion_points/'
         else if (qaqc_flag == 2) then
-            save_dir = 'geomorph/output_qaqc/transect_points'
+            save_dir = 'geomorph/output_qaqc/transect_points/'
         else if (qaqc_flag == 3) then 
-            save_dir = 'geomorph/output_qaqc/CRMS_points'
+            save_dir = 'geomorph/output_qaqc/CRMS_points/'
         else
-            save_dir = 'geomorph/output_qaqc/random_points'
+            save_dir = 'geomorph/output_qaqc/random_points/'
         end if
         
         write(site_no_text,'(I4.4)') site_no
@@ -87,7 +87,15 @@ subroutine write_output_QAQC_points
         if (dem_comp(idem) /= dem_NoDataVal) then                           ! since dem_comp is an array pointer, must check if NoData
             mwl = stg_av_yr(dem_comp(idem))
             econum = comp_eco(dem_comp(idem))
-            ecotxt = trim(adjustL(er_codes(econum)))
+            if (econum > 0) then
+                if (econum < neco) then
+                    ecotxt = trim(adjustL(er_codes(econum)))
+                else
+                    ecotxt = 'na'
+                end if
+            else
+                ecotxt = 'na'
+            end if
             shsb = er_shsb(econum)
         else
             mwl = dem_NoDataVal
@@ -117,8 +125,8 @@ subroutine write_output_QAQC_points
             dpsb = dem_NoDataVal
         end if
         
-        write(666,42666)fnc_tag(1:3),           &       ! S## 
-   &                    fnc_tag(5:8),           &       ! G###
+        write(666,42666)fnc_tag(8:10),          &       ! S## 
+   &                    fnc_tag(12:15),         &       ! G###
    &                    ecotxt,                 &       ! ecoregion code
    &                    site_no,site_x,site_y,  &       ! QAQC_site_no,X_UTMm,Y_UTMm
    &                    dem_comp(idem),         &       ! Hydro_compID
