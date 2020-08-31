@@ -211,10 +211,10 @@ subroutine preprocessing
     if (binary_in == 1) then
         write(  *,*) '   - using binary file'
         write(000,*) '   - using binary file'
-        open(unit=1117, file=trim(adjustL('input/'//dsub_file//'.b')))
+        open(unit=1117, file=trim(adjustL(dsub_file))//'.b',form='unformatted')
         read(1117) dem_dpsb
     else
-        open(unit=1117, file=trim(adjustL('input/'//dsub_file)))
+        open(unit=1117, file=trim(adjustL(dsub_file)))
         !read(1117,*) dump_txt                               ! dump header
         do i = 1,ndem
              read(1117,*) dump_int,dump_int,dem_dpsb(i)      ! X, Y, deep subsidence
