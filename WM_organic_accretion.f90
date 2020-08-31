@@ -67,7 +67,7 @@ subroutine organic_accretion
                                     omar_upr = er_omar(e,5)
                                 end if
                              
-                                OMAR = omar_low !+ int_wgt*(omar_upr - omar_low)
+                                OMAR = omar_low + int_wgt*(omar_upr - omar_low)
                                 org_accr_cm(i) = OMAR / om_k1                                                   ! OMAR [g/cm2] * k1 [g/cm3] = cm organic accretion
             
                             end if    
