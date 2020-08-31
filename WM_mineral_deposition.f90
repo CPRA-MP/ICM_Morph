@@ -39,14 +39,6 @@ subroutine mineral_deposition
             end if
         end do
     end do
-    
-    do ci = 1,ncomp                                                                 ! update mineral sediment deposition per unit area of interior marsh
-        do mni = 1,12
-            write(*,6666 )  ci,mni,sed_dp_mi_mons(ci,mni),comp_ndem_wet(ci,mni),comp_ndem_all(ci),sed_dp_mi_mons_corr(ci,mni),sed_dp_me_mons(ci,mni),sed_dp_ow_mons(ci,mni)
-        end do
-    end do
-6666 format(2(I0,','),F0.4,',',2(I0,','),2(F0.4,','),F0.4)
-
      
                 
     do i = 1,ndem

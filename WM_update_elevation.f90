@@ -76,19 +76,7 @@ subroutine update_elevation
         end if
     end do
     
-    
-    write(*,*)
-    write(*,*)
-    write(*,*)
-    write(*,*) 'shallow sub: [',minval(er_shsb),maxval(er_shsb),']'
-    write(*,*) 'deep sub: [',minval(dem_dpsb),maxval(dem_dpsb),']'
-    write(*,*) 'min accr: [',minval(min_accr_cm),maxval(min_accr_cm),']'
-    write(*,*) 'org accr: [',minval(org_accr_cm),maxval(org_accr_cm),']'
-    write(*,*) 'dem z after update elevation: [',minval(dem_z),maxval(dem_z),']'
-    write(*,*)
-    write(*,*)
-    write(*,*)
-    
+
 
     
     return
