@@ -12,7 +12,7 @@ subroutine write_output_QAQC_points
     implicit none
     
     ! local variables
-    integer :: i                                                    ! iterator
+    integer :: i                        ! iterator
     integer :: site_no                  ! site number of QAQC point
     integer :: site_x                   ! local variable to read in X-coord of QAQC point
     integer :: site_y                   ! local variable to read in Y-coord of QAQC point
@@ -77,7 +77,7 @@ subroutine write_output_QAQC_points
             open(unit=666, file = trim(adjustL(qaqc_file)))
             write(666,'(A)')'S,G,Ecoregion,QAQC_site_no,X_UTMm,Y_UTMm,Hydro_compID,comp_mwl_NAVD88m,pixel_z_NAVD88m,annual_mean_inun_depth_m,pixel_lndtyp,pixel_mnrl_dep_g/cm2-yr,pixel_mnrl_accr_cm,pixel_org_accum_g/cm2-yr,pixel_org_accr_cm,LAVegMod_gridID,grid_FFIBS,deep_subsidence_mm/yr,shallow_subsidence_mm/yr,grid_land_z_NAVD88m,grid_wat_z_NAVD88m'
         else   
-            open(unit=666, file = 'geomorph/output_qaqc/'//trim(adjustL(qaqc_file)),position='append')
+            open(unit=666, file = trim(adjustL(qaqc_file)),position='append')
         end if
         
         col_lookup = 1+(site_x - dem_LLx)/dem_res                           ! find column number in mapped DEM that corresponds to QAQC pointX-coord
