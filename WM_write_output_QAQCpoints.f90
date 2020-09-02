@@ -34,6 +34,8 @@ subroutine write_output_QAQC_points
     integer :: econum                   ! local variable for ecoregion number - filtered for NoData 
     character*10 :: ecotxt              ! local variable for ecoregion text code - filtered for NoData
     real(sp) :: mwl                     ! local variable of mean water level - filtered for NoData
+    real(sp) :: sal                     ! local variable of mean salinity - filtered for NoData
+    real(sp) :: salmx                   ! local variable of maximum 2-wk mean salinity - filtered for NoData
     real(sp) :: mdep                    ! local variable of mineral deposition - calculated from bulk density/self packing density and mineral accretion
     real(sp) :: omar                    ! local variable of mean water level - calculated from self packing density and organic accretion
     real(sp) :: FFIBS                   ! local variable of grid FFIBS score - filtered for NoData
@@ -75,7 +77,7 @@ subroutine write_output_QAQC_points
         ! open site-specific QAQC file, if not first year then open in 'append' mode
         if (elapsed_year == 1) then
             open(unit=666, file = trim(adjustL(qaqc_file)))
-            write(666,'(A)')'S,G,Ecoregion,QAQC_site_no,X_UTMm,Y_UTMm,Hydro_compID,comp_mwl_NAVD88m,pixel_z_NAVD88m,annual_mean_inun_depth_m,pixel_lndtyp,pixel_mnrl_dep_g/cm2-yr,pixel_mnrl_accr_cm,pixel_org_accum_g/cm2-yr,pixel_org_accr_cm,LAVegMod_gridID,grid_FFIBS,deep_subsidence_mm/yr,shallow_subsidence_mm/yr,grid_land_z_NAVD88m,grid_wat_z_NAVD88m'
+            write(666,'(A)')'S,G,Ecoregion,year,QAQC_site_no,X_UTMm,Y_UTMm,Hydro_compID,comp_mwl_NAVD88m,comp_mean_sal_ppt,comp_2wk_max_sal,ppt,pixel_z_NAVD88m,annual_mean_inun_depth_m,pixel_lndtyp,pixel_mnrl_dep_g/cm2-yr,pixel_mnrl_accr_cm,pixel_org_accum_g/cm2-yr,pixel_org_accr_cm,LAVegMod_gridID,grid_FFIBS,deep_subsidence_mm/yr,shallow_subsidence_mm/yr,grid_land_z_NAVD88m,grid_wat_z_NAVD88m'
         else   
             open(unit=666, file = trim(adjustL(qaqc_file)),position='append')
         end if
@@ -86,6 +88,8 @@ subroutine write_output_QAQC_points
 
         if (dem_comp(idem) /= dem_NoDataVal) then                           ! since dem_comp is an array pointer, must check if NoData
             mwl = stg_av_yr(dem_comp(idem))
+            sal = sal_av_yr(dem_comp(idem))
+            salmx = sal_mx_14d_yr(dem_comp(idem))
             econum = comp_eco(dem_comp(idem))
             if (econum > 0) then
                 if (econum < neco) then
@@ -102,6 +106,8 @@ subroutine write_output_QAQC_points
 
         else
             mwl = dem_NoDataVal
+            sal = dem_NoDataVal
+            salmx = dem_NoDataVal
             econum = dem_NoDataVal
             ecotxt = 'na'
             shsb = dem_NoDataVal
@@ -131,9 +137,12 @@ subroutine write_output_QAQC_points
         write(666,42666)fnc_tag(8:10),          &       ! S## 
    &                    fnc_tag(12:15),         &       ! G###
    &                    ecotxt,                 &       ! ecoregion code
+   &                    elapsed_year,           &       ! year 
    &                    site_no,site_x,site_y,  &       ! QAQC_site_no,X_UTMm,Y_UTMm
    &                    dem_comp(idem),         &       ! Hydro_compID
    &                    mwl,                    &       ! comp_mwl_NAVD88m
+   &                    sal,                    &       ! comp_mean_sal_ppt
+   &                    salmx,                   &       ! comp_2wk_max_sal_ppt
    &                    dem_z(idem),            &       ! pixel_z_NAVD88m
    &                    dem_inun_dep(idem,13),  &       ! annual_mean_inun_depth_m (tp=13 for annual mean)
    &                    dem_lndtyp(idem),       &       ! pixel_lndtyp
@@ -152,7 +161,7 @@ subroutine write_output_QAQC_points
     end do
     close(42)
 
-42666 format(3(A,','),4(I0,','),3(F0.2,','),I0,',',4(F0.2,','),I0,',',4(F0.2,','),F0.2) 
+42666 format(3(A,','),5(I0,','),5(F0.2,','),I0,',',4(F0.4,','),I0,',',4(F0.2,','),F0.2) 
      
     
         

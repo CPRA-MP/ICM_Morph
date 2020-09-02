@@ -46,6 +46,10 @@ subroutine mineral_deposition
     ow_dep_max_mon = ow_dep_max_ann / 12.0
     ow_erd_max_mon = ow_erd_max_ann / 12.0
     
+    write(*,*) 'max erosion:',ow_erd_max_ann
+    write(*,*) 'max deposition - water:',ow_dep_max_ann
+    write(*,*) 'max deposition - marsh:',min_dep_max_ann
+
     
     min_accr_cm = 0.0                                                                                           ! initialize mineral depositional accretion array to 0
     
@@ -64,6 +68,9 @@ subroutine mineral_deposition
         end do
         sed_dp_mi_yr(ci) = max(0.0,min(sed_dp_mi_yr(ci),min_dep_max_ann))
         sed_dp_me_yr(ci) = max(0.0,min(sed_dp_me_yr(ci),min_dep_max_ann))
+        
+        write(*,*) ci,mni,sed_dp_ow_mons(ci,mni),sed_dp_me_mons(ci,mni),sed_dp_mi_mons_corr(ci,mni)
+        
     end do
      
                 
