@@ -38,18 +38,13 @@ subroutine mineral_deposition
     
     ! check for maximum allowabale accretion thresholds  
     ! Hydro reports out max value of 999999 if no data for mineral sediment deposition - results in erroneous deposition calculations
-    min_dep_max_ann = min_accretion_limit_cm * mn_k2              ! maximum allowable annual mineral depostion on marsh [g/cm2] = mineral self packing density [g/cm3]* max allowable mineral accretion depth [cm]                             
-    min_dep_max_mon = min_dep_max_ann / 12.0
+    min_dep_max_ann = 10000.0*min_accretion_limit_cm * mn_k2                        ! maximum allowable annual mineral depostion on marsh [g/cm2] = mineral self packing density [g/cm3]* max allowable mineral accretion depth [cm]                             
+    min_dep_max_mon = 10000.0*min_dep_max_ann / 12.0                                ! [g/cm^2] = [g/m^2]*[m/100 cm]*[m/100 cm] = [g/m^2]/10000
     
-    ow_dep_max_ann = ow_accretion_limit_cm * ow_bd           ! maximum allowable mineral depostion in water [g/cm2] = open water bed bulk density [g/cm3] * max allowable open water mineral deposition depth [cm]
-    ow_erd_max_ann = ow_erosion_limit_cm  * ow_bd            ! maximum allowable erosion in water [g/cm2] = open water bed bulk density [g/cm3] * max allowable open water erosion depth [cm]
+    ow_dep_max_ann = 10000.0*ow_accretion_limit_cm * ow_bd           ! maximum allowable mineral depostion in water [g/cm2] = open water bed bulk density [g/cm3] * max allowable open water mineral deposition depth [cm]
+    ow_erd_max_ann = 10000.0*ow_erosion_limit_cm  * ow_bd            ! maximum allowable erosion in water [g/cm2] = open water bed bulk density [g/cm3] * max allowable open water erosion depth [cm]
     ow_dep_max_mon = ow_dep_max_ann / 12.0
     ow_erd_max_mon = ow_erd_max_ann / 12.0
-    
-    write(*,*) 'max erosion:',ow_erd_max_ann
-    write(*,*) 'max deposition - water:',ow_dep_max_ann
-    write(*,*) 'max deposition - marsh:',min_dep_max_ann
-
     
     min_accr_cm = 0.0                                                                                           ! initialize mineral depositional accretion array to 0
     
@@ -64,13 +59,10 @@ subroutine mineral_deposition
             sed_dp_ow_mons(ci,mni)      = max(ow_erd_max_mon,min(sed_dp_ow_mons(ci,mni),      ow_dep_max_mon))  ! check that monthly open water erosion or deposition depths do not exceed maximum allowable defined in input file
             sed_dp_me_mons(ci,mni)      = max(0.0,           min(sed_dp_me_mons(ci,mni),     min_dep_max_mon))  ! check that monthly edge-deposited sediment does not exceed maximum allowable defined in input file
             sed_dp_mi_mons_corr(ci,mni) = max(0.0,           min(sed_dp_mi_mons_corr(ci,mni),min_dep_max_mon))  ! check that monthly areally-corrected interior-deposited sediment does not exceed maximum allowable defined in input file
-            
         end do
-        sed_dp_mi_yr(ci) = max(0.0,min(sed_dp_mi_yr(ci),min_dep_max_ann))
-        sed_dp_me_yr(ci) = max(0.0,min(sed_dp_me_yr(ci),min_dep_max_ann))
-        
-        write(*,*) ci,mni,sed_dp_ow_mons(ci,mni),sed_dp_me_mons(ci,mni),sed_dp_mi_mons_corr(ci,mni)
-        
+        sed_dp_mi_yr(ci) = max(0.0,           min(sed_dp_mi_yr(ci),min_dep_max_ann))
+        sed_dp_me_yr(ci) = max(0.0,           min(sed_dp_me_yr(ci),min_dep_max_ann))
+        sed_dp_ow_yr(ci) = max(ow_erd_max_ann,min(sed_dp_ow_yr(ci),ow_dep_max_ann))      
     end do
      
                 

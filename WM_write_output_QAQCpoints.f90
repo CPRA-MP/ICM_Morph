@@ -77,7 +77,7 @@ subroutine write_output_QAQC_points
         ! open site-specific QAQC file, if not first year then open in 'append' mode
         if (elapsed_year == 1) then
             open(unit=666, file = trim(adjustL(qaqc_file)))
-            write(666,'(A)')'S,G,Ecoregion,year,QAQC_site_no,X_UTMm,Y_UTMm,Hydro_compID,comp_mwl_NAVD88m,comp_mean_sal_ppt,comp_2wk_max_sal,ppt,pixel_z_NAVD88m,annual_mean_inun_depth_m,pixel_lndtyp,pixel_mnrl_dep_g/cm2-yr,pixel_mnrl_accr_cm,pixel_org_accum_g/cm2-yr,pixel_org_accr_cm,LAVegMod_gridID,grid_FFIBS,deep_subsidence_mm/yr,shallow_subsidence_mm/yr,grid_land_z_NAVD88m,grid_wat_z_NAVD88m'
+            write(666,'(A)')'S,G,Ecoregion,year,QAQC_site_no,X_UTMm,Y_UTMm,Hydro_compID,comp_mwl_NAVD88m,comp_mean_sal_ppt,comp_2wk_max_sal_ppt,pixel_z_NAVD88m,annual_mean_inun_depth_m,pixel_lndtyp,pixel_mnrl_dep_g/cm2-yr,pixel_mnrl_accr_cm,pixel_org_accum_g/cm2-yr,pixel_org_accr_cm,LAVegMod_gridID,grid_FFIBS,deep_subsidence_mm/yr,shallow_subsidence_mm/yr,grid_land_z_NAVD88m,grid_wat_z_NAVD88m'
         else   
             open(unit=666, file = trim(adjustL(qaqc_file)),position='append')
         end if
