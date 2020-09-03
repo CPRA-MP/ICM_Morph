@@ -80,7 +80,7 @@ ADD_EXECUTABLE( ${MORPH} WM_edge_delineation.f90
                          WM_main.f90
                          WM_map_bareground.f90
                          WM_mineral_deposition.f90
-                         WM_netcdf.f90
+                         WM_netcdf.F90
                          WM_organic_accretion.f90
                          WM_params.f90
                          WM_params_alloc.f90
