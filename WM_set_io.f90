@@ -8,7 +8,7 @@ subroutine set_io
     
     allocate(FIBS_intvals(6))
 
-    open(unit=001, file=trim(adjustL('./input_params.csv')))
+    open(unit=001, file=trim(adjustL('geomorph/input_params.csv')))
  
     ! settings
     read(001,*) start_year,dump_txt
@@ -37,8 +37,13 @@ subroutine set_io
     read(001,*) FIBS_intvals(4),dump_txt
     read(001,*) FIBS_intvals(5),dump_txt
     read(001,*) FIBS_intvals(6),dump_txt
+    read(001, *) min_accretion_limit_cm,dump_txt
+    read(001, *) ow_accretion_limit_cm,dump_txt
+    read(001, *) ow_erosion_limit_cm,dump_txt
+    read(001, *) bg_lowerZ_m,dump_txt    
+    read(001, *) me_lowerDepth_m,dump_txt 
+    read(001, *) flt_lowerDepth_m,dump_txt
     read(001,*) mc_depth_threshold,dump_txt
-
     ! input files
     read(001,*) binary_in
     read(001,*) binary_out
@@ -62,7 +67,7 @@ subroutine set_io
     read(001,*) monthly_mi_sed_dep_file,dump_txt
     read(001,*) monthly_me_sed_dep_file,dump_txt
     read(001,*) bi_dem_xyz_file,dump_txt
-    
+
     !  output files     
     read(001,*) edge_eoy_xyz_file,dump_txt
     read(001,*) dem_eoy_xyz_file,dump_txt
@@ -78,7 +83,12 @@ subroutine set_io
     read(001,*) comp_elev_file,dump_txt
     read(001,*) comp_wat_file,dump_txt
     read(001,*) comp_upl_file,dump_txt
-
+    
+    ! QAQC save point information
+    read(001,*) nqaqc                    
+    read(001,*) qaqc_site_list_file
+    read(001,*) fnc_tag
+    
     close(001)
 
     return

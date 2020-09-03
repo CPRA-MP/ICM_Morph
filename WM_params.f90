@@ -36,6 +36,12 @@ module params
     real(sp) :: om_k1                                               ! organic matter self-packing density  of wetland soils (g/cm3)
     real(sp) :: mn_k2                                               ! mineral sediment self-packing density of wetland soils (g/cm3)
     real(sp),dimension(:),allocatable :: FIBS_intvals               ! local array that stores FIBS values used to interpolate between **allocated in SET_IO instead of PARAMS_ALLOC**
+    real(sp) :: min_accretion_limit_cm                              ! upper limit to allowable mineral accretion on the marsh surface during any given year [cm]
+    real(sp) :: ow_accretion_limit_cm                               ! upper limit to allowable accretion on the water bottom during any given year [cm]
+    real(sp) :: ow_erosion_limit_cm                                 ! upper limit to allowable erosion of the water bottom during any given year [cm]
+    real(sp) :: bg_lowerZ_m                                         ! height that bareground is lowered [m]
+    real(sp) :: me_lowerDepth_m                                     ! depth to which eroded marsh edge is lowered to [m]
+    real(sp) :: flt_lowerDepth_m                                    ! depth to which dead floating marsh is lowered to [m]
     real(sp) :: mc_depth_threshold                                  ! water depth threshold (meters) defining deep water area to be excluded from marsh creation projects footprint
     
     ! input files in subroutine: SET_IO
@@ -79,6 +85,11 @@ module params
     character*100 :: comp_wat_file                                  ! file name, with relative path, to percent water summary compartment file used internally by ICM
     character*100 :: comp_upl_file                                  ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
     
+    ! QAQC save point information in subroutine: SET_IO
+    integer :: nqaqc                                                ! number of QAQC points for reporting - as listed in qaqc_site_list_file
+    character*100 :: qaqc_site_list_file                            ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
+    character*100 :: fnc_tag                                        ! file naming convention tag
+    
     ! define variables read in or calculated from xyz files in subroutine: PREPROCESSING
     integer,dimension(:),allocatable ::  dem_x                      ! x-coordinate of DEM pixel (UTM m, zone 15N)
     integer,dimension(:),allocatable ::  dem_y                      ! y-coordinate of DEM pixel (UTM m, zone 15N)
@@ -91,7 +102,8 @@ module params
     real(sp),dimension(:),allocatable :: er_shsb                    ! shallow subsidence for ecoregion (mm/yr; positive indicates downward VLM)
     integer,dimension(:),allocatable ::  comp_eco                   ! ecoregion number of ICM-Hydro compartment
     integer,dimension(:),allocatable ::  comp_act_dlt               ! flag indicating whether ICM-Hydro compartment is considered an active delta for fresh marsh organic accretion (0=inactive; 1=active)
-    real(sp),dimension(:,:),allocatable :: er_omar                   ! organic matter accumulation rate by marsh type by ecoregion (g/cm^2/yr)
+    character*10,dimension(:),allocatable :: er_codes              ! array to store ecoregion name codes - array location will correspond to ecoregion number - mucst match 
+    real(sp),dimension(:,:),allocatable :: er_omar                  ! organic matter accumulation rate by marsh type by ecoregion (g/cm^2/yr)
                                                                     ! value for second dimension of array indicates marsh type
                                                                     !               1 = fresh marsh
                                                                     !               2 = intermediate marsh
@@ -104,8 +116,6 @@ module params
     integer :: dem_LLy                                              ! lower left Y-coordinate of DEM grid
     integer :: dem_URx                                              ! upper right X-coordinate of DEM grid
     integer :: dem_URy                                              ! upper right Y-coordinate of DEM grid
-    integer,dimension(:),allocatable :: dem_col                     ! same as dem_x but use column number instead of X coordinate
-    integer,dimension(:),allocatable :: dem_row                     ! same as dem_y but use column number instead of Y coordinate
     integer,dimension(:),allocatable :: comp_ndem_all               ! number of DEM pixels within each ICM-Hydro compartment (-)
     integer,dimension(:),allocatable :: grid_ndem_all               ! number of DEM pixels within each ICM-LAVegMod grid cell (-)                                                         
     integer,dimension(:),allocatable :: dem_lndtyp                  ! Land type classification of DEM pixel

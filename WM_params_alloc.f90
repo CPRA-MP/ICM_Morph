@@ -12,11 +12,10 @@ subroutine params_alloc
     allocate(dem_comp(ndem))
     allocate(dem_grid(ndem))
     allocate(dem_lndtyp(ndem))
-    allocate(dem_col(ndem))
-    allocate(dem_row(ndem))    
     allocate(dem_bi_zone(ndem))
     allocate(dem_bi_map(ndem))
     allocate(dem_dpsb(ndem))
+    allocate(er_codes(neco))
     allocate(er_shsb(neco))
     allocate(er_omar(neco,6))
     allocate(comp_eco(ncomp))         
@@ -121,7 +120,6 @@ subroutine dem_params_alloc
     use params
     implicit none 
 
-    
     allocate(dem_index_mapped(n_dem_col,n_dem_row))
     
     return

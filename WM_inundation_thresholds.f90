@@ -101,7 +101,7 @@ subroutine inundation_thresholds
                             end if
                             
                         ! if upland - check if inundation would allow for wetland vegetation to establish
-                        else if (dem_lndtyp(i) == 5) then
+                        else if (dem_lndtyp(i) == 4) then
                             MuDepth = B0 + B1*sal_yr
                             SigmaDepth = B2 + B3*exp(B4*sal_yr)
                             DepthThreshold_Dry =  MuDepth - ptile_Z*SigmaDepth

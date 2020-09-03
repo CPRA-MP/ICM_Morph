@@ -14,7 +14,7 @@ subroutine write_output_asci_rasters
     write(  *,*) ' - writing output raster XYZ file for Edge'
     write(000,*) ' - writing output raster XYZ file for Edge'
     
-    open(unit=800, file = trim(adjustL('output/'//edge_eoy_xyz_file) ))
+    open(unit=800, file = trim(adjustL(edge_eoy_xyz_file) ))
     ! write headers
     ! write(800,'(A)') 'X    Y   Edge'                              ! no header neededin XYZ raster format
  
@@ -31,7 +31,7 @@ subroutine write_output_asci_rasters
     write(  *,*) ' - writing output raster XYZ file for topobathy DEM'
     write(000,*) ' - writing output raster XYZ file for topobathy DEM'
     
-    open(unit=801, file = trim(adjustL('output/'//dem_eoy_xyz_file) ))
+    open(unit=801, file = trim(adjustL(dem_eoy_xyz_file) ))
     ! write headers
     ! write(800,'(A)') 'X    Y   Z'                                 ! no header neededin XYZ raster format
  
@@ -49,7 +49,7 @@ subroutine write_output_asci_rasters
     write(  *,*) ' - writing output raster XYZ file for landchange flag'
     write(000,*) ' - writing output raster XYZ file for landchange flag'
     
-    open(unit=802, file = trim(adjustL('output/'//lndchng_eoy_xyz_file) ))
+    open(unit=802, file = trim(adjustL(lndchng_eoy_xyz_file) ))
     ! write headers
     ! write(800,'(A)') 'X    Y   lndchange_flg'                    ! no header neededin XYZ raster format
  
@@ -66,7 +66,7 @@ subroutine write_output_asci_rasters
     write(  *,*) ' - writing output raster XYZ file for land type'
     write(000,*) ' - writing output raster XYZ file for land type'
     
-    open(unit=803, file = trim(adjustL('output/'//lndtyp_eoy_xyz_file) ))
+    open(unit=803, file = trim(adjustL(lndtyp_eoy_xyz_file) ))
     ! write headers
     ! write(800,'(A)') 'X    Y   lndchange_flg'                    ! no header neededin XYZ raster format
  
@@ -85,7 +85,7 @@ subroutine write_output_asci_rasters
     write(  *,*) ' - writing output raster XYZ file for elevation change'
     write(000,*) ' - writing output raster XYZ file for elevation change'
     
-    open(unit=804, file = trim(adjustL('output/'//dz_eoy_xyz_file) ))
+    open(unit=804, file = trim(adjustL(dz_eoy_xyz_file) ))
     ! write headers
     ! write(800,'(A)') 'X    Y   dZ_cm'                    ! no header neededin XYZ raster format
  

@@ -122,6 +122,7 @@ subroutine summaries
 
         ! calculate average elevation, in compartment, of vegetated wetland (lndtyp=1) and nonvegetated wetland (lndtyp=3)
         ! if no pixels are vegetated nor nonvegetated wetland in compartment set to NoData (-9999)
+        ! currently not including upland areas (lndtyp=4)
         comp_elv_sums_land = comp_elv_sums(ic,1 ) + comp_elv_sums(ic,3)
         comp_counts_land = comp_counts(ic,1) + comp_counts(ic,3)
         
