@@ -6,8 +6,8 @@ subroutine write_output_netcdf_rasters
     use icm_netcdf,only: write_netcdf_float,write_netcdf_int
     implicit none
     
-    write(  *,*) ' - writing output raster XYZ file for Edge'
-    write(000,*) ' - writing output raster XYZ file for Edge'
+    write(  *,*) ' - writing output raster XYZ file for grid'
+    write(000,*) ' - writing output raster XYZ file for grid'
     call write_netcdf_int(trim(adjustL('output/'//grid_file//'.nc')),&
                                    dem_x,dem_y,dem_grid,dble(dem_NoDataVal),"gridID")
 

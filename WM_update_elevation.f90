@@ -33,10 +33,10 @@ subroutine update_elevation
             if (c /= dem_NoDataVal) then
                 if (dem_to_bidem(i) == dem_NoDataVal) then                                                                      ! if pixel is not within barrier island domain            
                     if (dem_bg_flag(i) == 1) then                                                                               ! lower old bareground pixels
-                        dz_cm_lndtyp = -1.0*bg_lowerZ_m/100.0
+                        dz_cm_lndtyp = -1.0*bg_lowerZ_m*100.0
                     else 
                         if (lnd_change_flag(i) == -2) then                                                                      ! lower dead flotant pixels to 1 m below mean water level
-                            dz_cm_lndtyp = min(0.00,-100.0*( dem_z(i) - (stg_av_yr(c) - flt_lowerDepth_m) ))                                   ! if current elevation is already more than 1-m below water level, do not allow for elevation gain
+                            dz_cm_lndtyp = min(0.00,-100.0*( dem_z(i) - (stg_av_yr(c) - flt_lowerDepth_m) ))                    ! if current elevation is already more than 1-m below water level, do not allow for elevation gain
                         else if (lnd_change_flag(i) == -3) then                                                                 ! lower eroded edge pixels to  25 cm below mean water level
                             dz_cm_lndtyp = min(0.00,-100.0*( dem_z(i) - (stg_av_yr(c) - me_lowerDepth_m) )) 
                         end if
@@ -47,8 +47,10 @@ subroutine update_elevation
                         if (dem_lndtyp(i) == 1) then
                             if (dem_pldr(i) == 1) then                                                                          ! poldered vegetated land dz_cm = f(deep)
                                 dz_cm = 0.0 - dem_dpsb(i)/10.0 + dz_cm_lndtyp                                                   ! convert subsidence from mm/yr to cm/yr
-                            else                                                                                                ! non-polder vegetated land dz_cm = f(organic, mineral, deep, shallow),
+                            elseif (lnd_change_flag(i) == 0) then                                                                  ! non-polder vegetated land dz_cm = f(organic, mineral, deep, shallow),
                                 dz_cm = org_accr_cm(i) + min_accr_cm(i) - dem_dpsb(i)/10.0 - er_shsb(er)/10.0 + dz_cm_lndtyp    ! convert subsidence from mm/yr to cm/yr
+                            else
+                                dz_cm = min_accr_cm(i) - dem_dpsb(i)/10.0 - er_shsb(er)/10.0 + dz_cm_lndtyp
                             end if
                         else if (dem_lndtyp(i) == 2) then                                                                       ! water bottom dz_cm = f(mineral, deep)
                             dz_cm = min_accr_cm(i) - dem_dpsb(i)/10.0 + dz_cm_lndtyp                                            ! convert subsidence from mm/yr to cm/yr
