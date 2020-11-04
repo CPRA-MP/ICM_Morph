@@ -7,6 +7,7 @@ subroutine write_output_summaries
     
     ! local variables
     integer :: i                                                    ! iterator
+    integer :: c                                                    ! local compartment ID variable
     real(sp) :: grid_pct_vg_land                                    ! calculation of vegetated wetland area (excludes nonvegetated land, upland, flotant, and water)
     real(sp) :: grid_pct_land_tot                                   ! calculation of total land area, regardless of landtype (excludes flotant and water)
     real(sp) :: grid_pct_land_wetl                                  ! calculation wetland area, either attached or flotant - with or without vegetation (excludes water and upland)
@@ -23,7 +24,7 @@ subroutine write_output_summaries
     open(unit=905, file = trim(adjustL(grid_depth_file_MtD) ))
     
     ! write headers
-    write(900,'(A)') 'gridID,pct_water,pct_flotant,pct_land_veg,pct_land_bare,pct_land_upland_dry,pct_land_upland_wet,pct_vglnd_BLHF,pct_vglnd_SWF,pct_vglnd_FM,pct_vglnd_IM,pct_vglnd_BM,pct_vglnd_SM,FIBS_score'
+    write(900,'(A)') 'gridID,compID,stage_m_NAVD88,stg_stdv_smr_m,mean_sal_ppt,mean_smr_sal_ppt,2wk_max_sal_ppt,mean_temp_degC,mean_TSS_mgL,pct_water,pct_flotant,pct_land_veg,pct_land_bare,pct_land_upland_dry,pct_land_upland_wet,pct_vglnd_BLHF,pct_vglnd_SWF,pct_vglnd_FM,pct_vglnd_IM,pct_vglnd_BM,pct_vglnd_SM,FIBS_score'
     write(901,'(A)') 'GRID,MEAN_BED_ELEV,MEAN_LAND_ELEV,PERCENT_LAND_0-100,PERCENT_WETLAND_0-100,PERCENT_WATER_0-100'
     write(902,'(A)') 'GRID,PERCENT_EDGE_0-100'
     write(903,'(A)') 'GRID_ID,VALUE_0,VALUE_4,VALUE_8,VALUE_12,VALUE_18,VALUE_22,VALUE_28,VALUE_32,VALUE_36,VALUE_40,VALUE_44,VALUE_78,VALUE_150,VALUE_151'
@@ -31,7 +32,7 @@ subroutine write_output_summaries
     write(905,'(A)') 'GRID_ID,VALUE_0,VALUE_8,VALUE_30,VALUE_36,VALUE_42,VALUE_46,VALUE_50,VALUE_56,VALUE_57'
  
     do i = 1,ngrid
-
+        c = grid_comp(i)
         ! calculate some local tabulations on land area to be used in output files
         grid_pct_vg_land = dem_NoDataVal
         grid_pct_land_tot = dem_NoDataVal
@@ -40,9 +41,16 @@ subroutine write_output_summaries
         grid_pct_vg_land   = 1.0 - grid_pct_water(i) - grid_pct_flt(i) - grid_pct_bare(i) - grid_pct_upland(i)
         grid_pct_land_tot  = 1.0 - grid_pct_water(i) - grid_pct_flt(i)
         grid_pct_land_wetl =       grid_pct_vg_land  + grid_pct_flt(i) + grid_pct_bare(i)
-   
-        
+
         write(900,1900) i,                          &
+   &                c,                              &        
+   &                stg_av_yr(c),                   &
+   &                stg_sd_smr(c),                  &
+   &                sal_av_yr(c),                   &
+   &                sal_av_smr(c),                  &
+   &                sal_mx_14d_yr(c),               &
+   &                tmp_av_yr(c),                   &
+   &                ave_annual_tss(c),              &
    &                grid_pct_water(i),              &
    &                grid_pct_flt(i),                &
    &                grid_pct_vg_land,               &
@@ -152,7 +160,7 @@ subroutine write_output_summaries
     
     
     
-1900    format(I0,12(',',F0.4),',',F0.2)
+1900    format(I0,I0,19(',',F0.4),',',F0.2)
 1901    format(I0,2(',',F0.4),3(',',F0.2))
 1902    format(I0,',',F0.2)  
 1903    format(I0,14(',',I0))

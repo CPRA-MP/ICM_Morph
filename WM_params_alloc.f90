@@ -50,6 +50,7 @@ subroutine params_alloc
  
     
     ! define variables read in or calculated from vegtype ICM-LAVegMod summary file in subroutine: PREPROCESSING
+    allocate(grid_comp(ngrid))
     allocate(grid_pct_water(ngrid))
     allocate(grid_pct_upland(ngrid))
     allocate(grid_pct_bare_old(ngrid))

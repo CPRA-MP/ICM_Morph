@@ -178,12 +178,12 @@ program main
         write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
         write(  *,*) 'Write Binary Raster Output subroutine ended at: ',dtstr
         write(000,*) 'Write Binary Raster Output subroutine ended at: ',dtstr    
-    else if(binary_out == 2)then
-        call write_output_netcdf_rasters
-        call date_and_time(VALUES=dtvalues)
-        write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
-        write(  *,*) 'Write netCDF Raster Output subroutine ended at: ',dtstr
-        write(000,*) 'Write netCDF Raster Output subroutine ended at: ',dtstr    
+    !else if(binary_out == 2)then
+    !    call write_output_netcdf_rasters
+    !    call date_and_time(VALUES=dtvalues)
+    !    write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
+    !    write(  *,*) 'Write netCDF Raster Output subroutine ended at: ',dtstr
+    !    write(000,*) 'Write netCDF Raster Output subroutine ended at: ',dtstr    
     else
         call write_output_asci_rasters
         call date_and_time(VALUES=dtvalues)

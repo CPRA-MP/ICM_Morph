@@ -95,6 +95,7 @@ module params
     integer,dimension(:),allocatable ::  dem_y                      ! y-coordinate of DEM pixel (UTM m, zone 15N)
     integer,dimension(:),allocatable ::  dem_comp                   ! ICM-Hydro compartment ID overlaying DEM pixel (-)
     integer,dimension(:),allocatable ::  dem_grid                   ! ICM-LAVegMod grid ID overlaying DEM pixel (-)
+    integer,dimension(:),allocatable ::  grid_comp                  ! ICM-Hydro compartment ID overlaying ICM-LAVegMod grid (-)
     real(sp),dimension(:),allocatable :: dem_z                      ! average elevation of DEM pixel (m NAVD88)
     real(sp),dimension(:),allocatable :: dem_meer                   ! marsh edge erosion rate of DEM pixel (m / yr)
     real(sp),dimension(:),allocatable :: dem_pldr                   ! polder flag of DEM pixel (1 = pixel is in polder; 0 = not in polder)
