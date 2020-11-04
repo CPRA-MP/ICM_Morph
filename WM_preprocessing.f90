@@ -56,13 +56,15 @@ subroutine preprocessing
     write(  *,*) ' - mapping compartment IDs to grid cell'
     write(000,*) ' - mapping compartment IDs to grid cell'
     
-    grid_comp = 0
+    grid_comp = 0                               ! initialize all grid-compartment mapping values to 0
     do i = 1,ndem
         g = dem_grid(i)
         c = dem_comp(i)
-        if (g > 0) then
-            if (c > 0 ) then
-                grid_comp(g) = c
+        if (g > 0) then                         ! if DEM pixel has an associated grid ID
+            if (c > 0 ) then                    ! and DEM pixel has an associated compartment ID
+                if (grid_comp(g) == 0) then     ! if grid-to-compartment has not yet been mapped, popuplate the grid_comp array with mapping value 
+                    grid_comp(g) = c
+                end if
             end if
         end if
     end do
