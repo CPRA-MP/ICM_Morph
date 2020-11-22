@@ -102,11 +102,11 @@ subroutine summaries
                             
                             if (grid_FIBS_score(g) <= 0.15 ) then       !   fresh forested wetland
                                 er_counts(er,2) = er_count(er,2) + 1      
-                            else if (grid_FIBS_score(g) <= 1.5 ) then        !   fresh marsh
+                            else if (grid_FIBS_score(g) <= 1.5 ) then   !   fresh marsh
                                 er_counts(er,3) = er_count(er,3) + 1      
-                            else if (grid_FIBS_score(g) <= 5 ) then          !   intermediate marsh
+                            else if (grid_FIBS_score(g) <= 5 ) then     !   intermediate marsh
                                 er_counts(er,4) = er_count(er,4) + 1      
-                            else if (grid_FIBS_score(g) <= 18 ) then         !   brackish marsh
+                            else if (grid_FIBS_score(g) <= 18 ) then    !   brackish marsh
                                 er_counts(er,5) = er_count(er,5) + 1      
                             else if (grid_FIBS_score(g) > 18 ) then     !   saline marsh
                                 er_counts(er,6) = er_count(er,6) + 1

@@ -84,11 +84,13 @@ module params
     character*100 :: comp_elev_file                                 ! file name, with relative path, to elevation summary compartment file used internally by ICM
     character*100 :: comp_wat_file                                  ! file name, with relative path, to percent water summary compartment file used internally by ICM
     character*100 :: comp_upl_file                                  ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
-    
+    character*100 :: er_summary_file                                ! file name 
     ! QAQC save point information in subroutine: SET_IO
     integer :: nqaqc                                                ! number of QAQC points for reporting - as listed in qaqc_site_list_file
     character*100 :: qaqc_site_list_file                            ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
     character*100 :: fnc_tag                                        ! file naming convention tag
+    character*3 :: sterm                                            ! file naming convention scenario term
+    character*4 :: gterm                                            ! file naming convention group term
     
     ! define variables read in or calculated from xyz files in subroutine: PREPROCESSING
     integer,dimension(:),allocatable ::  dem_x                      ! x-coordinate of DEM pixel (UTM m, zone 15N)
@@ -126,7 +128,7 @@ module params
                                                                     !               3 = unvegetated wetland/new subaerial unvegetated mudflat (e.g., bare ground)
                                                                     !               4 = developed land/upland/etc. that are not modeled in ICM-LAVegMod
                                                                     !               5 = flotant marsh
-    integer,dimension(:),allocatable :: dem_bi_zone                 ! flag for DEM pixel identifying whether it is within the barrier island model domain
+    integer,dimension(:),allocatable :: dem_bi_zone                 ! flag for DEM pixel identifyin g whether it is within the barrier island model domain
     integer,dimension(:),allocatable :: dem_bi_map                  ! if pixel is in BI model domain, map the interpolated BI-DEM raster to the corresponding DEM pixel index
     
     ! define variables read in or calculated from compartment_out Hydro summary file in subroutine: PREPROCESSING

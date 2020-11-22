@@ -89,6 +89,12 @@ subroutine set_io
     read(001,*) qaqc_site_list_file
     read(001,*) fnc_tag
     
+    fnc_tag =trim(adjustL(fnc_tag))
+    sterm = fnc_tag(8:10)
+    gterm = fnc_tag(12:15)
+    
+    er_summary_file = fnc_tag//'_land_veg.csv'
+    
     close(001)
 
     return

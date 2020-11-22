@@ -7,19 +7,21 @@ subroutine write_output_summaries
     
     ! local variables
     integer :: i                                                    ! iterator
+    integer :: j                                                    ! iterator
     integer :: c                                                    ! local compartment ID variable
     real(sp) :: grid_pct_vg_land                                    ! calculation of vegetated wetland area (excludes nonvegetated land, upland, flotant, and water)
     real(sp) :: grid_pct_land_tot                                   ! calculation of total land area, regardless of landtype (excludes flotant and water)
     real(sp) :: grid_pct_land_wetl                                  ! calculation wetland area, either attached or flotant - with or without vegetation (excludes water and upland)
-              
+    character*3,dimension(:),allocatable :: lnd_codes               ! array of land-type codes used in output ecoregion summary file
+    
+    
     ! write end-of-year grid summary file    
     write(  *,*) ' - writing end-of-year grid summary files'
     write(000,*) ' - writing end-of-year grid summary files'
     
     open(unit=900, file = trim(adjustL(grid_summary_eoy_file) ))
     open(unit=901, file = trim(adjustL(grid_data_file) ))
-    open(unit=902, file = trim(adjustL(grid_pct_edge_file) ))
-    open(unit=903, file = trim(adjustL(grid_depth_file_Gdw) ))
+    open(unit=902, file = trim(adjustL(gri`id_depth_file_Gdw) ))
     open(unit=904, file = trim(adjustL(grid_depth_file_GwT) ))
     open(unit=905, file = trim(adjustL(grid_depth_file_MtD) ))
     
@@ -158,7 +160,28 @@ subroutine write_output_summaries
     close(907)
     close(908)    
     
+    ! write ecoregion summary file (each year will be appended to bottom of file)
+    open(unit=909, file = 'geomorph/output/'//trim(adjustL(er_summary_file)),position='append'))
+    allocate(lnd_codes(10))
+    lnd_codes(1) = 'LND'                                                !       er_counts(neco,1) = count of land pixels within ecoregion
+    lnd_codes(2) = 'FOR'                                                !       er_counts(neco,2) = count of fresh forested pixels within ecoregion (FFIBS <= 0.15)
+    lnd_codes(3) = 'FRM'                                                !       er_counts(neco,3) = count of fresh marsh pixels within ecoregion (FFIBS <= 1.5)
+    lnd_codes(4) = 'INM'                                                !       er_counts(neco,4) = count of intermediate marsh within ecoregion (FFIBS <= 5) 
+    lnd_codes(5) = 'BRM'                                                !       er_counts(neco,5) = count of brackish marsh pixels within ecoregion (FFIBS <= 18)
+    lnd_codes(6) = 'SAM'                                                !       er_counts(neco,6) = count of saline marsh pixels within ecoregion (FFIBS > 18)
+    lnd_codes(7) = 'WAT'                                                !       er_counts(neco,7) = count of water pixels within ecoregion
+    lnd_codes(8) = 'BRG'                                                !       er_counts(neco,8) = count of bareground pixels within ecoregion
+    lnd_codes(9) = 'UPL'                                                !       er_counts(neco,9) = count of upland/developed pixels within ecoregion
+    lnd_codes(10)= 'FLT'                                                !       er_counts(neco,10) = count of flotant marsh pixels within ecoregion
+
+    write(909,'(A)') 'prj_no,S,year,code,ecoregion,value'
+    do i = 1,neco
+        do j = 1,10
+            write(909,1909) gterm,sterm,elapsed_year,lnd_codes(j),er_codes(i),er_counts(i,j)*dem_res*dem_res  
+        end do
+    end do
     
+    close(909)
     
 1900    format(I0,I0,19(',',F0.4),',',F0.2)
 1901    format(I0,2(',',F0.4),3(',',F0.2))
@@ -167,6 +190,7 @@ subroutine write_output_summaries
 1904    format(I0,9(',',I0))
 1906    format(I0,2(',',F0.4),',',I0)
 1907    format(I0,',',F0.4)  
+1909    format(2(A,',',),I,',',2(A,',',),I)
     
     
         

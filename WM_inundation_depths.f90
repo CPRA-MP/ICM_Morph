@@ -33,7 +33,7 @@ subroutine inundation_depths
         write(  *,*) ' - calculating inundation for previous year'
         write(000,*) ' - calculating inundation for previous year'
         wse_by_comp = stg_av_prev_yr
-    ! tp <= 12 uses monthly mean stage to calculate inundation for month tp
+    ! tp <= 12 uses monthly maximum stage to calculate inundation for month tp
     else
         write(  *,*) ' - calculating inundation for current year, month: ' , tp
         write(000,*) ' - calculating inundation for current year, month: ' , tp
