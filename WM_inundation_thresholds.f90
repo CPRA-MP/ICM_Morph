@@ -90,17 +90,7 @@ subroutine inundation_thresholds
                                     end if
                                 end if
                             end if
-                        
-                        ! if water - check if current year elevation is above MWL by depth threshold defining whether vegetation can establish
-                        else if (dem_lndtyp(i) == 2) then
-                            if (dep_yr < ht_abv_mwl_est) then
-                                dep_prev_yr = dem_inun_dep(i,14)
-                                ! if both current year and previous year have elevation above threshold for establishment, convert water to land eligible for vegetation
-                                if (dep_prev_yr < ht_abv_mwl_est) then
-                                    lnd_change_flag(i) = 1                          ! lnd_change_flag = 1 for conversion from open water to land eligible for vegetation
-                                end if
-                            end if
-                            
+
                         ! if upland - check if inundation would allow for wetland vegetation to establish
                         else if (dem_lndtyp(i) == 4) then
                             MuDepth = B0 + B1*sal_yr

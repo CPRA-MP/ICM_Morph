@@ -6,12 +6,12 @@
 !   Fortran version of ICM-Morph developed         
 !   for 2023 Coastal Master Plan - LA CPRA         
 !                                                  
-!   original model: Couvillion et al., 2012        
-!   revised model: White et al., 2017              
-!   current model: TBD                                               
+!   original model: Couvillion et al., (2012)       
+!   revised model: White et al., (2017)             
+!   current model: Foster-Martinez et al., (in prep)                                               
 !                                                  
 !   Questions: eric.white@la.gov                   
-!   last update: 8/16/2020                          
+!   last update: 11/22/2020                          
 !                                                     
 !   project site: https://github.com/CPRA-MP      
 !   documentation: http://coastal.la.gov/our-plan  
@@ -26,8 +26,8 @@ program main
     ! local variables
     integer,dimension(8) :: dtvalues                ! variable to store date time values
     
-    character*17 :: dtstrf                    ! string to hold formatted datetime
-    character*19 :: dtstr                    ! string to hold formatted datetime
+    character*17 :: dtstrf                          ! string to hold formatted datetime
+    character*19 :: dtstr                           ! string to hold formatted datetime
 
     call date_and_time(VALUES=dtvalues)             ! grab simulation start time
     write(dtstrf,8888) dtvalues(1),dtvalues(2),dtvalues(3),'_',dtvalues(5),'.',dtvalues(6),'.',dtvalues(7)
@@ -134,10 +134,13 @@ program main
     write(000,*) 'Update Elevation subroutine ended at: ',dtstr       
 
     
-    !call subaerial_establishment
-    !this is a new subroutine
+    call new_subaerial_land
+    call date_and_time(VALUES=dtvalues)
+    write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
+    write(  *,*) 'New Subaerial Land subroutine ended at: ',dtstr
+    write(000,*) 'New Subaerial Land subroutine ended at: ',dtstr   
     
-    
+   
     call update_landtype
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
@@ -165,6 +168,7 @@ program main
     write(  *,*) 'Write Output subroutine ended at: ',dtstr
     write(000,*) 'Write Output subroutine ended at: ',dtstr    
 
+    
     call write_output_QAQC_points
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
