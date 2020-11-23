@@ -75,6 +75,9 @@ module params
     character*100 :: dz_eoy_xyz_file                                ! file name, with relative path, to XYZ raster output file for elevation change raster
     character*100 :: lndtyp_eoy_xyz_file                            ! file name, with relative path, to XYZ raster output file for land type
     character*100 :: lndchng_eoy_xyz_file                           ! file name, with relative path, to XYZ raster output file for land change flag
+    character*100 :: salav_xyz_file                                 ! file name, with relative path, to XYZ raster output file for annual mean salinity raster
+    character*100 :: salmx_xyz_file                                 ! file name, with relative path, to XYZ raster output file for maximum 14-day salinity raster
+    character*100 :: inun_xyz_file                                  ! file name, with relative path, to XYZ raster output file for annual inundation depth raster
     character*100 :: grid_summary_eoy_file                          ! file name, with relative path, to summary grid file for end-of-year landscape
     character*100 :: grid_data_file                                 ! file name, with relative path, to summary grid data file used internally by ICM
     character*100 :: grid_depth_file_Gdw                            ! file name, with relative path, to Gadwall depth grid data file used internally by ICM and HSI
@@ -221,6 +224,22 @@ module params
     real(sp),dimension(:),allocatable :: comp_wetland_z             ! average elevation of wetland in ICM-Hydro compartment
     real(sp),dimension(:),allocatable :: comp_water_z               ! average elevation of water bottom in ICM-Hydro compartment
     integer,dimension(:),allocatable :: comp_edge_area              ! area of edge within each ICM-Hydro compartment (sq m)
+    integer,dimension(:),allocatable :: er_sum                      ! local count of all pixels within each ecoregion
+    integer,dimension(:,:),allocatable :: er_counts                 ! local count of pixels within each ecoregion for each landtype summary
+                                                                    !       er_counts(neco,1) = count of land pixels within ecoregion
+                                                                    !       er_counts(neco,2) = count of fresh forested pixels within ecoregion (FFIBS <= 0.15)
+                                                                    !       er_counts(neco,3) = count of fresh marsh pixels within ecoregion (FFIBS <= 1.5)
+                                                                    !       er_counts(neco,4) = count of intermediate marsh within ecoregion (FFIBS <= 5) 
+                                                                    !       er_counts(neco,5) = count of brackish marsh pixels within ecoregion (FFIBS <= 18)
+                                                                    !       er_counts(neco,6) = count of saline marsh pixels within ecoregion (FFIBS > 18)
+                                                                    !       er_counts(neco,7) = count of water pixels within ecoregion                                                                
+                                                                    !       er_counts(neco,8) = count of bareground pixels within ecoregion
+                                                                    !       er_counts(neco,9) = count of upland/developed pixels within ecoregion
+                                                                    !       er_counts(neco,10) = count of flotant marsh pixels within ecoregion
+    
+    
+    
+    
     
     ! DEM mapping arrays that are allocated in their own allocation subroutine DEM_PARAMS_ALLOC
     integer :: n_dem_col                                            ! number of columns (e.g. range in X) in DEM when mapped

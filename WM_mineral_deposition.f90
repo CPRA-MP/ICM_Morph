@@ -29,9 +29,7 @@ subroutine mineral_deposition
     real(sp) :: sed_dp_edge                                                                                     ! local variable to sum annual edge sediment deposition at pixel from monthly inputs
     real(sp) :: sed_dp_wat                                                                                      ! local variable to sum annual open water sediment erosion/deposition at pixel from monthly inputs
     real(sp),dimension(:,:),allocatable :: sed_dp_mi_mons_corr                                                  ! local array storing monthly mineral sediment deposition per unit area - corrected for ratio of marsh that was inundated during each respective month
-    real(sp) :: sed_dp_ow_mons_mx                                                                               ! maximum allowable monthly sediment deposition in open water [g/cm^2]- this is the amount of sediment that would be deposited if deposition filled the entire water column up to the maximum monthly water level - calculated from the inundation depth at a pixel and the bulk density of the soil 
-    real(sp) :: sed_dp_mons_mx                                                                                  ! maximum allowable monthly sediment deposition on marsh surface [g/cm^2]- this is the amount of sediment that would be deposited if deposition filled the entire water column up to the maximum monthly water level - calculated from the inundation depth at a pixel and the bulk density of the soil
-    
+
     
     allocate(sed_dp_mi_mons_corr(ncomp,12))
     sed_dp_mi_mons_corr = 0.0

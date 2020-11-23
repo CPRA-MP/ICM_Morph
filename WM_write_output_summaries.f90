@@ -21,7 +21,7 @@ subroutine write_output_summaries
     
     open(unit=900, file = trim(adjustL(grid_summary_eoy_file) ))
     open(unit=901, file = trim(adjustL(grid_data_file) ))
-    open(unit=902, file = trim(adjustL(gri`id_depth_file_Gdw) ))
+    open(unit=902, file = trim(adjustL(grid_depth_file_Gdw) ))
     open(unit=904, file = trim(adjustL(grid_depth_file_GwT) ))
     open(unit=905, file = trim(adjustL(grid_depth_file_MtD) ))
     
@@ -161,7 +161,7 @@ subroutine write_output_summaries
     close(908)    
     
     ! write ecoregion summary file (each year will be appended to bottom of file)
-    open(unit=909, file = 'geomorph/output/'//trim(adjustL(er_summary_file)),position='append'))
+    open(unit=909, file = 'geomorph/output/'//trim(adjustL(er_summary_file)),position='append')
     allocate(lnd_codes(10))
     lnd_codes(1) = 'LND'                                                !       er_counts(neco,1) = count of land pixels within ecoregion
     lnd_codes(2) = 'FOR'                                                !       er_counts(neco,2) = count of fresh forested pixels within ecoregion (FFIBS <= 0.15)
@@ -190,7 +190,7 @@ subroutine write_output_summaries
 1904    format(I0,9(',',I0))
 1906    format(I0,2(',',F0.4),',',I0)
 1907    format(I0,',',F0.4)  
-1909    format(2(A,',',),I,',',2(A,',',),I)
+1909    format(2(A,','),I,',',2(A,','),I)
     
     
         

@@ -6,6 +6,11 @@ subroutine write_output_binary_rasters
     implicit none
     
     ! local variables
+    integer :: i                                                            ! iterator
+    integer :: c                                                            ! local variable storing ICM-Hydro compartment number
+    real(sp),dimension(:),allocatable :: dem_sal_av_yr                      ! local array to store ICM-Hydro compartment mean salinity data mapped to DEM grid
+    real(sp),dimension(:),allocatable :: dem_sal_mx_14d_yr                  ! local array to store ICM-Hydro compartment max 2-week mean salinity data mapped to DEM grid
+    
     
     
     write(  *,*) ' - writing output raster binary file for Edge'
@@ -38,6 +43,7 @@ subroutine write_output_binary_rasters
     write(804) dem_dz_cm
     close(804)    
 
+    
     if (elapsed_year == 1) then
     
         write(  *,*) ' - writing output raster binary file for X-coordinate'
@@ -83,5 +89,39 @@ subroutine write_output_binary_rasters
         close(811)
     end if
     
+    write(  *,*) ' - writing output raster binary file for annual mean salinity'
+    write(000,*) ' - writing output raster binary file for annual mean salinity'
+    allocate(dem_sal_av_yr(ndem))
+    dem_sal_av_yr = dem_NoDataVal
+    do i = 1,ndem
+        c = dem_comp(i)
+        if (c /= dem_NoDataVal) then
+            dem_sal_av_yr(i) = sal_av_yr(c)
+        end if
+    end do
+    open(unit=812, file = trim(adjustL(salav_xyz_file))//'.b',form='unformatted')
+    write(812,*) dem_sal_av_yr
+    close(812)
+     
+    write(  *,*) ' - writing output raster binary file for maximum 2-wk mean salinity'
+    write(000,*) ' - writing output raster binary file for maximum 2-wk mean salinity'
+    allocate(dem_sal_mx_14d_yr (ndem))
+    dem_sal_mx_14d_yr  = dem_NoDataVal
+    do i = 1,ndem
+        c = dem_comp(i)
+        if (c /= dem_NoDataVal) then
+            dem_sal_mx_14d_yr(i) = sal_mx_14d_yr(c)
+        end if
+    end do
+    open(unit=813, file = trim(adjustL(salmx_xyz_file))//'.b',form='unformatted')
+    write(813,*) dem_sal_mx_14d_yr
+    close(813)
+    
+    write(  *,*) ' - writing output raster binary file for annual mean inundation depth'
+    write(000,*) ' - writing output raster binary file for annual mean inundation depth'
+    open(unit=814, file = trim(adjustL(inun_xyz_file))//'.b',form='unformatted')
+    write(814,*) dem_inun_dep(:,13)
+    close(814)
+    
     return
-end
+    end

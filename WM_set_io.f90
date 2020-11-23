@@ -74,6 +74,9 @@ subroutine set_io
     read(001,*) dz_eoy_xyz_file,dump_txt
     read(001,*) lndtyp_eoy_xyz_file,dump_txt
     read(001,*) lndchng_eoy_xyz_file,dump_txt
+    read(001,*) salav_xyz_file
+    read(001,*) salmx_xyz_file
+    read(001,*) inun_xyz_file
     read(001,*) grid_summary_eoy_file,dump_txt
     read(001,*) grid_data_file,dump_txt
     read(001,*) grid_depth_file_Gdw,dump_txt

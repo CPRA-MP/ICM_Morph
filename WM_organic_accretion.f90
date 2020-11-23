@@ -39,13 +39,13 @@ subroutine organic_accretion
                     e = comp_eco(c)
                     if (e /= dem_NoDataVal) then
                         if (g /= dem_NoDataVal) then    
-                            if (max(dem_inun_dep(i,:)) > 0) then                                                    ! check that the pixel was inundated at some point during year
+                            if (maxval(dem_inun_dep(i,:)) > 0) then                                                    ! check that the pixel was inundated at some point during year
                                 FIBS = grid_FIBS_score(g)
                                 if (FIBS >= 0.0) then                                                               ! check that there is a FIBS score for grid cell
                                     if (FIBS < FIBS_intvals(1)) then                                                ! FIBS indicates forested wetland
                                         int_wgt = 0                                                                 ! no interpolation for lowest FIBS score (forested) - use lowest OMAR     
                                         omar_low = er_omar(e,1)
-                                        omar_up = er_omar(e,1)
+                                        omar_upr = er_omar(e,1)
                                     else if (FIBS < FIBS_intvals(2)) then                                           ! FIBS indicates fresh marsh                                   
                                         int_wgt = (FIBS - FIBS_intvals(1)) / (FIBS_intvals(2) - FIBS_intvals(1))    
                                         if (comp_act_dlt(c) == 0) then                                              ! if compartment is not active delta

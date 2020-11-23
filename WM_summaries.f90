@@ -37,19 +37,7 @@ subroutine summaries
     integer,dimension(:),allocatable :: comp_counts_edge            ! local array for counting number of edge pixels in each ICM-Hydro compartment
     integer :: comp_counts_land                                     ! local count of all pixels that are used in average elevation of land within each ICM-Hydro compartment
     real(sp) :: comp_elv_sums_land                                  ! local sum of all elevation values used in calculating average elevation of land within each ICM-Hydro compartment
-    integer(,dimension(:), :: er_sum                                ! local count of all pixels within each ecoregion
-    integer,dimension(:,:),allocatable :: er_counts                 ! local count of pixels within each ecoregion for each landtype summary
-                                                                    !       er_counts(neco,1) = count of land pixels within ecoregion
-                                                                    !       er_counts(neco,2) = count of fresh forested pixels within ecoregion (FFIBS <= 0.15)
-                                                                    !       er_counts(neco,3) = count of fresh marsh pixels within ecoregion (FFIBS <= 1.5)
-                                                                    !       er_counts(neco,4) = count of intermediate marsh within ecoregion (FFIBS <= 5) 
-                                                                    !       er_counts(neco,5) = count of brackish marsh pixels within ecoregion (FFIBS <= 18)
-                                                                    !       er_counts(neco,6) = count of saline marsh pixels within ecoregion (FFIBS > 18)
-                                                                    !       er_counts(neco,7) = count of water pixels within ecoregion                                                                
-                                                                    !       er_counts(neco,8) = count of bareground pixels within ecoregion
-                                                                    !       er_counts(neco,9) = count of upland/developed pixels within ecoregion
-                                                                    !       er_counts(neco,10) = count of flotant marsh pixels within ecoregion
-    
+
     
     allocate(grid_counts(ngrid,nlt))
     allocate(grid_elv_sums(ngrid,nlt))
@@ -57,8 +45,6 @@ subroutine summaries
     allocate(comp_counts(ncomp,nlt))  
     allocate(comp_elv_sums(ncomp,nlt))
     allocate(comp_counts_edge(ncomp))
-    allocate(er_counts(neco))
-    allocate(er_counts(neco, 10))
 
     
     grid_counts = 0
@@ -98,28 +84,28 @@ subroutine summaries
                         er_sum(er) = er_sum(er) + 1
                         
                         if (lt == 1) then                               !   vegetated wetland
-                            er_counts(er,1) = er_count(er,1) + 1
+                            er_counts(er,1) = er_counts(er,1) + 1
                             
                             if (grid_FIBS_score(g) <= 0.15 ) then       !   fresh forested wetland
-                                er_counts(er,2) = er_count(er,2) + 1      
+                                er_counts(er,2) = er_counts(er,2) + 1      
                             else if (grid_FIBS_score(g) <= 1.5 ) then   !   fresh marsh
-                                er_counts(er,3) = er_count(er,3) + 1      
+                                er_counts(er,3) = er_counts(er,3) + 1      
                             else if (grid_FIBS_score(g) <= 5 ) then     !   intermediate marsh
-                                er_counts(er,4) = er_count(er,4) + 1      
+                                er_counts(er,4) = er_counts(er,4) + 1      
                             else if (grid_FIBS_score(g) <= 18 ) then    !   brackish marsh
-                                er_counts(er,5) = er_count(er,5) + 1      
+                                er_counts(er,5) = er_counts(er,5) + 1      
                             else if (grid_FIBS_score(g) > 18 ) then     !   saline marsh
-                                er_counts(er,6) = er_count(er,6) + 1
+                                er_counts(er,6) = er_counts(er,6) + 1
                             end if
                         
                         else if (lt == 2) then                          !   water
-                            er_counts(er,7) = er_count(er,7) + 1
+                            er_counts(er,7) = er_counts(er,7) + 1
                         else if (lt == 3) then                          !   unvegetated wetland/new subaerial unvegetated mudflat (e.g., bare ground)
-                            er_counts(er,8) = er_count(er,8) + 1
+                            er_counts(er,8) = er_counts(er,8) + 1
                         else if (lt == 4) then                          !   developed land/upland/etc. that are not modeled in ICM-LAVegMod
-                            er_counts(er,9) = er_count(er,9) + 1
+                            er_counts(er,9) = er_counts(er,9) + 1
                         else if (lt == 5) then                          !   flotant marsh 
-                            er_counts(er,10) = er_count(er,10) + 1
+                            er_counts(er,10) = er_counts(er,10) + 1
                         end if    
                             
                         

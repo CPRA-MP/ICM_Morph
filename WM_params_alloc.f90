@@ -112,7 +112,10 @@ subroutine params_alloc
     allocate(comp_wetland_z(ncomp))
     allocate(comp_water_z(ncomp))
     allocate(comp_edge_area(ncomp))
- 
+
+    allocate(er_sum(neco))
+    allocate(er_counts(neco, 10))
+    
     return
 end
     

@@ -7,9 +7,10 @@ subroutine write_output_asci_rasters
     
     ! local variables
     integer :: i                                                    ! iterator
+    integer :: c                                                    ! local variable storing ICM-Hydro compartment number
     integer :: rasval_int                                           ! local integer value to write out
     real(sp) :: rasval_flt                                          ! local integer value to write out     
-    
+
     
     write(  *,*) ' - writing output raster XYZ file for Edge'
     write(000,*) ' - writing output raster XYZ file for Edge'
@@ -37,9 +38,9 @@ subroutine write_output_asci_rasters
  
     do i = 1,ndem
         if (dem_z(i) /= dem_NoDataVal) then
-            rasval_int = dem_z(i)    
+            rasval_flt = dem_z(i)    
         else
-            rasval_int = dem_NoDataVal
+            rasval_flt = dem_NoDataVal
         end if
         write(801,1801) dem_x(i), dem_y(i),rasval_flt
     end do
@@ -91,19 +92,70 @@ subroutine write_output_asci_rasters
  
     do i = 1,ndem
         if (dem_z(i) /= dem_NoDataVal) then
-            rasval_int = dem_dz_cm(i)    
+            rasval_flt = dem_dz_cm(i)    
         else
-            rasval_int = dem_NoDataVal
+            rasval_flt = dem_NoDataVal
         end if
         write(804,1801) dem_x(i), dem_y(i),rasval_flt
     end do
     close(804)    
     
-     
+         
+    
+    write(  *,*) ' - writing output raster XYZ file for annual mean salinity'
+    write(000,*) ' - writing output raster XYZ file for annual mean salinity'
+ 
+    open(unit=812, file = trim(adjustL(salav_xyz_file) ))
+    
+    do i = 1,ndem
+        c = dem_comp(i)
+        if (c /= dem_NoDataVal) then
+            rasval_flt = dem_NoDataVal
+        else
+            rasval_flt = sal_av_yr(c)
+        end if
+        write(812,1801) dem_x(i), dem_y(i),rasval_flt
+    end do
+
+    close(812)
+    
+    
+    
+    write(  *,*) ' - writing output raster XYZ file for maximum 2-wk mean salinity'
+    write(000,*) ' - writing output raster XYZ file for maximum 2-wk mean salinity'
+    
+    open(unit=813, file = trim(adjustL(salmx_xyz_file))//'.b',form='unformatted')
+
+    do i = 1,ndem
+        c = dem_comp(i)
+        if (c /= dem_NoDataVal) then
+             rasval_flt = dem_NoDataVal
+        else
+            rasval_flt = sal_mx_14d_yr(c)
+        end if
+        write(813,1801) dem_x(i), dem_y(i),rasval_flt
+    end do
+
+    close(813)
+    
+    
+    
+    write(  *,*) ' - writing output raster XYZ file for annual mean inundation depth'
+    write(000,*) ' - writing output raster XYZ file for annual mean inundation depth'
+    open(unit=814, file = trim(adjustL(inun_xyz_file))//'.b',form='unformatted')
+    
+    if (dem_z(i) /= dem_NoDataVal) then
+        rasval_flt = dem_inun_dep(i,13)
+    else
+        rasval_flt = dem_NoDataVal
+    end if
+    
+    write(814,1801) dem_x(i), dem_y(i), rasval_flt
+    close(814)
 
     
     
 1800    format(I0,2(4x,I0))
-1801    format(I0,2(4x,F0.4))      
+1801    format(2(I0,4x),F0.4)     
     return
 end
