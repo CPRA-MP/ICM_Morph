@@ -54,27 +54,27 @@ subroutine write_output_QAQC_points
     read(42,*) dump_txt         ! skip header row
     
     do i = 1,nqaqc
-        read(42,*) site_no,                          &      ! site_no
+        read(42,*) dump_int,                         &      ! site_no
    &               site_x,                           &      ! dem_x
    &               site_y,                           &      ! dem_y	
    &               qaqc_filetag,                     &      ! qaqc_filetag
+   &               qaqc_er,                          &      ! ecoregion for file name
    &               qaqc_flag,                        &      ! qaqc_use
    &               dump_int,                         &      ! site_x
    &               dump_int                                 ! site_y
         
-        if (qaqc_flag == 1) then
-            save_dir = 'geomorph/output_qaqc/ecoregion_points/'
-        else if (qaqc_flag == 2) then
-            save_dir = 'geomorph/output_qaqc/transect_points/'
-        else if (qaqc_flag == 3) then 
-            save_dir = 'geomorph/output_qaqc/CRMS_points/'
-        else
-            save_dir = 'geomorph/output_qaqc/random_points/'
-        end if
-        
-        write(site_no_text,'(I4.4)') site_no
-        qaqc_file = trim(adjustL(save_dir))//trim(adjustL(fnc_tag))//"_QAQC_"//trim(adjustL(site_no_text))//"_"//trim(adjustL(qaqc_filetag))//'.csv'
-
+        qaqc_file = 'geomorph/output_qaqc/'     &
+   &               //trim(adjustL(mterm))//'_'  &
+   &               //trim(adjustL(sterm))//'_'  &
+   &               //trim(adjustL(gterm))//'_'  &
+   &               //trim(adjustL(cterm))//'_'  &
+   &               //trim(adjustL(uterm))//'_'  &
+   &               //trim(adjustL(vterm))//'_'  &
+   &               //trim(adjustL(qaqc_er))//'_'&
+   &               //'O_01_50_Q_'               &
+   &               //trim(adjustL(qaqc_filetag))//'.csv'
+   
+   
         ! open site-specific QAQC file, if not first year then open in 'append' mode
         if (elapsed_year == 1) then
             open(unit=666, file = trim(adjustL(qaqc_file)))

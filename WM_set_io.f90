@@ -93,8 +93,14 @@ subroutine set_io
     read(001,*) fnc_tag
     
     fnc_tag =trim(adjustL(fnc_tag))
+    mterm = fnc_tag(1:6)
     sterm = fnc_tag(8:10)
     gterm = fnc_tag(12:15)
+    cterm = fnc_tag(17:20)
+    uterm = fnc_tag(22:24)
+    vterm = fnc_tag(26:28)
+    
+    
     
     er_summary_file = fnc_tag//'_land_veg.csv'
     

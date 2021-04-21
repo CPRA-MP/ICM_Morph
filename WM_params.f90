@@ -92,8 +92,12 @@ module params
     integer :: nqaqc                                                ! number of QAQC points for reporting - as listed in qaqc_site_list_file
     character*100 :: qaqc_site_list_file                            ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
     character*100 :: fnc_tag                                        ! file naming convention tag
+    character*6 :: mterm                                            ! file naming convention model name term
     character*3 :: sterm                                            ! file naming convention scenario term
     character*4 :: gterm                                            ! file naming convention group term
+    character*4 :: cterm                                            ! file naming convention CLARA scenario term
+    character*3 :: uterm                                            ! file naming convention uncertainty term
+    character*3 :: vterm                                            ! file naming convention variance term
     
     ! define variables read in or calculated from xyz files in subroutine: PREPROCESSING
     integer,dimension(:),allocatable ::  dem_x                      ! x-coordinate of DEM pixel (UTM m, zone 15N)
