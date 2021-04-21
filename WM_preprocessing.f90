@@ -262,6 +262,7 @@ subroutine preprocessing
    &                dump_txt                            ! notes
     end do
     close(1118) 
+    
 
     ! read polder area map file into arrays
     write(  *,*) ' - reading in polder map data'
@@ -576,6 +577,29 @@ subroutine preprocessing
     
     end do    
     close(120)    
+
+    ! read in SAV statistical model priors file
+    write(  *,*) ' - reading in parameters defining SAV statistical model priors by ecoregion'
+    write(000,*) ' - reading in parameters defining SAV statistical model priors by ecoregion'
+    
+    ! initialize table to noData
+    prior_int = dem_NoDataVal
+    prior_slope = dem_NoDataVal
+
+    open(unit=121, file=trim(adjustL(sav_priors_file)))
+    read(121,*) dump_txt                               ! dump header
+    do i = 1,neco
+        read(121,*) en,                             &       ! ecoregion number
+   &                dump_txt,                       &       ! ecoregion abbreviation
+   &                dump_txt,                       &       ! ecoregion name
+   &                dump_txt,                       &       ! CWPPRA basin name
+   &                dump_int,                       &       ! CWPPRA basin number
+   &                prior_int(en),                  &       ! intercept value for SAV statstical prior model for basin
+   &                prior_slope(en)                         ! slope value for SAV statstical prior model for basin
+    end do
+    close(121) 
+    
+    
     
 1234    format(A,54(',',A))
     

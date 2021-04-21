@@ -6,8 +6,8 @@ subroutine set_io
     use params
     implicit none
     
-    allocate(FIBS_intvals(6))
 
+    
     open(unit=001, file=trim(adjustL('geomorph/input_params.csv')))
  
     ! settings
@@ -44,6 +44,16 @@ subroutine set_io
     read(001, *) me_lowerDepth_m,dump_txt 
     read(001, *) flt_lowerDepth_m,dump_txt
     read(001,*) mc_depth_threshold,dump_txt
+    read(001,*) spsal_params(1),dump_txt
+    read(001,*) spsal_params(2),dump_txt
+    read(001,*) spsal_params(3),dump_txt
+    read(001,*) sptss_params(1),dump_txt
+    read(001,*) sptss_params(2),dump_txt
+    read(001,*) sptss_params(3),dump_txt    
+    read(001,*) dfl_params(1),dump_txt
+    read(001,*) dfl_params(2),dump_txt
+    read(001,*) dfl_params(3),dump_txt       
+    
     ! input files
     read(001,*) binary_in
     read(001,*) binary_out
@@ -58,6 +68,7 @@ subroutine set_io
     read(001,*) act_del_file,dump_txt
     read(001,*) eco_omar_file,dump_txt
     read(001,*) comp_eco_file,dump_txt
+    read(001,*) sav_priors_file,dump_txt
     read(001,*) hydro_comp_out_file,dump_txt
     read(001,*) prv_hydro_comp_out_file,dump_txt
     read(001,*) veg_out_file,dump_txt

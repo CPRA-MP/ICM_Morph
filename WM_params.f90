@@ -7,11 +7,12 @@ module params
     ! generic variables used across all subroutines
     integer,parameter :: sp=selected_real_kind(p=6)                 ! determine compiler KIND value for 4-byte (single precision) floating point real numbers
     integer,parameter :: dp=selected_real_kind(p=15)                ! determine compiler KIND value for 8-byte (double precision) floating point real numbers
+    integer,parameter :: fn_len=100                                 ! maximum character length allowed for filename character strings read in from input_params.csv
     character*3000 :: dump_txt                                      ! dummy variable to use for skipping lines in input files
     integer :: dump_int                                             ! dummy variable to use for data in input files
     real(sp) :: dump_flt                                            ! dummy variable to use for data in input files
     integer :: tp                                                   ! flag to indicate which timeperiod to use for inundation calculations (1-12=month; 13 = annual)
-
+    
     ! I/O settings in subroutine: SET_IO
     integer :: start_year                                           ! first year of model run
     integer :: elapsed_year                                         ! elapsed year of model simulation
@@ -43,55 +44,60 @@ module params
     real(sp) :: me_lowerDepth_m                                     ! depth to which eroded marsh edge is lowered to [m]
     real(sp) :: flt_lowerDepth_m                                    ! depth to which dead floating marsh is lowered to [m]
     real(sp) :: mc_depth_threshold                                  ! water depth threshold (meters) defining deep water area to be excluded from marsh creation projects footprint
+    real(sp),dimension(:),allocatable :: spsal_params               ! spring salinity parameters used by SAV model - from probabilistic analysis/model
+    real(sp),dimension(:),allocatable :: sptss_params               ! spring TSS parameters used by SAV model - from probabilistic analysis/model
+    real(sp),dimension(:),allocatable :: dfl_params                 ! distance-from-land parameters used by SAV model - from probabilistic analysis/model
     
     ! input files in subroutine: SET_IO
     integer :: binary_in                                            ! read input raster datas from binary files (1) or from ASCI XYZ files (0)
     integer :: binary_out                                           ! write raster datas to binary format only (1) or to ASCI XYZ files (0)
-    character*100 :: dem_file                                       ! file name, with relative path, to DEM XYZ file
-    character*100 :: lwf_file                                       ! file name, with relative path, to land/water file that is same resolution and structure as DEM XYZ
-    character*100 :: meer_file                                      ! file name, with relative path, to marsh edge erosion rate file that is same resolution and structure as DEM XYZ
-    character*100 :: pldr_file                                      ! file name, with relative path, to polder file that is same resolution and structure as DEM XYZ (0=non-poldered pixel; 1=pixel within a polder)
-    character*100 :: comp_file                                      ! file name, with relative path, to ICM-Hydro compartment map file that is same resolution and structure as DEM XYZ
-    character*100 :: grid_file                                      ! file name, with relative path, to ICM-LAVegMod grid map file that is same resolution and structure as DEM XYZ
-    character*100 :: dsub_file                                      ! file name, with relative path, to deep subsidence rate map file that is same resolution and structure as DEM XYZ (mm/yr; positive values are for downward VLM)
-    character*100 :: ssub_file                                      ! file name, with relative path, to shallow subsidence table with statistics by ecoregion (mm/yr; positive values are for downward VLM)
-    character*100 :: act_del_file                                   ! file name, with relative path, to lookup table that identifies whether an ICM-Hydro compartment is assigned as an 'active delta' site for use with Fresh Marsh organic accretion
-    character*100 :: eco_omar_file                                  ! file name, with relative path, to lookup table of organic accumulation rates by marsh type/ecoregion
-    character*100 :: comp_eco_file                                  ! file name, with relative path, to lookup table that assigns an ecoregion to each ICM-Hydro compartment    
-    character*100 :: hydro_comp_out_file                            ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro
-    character*100 :: prv_hydro_comp_out_file                        ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro for previous year
-    character*100 :: veg_out_file                                   ! file name, with relative path, to *vegty.asc+ file saved by ICM-LAVegMod    
-    character*100 :: monthly_mean_stage_file                        ! file name, with relative path, to compartment summary file with monthly mean water levels
-    character*100 :: monthly_max_stage_file                         ! file name, with relative path, to compartment summary file with monthly maximum water levels 
-    character*100 :: monthly_ow_sed_dep_file                        ! file name, with relative path, to compartment summary file with monthly sediment deposition in open water
-    character*100 :: monthly_mi_sed_dep_file                        ! file name, with relative path, to compartment summary file with monthly sediment deposition on interior marsh
-    character*100 :: monthly_me_sed_dep_file                        ! file name, with relative path, to compartment summary file with monthly sediment deposition on marsh edge
-    character*100 :: bi_dem_xyz_file                                ! file name, with relative path, to XYZ DEM file for ICM-BI-DEM model domain - XY resolution must be snapped to XY resolution of main DEM
+    character*fn_len :: dem_file                                    ! file name, with relative path, to DEM XYZ file
+    character*fn_len :: lwf_file                                    ! file name, with relative path, to land/water file that is same resolution and structure as DEM XYZ
+    character*fn_len :: meer_file                                   ! file name, with relative path, to marsh edge erosion rate file that is same resolution and structure as DEM XYZ
+    character*fn_len :: pldr_file                                   ! file name, with relative path, to polder file that is same resolution and structure as DEM XYZ (0=non-poldered pixel; 1=pixel within a polder)
+    character*fn_len :: comp_file                                   ! file name, with relative path, to ICM-Hydro compartment map file that is same resolution and structure as DEM XYZ
+    character*fn_len :: grid_file                                   ! file name, with relative path, to ICM-LAVegMod grid map file that is same resolution and structure as DEM XYZ
+    character*fn_len :: dsub_file                                   ! file name, with relative path, to deep subsidence rate map file that is same resolution and structure as DEM XYZ (mm/yr; positive values are for downward VLM)
+    character*fn_len :: ssub_file                                   ! file name, with relative path, to shallow subsidence table with statistics by ecoregion (mm/yr; positive values are for downward VLM)
+    character*fn_len :: act_del_file                                ! file name, with relative path, to lookup table that identifies whether an ICM-Hydro compartment is assigned as an 'active delta' site for use with Fresh Marsh organic accretion
+    character*fn_len :: eco_omar_file                               ! file name, with relative path, to lookup table of organic accumulation rates by marsh type/ecoregion
+    character*fn_len :: comp_eco_file                               ! file name, with relative path, to lookup table that assigns an ecoregion to each ICM-Hydro compartment    
+    character*fn_len :: sav_priors_file                             ! file name, with relative path, to CSV containing parameters defining the priors (per basin) for the SAV stasticial model
+
+    character*fn_len :: hydro_comp_out_file                         ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro
+    character*fn_len :: prv_hydro_comp_out_file                     ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro for previous year
+    character*fn_len :: veg_out_file                                ! file name, with relative path, to *vegty.asc+ file saved by ICM-LAVegMod    
+    character*fn_len :: monthly_mean_stage_file                     ! file name, with relative path, to compartment summary file with monthly mean water levels
+    character*fn_len :: monthly_max_stage_file                      ! file name, with relative path, to compartment summary file with monthly maximum water levels 
+    character*fn_len :: monthly_ow_sed_dep_file                     ! file name, with relative path, to compartment summary file with monthly sediment deposition in open water
+    character*fn_len :: monthly_mi_sed_dep_file                     ! file name, with relative path, to compartment summary file with monthly sediment deposition on interior marsh
+    character*fn_len :: monthly_me_sed_dep_file                     ! file name, with relative path, to compartment summary file with monthly sediment deposition on marsh edge
+    character*fn_len :: bi_dem_xyz_file                             ! file name, with relative path, to XYZ DEM file for ICM-BI-DEM model domain - XY resolution must be snapped to XY resolution of main DEM
     
     ! output files in subroutine: SET_IO
-    character*100 :: morph_log_file                                 ! file name of text file that logs all Morph print statements - no filepath will save this in executable directory
-    character*100 :: edge_eoy_xyz_file                              ! file name, with relative path, to XYZ raster output file for edge pixels
-    character*100 :: dem_eoy_xyz_file                               ! file name, with relative path, to XYZ raster output file for topobathy DEM
-    character*100 :: dz_eoy_xyz_file                                ! file name, with relative path, to XYZ raster output file for elevation change raster
-    character*100 :: lndtyp_eoy_xyz_file                            ! file name, with relative path, to XYZ raster output file for land type
-    character*100 :: lndchng_eoy_xyz_file                           ! file name, with relative path, to XYZ raster output file for land change flag
-    character*100 :: salav_xyz_file                                 ! file name, with relative path, to XYZ raster output file for annual mean salinity raster
-    character*100 :: salmx_xyz_file                                 ! file name, with relative path, to XYZ raster output file for maximum 14-day salinity raster
-    character*100 :: inun_xyz_file                                  ! file name, with relative path, to XYZ raster output file for annual inundation depth raster
-    character*100 :: grid_summary_eoy_file                          ! file name, with relative path, to summary grid file for end-of-year landscape
-    character*100 :: grid_data_file                                 ! file name, with relative path, to summary grid data file used internally by ICM
-    character*100 :: grid_depth_file_Gdw                            ! file name, with relative path, to Gadwall depth grid data file used internally by ICM and HSI
-    character*100 :: grid_depth_file_GwT                            ! file name, with relative path, to Greenwing Teal depth grid data file used internally by ICM and HSI
-    character*100 :: grid_depth_file_MtD                            ! file name, with relative path, to Mottled Duck depth grid data file used internally by ICM and HSI 
-    character*100 :: grid_pct_edge_file                             ! file name, with relative path, to percent edge grid data file used internally by ICM and HSI 
-    character*100 :: comp_elev_file                                 ! file name, with relative path, to elevation summary compartment file used internally by ICM
-    character*100 :: comp_wat_file                                  ! file name, with relative path, to percent water summary compartment file used internally by ICM
-    character*100 :: comp_upl_file                                  ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
-    character*100 :: er_summary_file                                ! file name 
+    character*fn_len :: morph_log_file                              ! file name of text file that logs all Morph print statements - no filepath will save this in executable directory
+    character*fn_len :: edge_eoy_xyz_file                           ! file name, with relative path, to XYZ raster output file for edge pixels
+    character*fn_len :: dem_eoy_xyz_file                            ! file name, with relative path, to XYZ raster output file for topobathy DEM
+    character*fn_len :: dz_eoy_xyz_file                             ! file name, with relative path, to XYZ raster output file for elevation change raster
+    character*fn_len :: lndtyp_eoy_xyz_file                         ! file name, with relative path, to XYZ raster output file for land type
+    character*fn_len :: lndchng_eoy_xyz_file                        ! file name, with relative path, to XYZ raster output file for land change flag
+    character*fn_len :: salav_xyz_file                              ! file name, with relative path, to XYZ raster output file for annual mean salinity raster
+    character*fn_len :: salmx_xyz_file                              ! file name, with relative path, to XYZ raster output file for maximum 14-day salinity raster
+    character*fn_len :: inun_xyz_file                               ! file name, with relative path, to XYZ raster output file for annual inundation depth raster
+    character*fn_len :: grid_summary_eoy_file                       ! file name, with relative path, to summary grid file for end-of-year landscape
+    character*fn_len :: grid_data_file                              ! file name, with relative path, to summary grid data file used internally by ICM
+    character*fn_len :: grid_depth_file_Gdw                         ! file name, with relative path, to Gadwall depth grid data file used internally by ICM and HSI
+    character*fn_len :: grid_depth_file_GwT                         ! file name, with relative path, to Greenwing Teal depth grid data file used internally by ICM and HSI
+    character*fn_len :: grid_depth_file_MtD                         ! file name, with relative path, to Mottled Duck depth grid data file used internally by ICM and HSI 
+    character*fn_len :: grid_pct_edge_file                          ! file name, with relative path, to percent edge grid data file used internally by ICM and HSI 
+    character*fn_len :: comp_elev_file                              ! file name, with relative path, to elevation summary compartment file used internally by ICM
+    character*fn_len :: comp_wat_file                               ! file name, with relative path, to percent water summary compartment file used internally by ICM
+    character*fn_len :: comp_upl_file                               ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
+    character*fn_len :: er_summary_file                             ! file name 
     ! QAQC save point information in subroutine: SET_IO
     integer :: nqaqc                                                ! number of QAQC points for reporting - as listed in qaqc_site_list_file
-    character*100 :: qaqc_site_list_file                            ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
-    character*100 :: fnc_tag                                        ! file naming convention tag
+    character*fn_len :: qaqc_site_list_file                         ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
+    character*fn_len :: fnc_tag                                     ! file naming convention tag
     character*6 :: mterm                                            ! file naming convention model name term
     character*3 :: sterm                                            ! file naming convention scenario term
     character*4 :: gterm                                            ! file naming convention group term
@@ -112,7 +118,7 @@ module params
     real(sp),dimension(:),allocatable :: er_shsb                    ! shallow subsidence for ecoregion (mm/yr; positive indicates downward VLM)
     integer,dimension(:),allocatable ::  comp_eco                   ! ecoregion number of ICM-Hydro compartment
     integer,dimension(:),allocatable ::  comp_act_dlt               ! flag indicating whether ICM-Hydro compartment is considered an active delta for fresh marsh organic accretion (0=inactive; 1=active)
-    character*10,dimension(:),allocatable :: er_codes              ! array to store ecoregion name codes - array location will correspond to ecoregion number - mucst match 
+    character*10,dimension(:),allocatable :: er_codes               ! array to store ecoregion name codes - array location will correspond to ecoregion number - mucst match 
     real(sp),dimension(:,:),allocatable :: er_omar                  ! organic matter accumulation rate by marsh type by ecoregion (g/cm^2/yr)
                                                                     ! value for second dimension of array indicates marsh type
                                                                     !               1 = fresh marsh
@@ -188,6 +194,10 @@ module params
     integer,dimension(:),allocatable :: dem_to_bidem                ! lookup array that pulls a corresponding BI-DEM index from an input DEM pixel index
     integer,dimension(:),allocatable :: dem_z_bi                    ! elevation from ICM-BI-DEM that has been interpolated to same grid as DEM
     
+    ! define varaiable read in for SAV statistical model in subroutine: PRE-PROCESSING
+    real(sp),dimension(:),allocatable :: prior_int                  ! values, per ecoregion, defining the intercept of the statistical priors used in SAV model
+    real(sp),dimension(:),allocatable :: prior_slope                ! values, per ecoregion, defining the slope of the statistical priors used in SAV model
+    
     
     ! define variables calculated in subroutine: EDGE_DELINEATION
     integer,dimension(:),allocatable :: dem_edge                    ! flag indicating whether DEM pixel is edge (0=non edge; 1=edge)
@@ -197,12 +207,18 @@ module params
     integer,dimension(:,:),allocatable :: comp_ndem_wet             ! number of inundated DEM pixels within each ICM-Hydro compartment from monthly and annual mean water levels (-)
     integer,dimension(:,:),allocatable :: grid_ndem_wet             ! number of inundated DEM pixels within each ICM-LAVegMod grid cell from monthly and annual mean water levels (-)
 
-    ! define global variables used in subroutine: MAP_BAREGROUND
-    integer,dimension(:),allocatable :: dem_bg_flag                 ! Bareground type classification of pixel (0 = non bareground; 1 = old bareground; 2 = new bareground)
-
     ! define global variables used in subrtoue: ORGANIC_ACCRETION & MINERAL_ACCRETION
     real(sp),dimension(:),allocatable :: org_accr_cm                ! annual organic matter accretion (cm) for each DEM pixel
     real(sp),dimension(:),allocatable :: min_accr_cm                ! annual mineral sedmient accretion (cm) for each DEM pixel
+    
+    ! define global variables used in subroutine: MAP_BAREGROUND
+    integer,dimension(:),allocatable :: dem_bg_flag                 ! Bareground type classification of pixel (0 = non bareground; 1 = old bareground; 2 = new bareground)
+    
+    ! define global variables calculated in subroutine: DISTANCE_TO_LAND
+    real(sp),dimension(:),allocatable :: dem_dtl                    ! distance to land (m) for each DEM pixel - initialized to be maximum search window size plus 1 meter
+    
+    ! define global variables calculated in subroutine: SAV
+    
     
     ! define global variables that are used summarizing end-of-year landscape
     real(sp),dimension(:),allocatable :: dem_dz_cm                  ! elevation change (cm) of pixel during current year
@@ -241,9 +257,7 @@ module params
                                                                     !       er_counts(neco,9) = count of upland/developed pixels within ecoregion
                                                                     !       er_counts(neco,10) = count of flotant marsh pixels within ecoregion
     
-    
-    
-    
+
     
     ! DEM mapping arrays that are allocated in their own allocation subroutine DEM_PARAMS_ALLOC
     integer :: n_dem_col                                            ! number of columns (e.g. range in X) in DEM when mapped

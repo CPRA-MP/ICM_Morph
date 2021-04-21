@@ -17,6 +17,7 @@ subroutine write_output_QAQC_points
     integer :: site_x                   ! local variable to read in X-coord of QAQC point
     integer :: site_y                   ! local variable to read in Y-coord of QAQC point
     character*300 :: qaqc_filetag       ! text tag to include in output file name for QAQC point
+    character*30 :: qaqc_er             ! local variable to read ecoregion code for QAQC point to use in file naming convention tag
     integer :: qaqc_flag                ! flag for QAQC site type (1 = ecoregion point; 2 = transect point; 3 = CRMS site; 4 = extra random points)
     character*300 :: save_dir           ! relative path to save output files
     character*300 :: qaqc_file          ! file name used to write QAQC point output data to
@@ -71,7 +72,7 @@ subroutine write_output_QAQC_points
    &               //trim(adjustL(uterm))//'_'  &
    &               //trim(adjustL(vterm))//'_'  &
    &               //trim(adjustL(qaqc_er))//'_'&
-   &               //'O_01_50_Q_'               &
+   &               //'O_01_52_Q_'               &
    &               //trim(adjustL(qaqc_filetag))//'.csv'
    
    

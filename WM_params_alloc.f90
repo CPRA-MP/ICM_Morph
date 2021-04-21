@@ -3,6 +3,14 @@ subroutine params_alloc
     use params
     implicit none 
     
+    
+    
+    ! allocate memory for variables read in subroutine: SET_IO
+    allocate(FIBS_intvals(6))
+    allocate(spsal_params(3))
+    allocate(sptss_params(3))
+    allocate(dfl_params(3))
+    
     ! allocate memory for variables read in or calculated from xyzc DEM file in subroutine: PREPROCESSING
     allocate(dem_x(ndem))
     allocate(dem_y(ndem))
@@ -75,6 +83,9 @@ subroutine params_alloc
     allocate(dem_to_bidem(ndem))
     allocate(dem_z_bi(ndem_bi))
 
+    ! allocate memory for variables for SAV statistical model read in during subroutine: PRE-PROCESSING 
+    allocate(prior_int(neco))
+    allocate(prior_slope(neco))
     
     ! allocate memory for global variables calculated in subroutine: EDGE_DELINEATION
     allocate(dem_edge(ndem))
@@ -90,6 +101,13 @@ subroutine params_alloc
     
     ! allocate memory for global variables used in subroutine:: MAP_BAREGROUND
     allocate(dem_bg_flag(ndem))
+    
+    ! allocate memory for variables calculated in subroutine: DISTANCE_TO_LAND
+    allocate(dem_dtl(ndem))
+    
+    ! allocate memory for variables calculated in subroutine: SAV
+    
+    
     
     ! allocate memory for variable used to write to output files
     ! some output variables are allocated elsewhere, but these are only used for summarizing output
@@ -116,6 +134,8 @@ subroutine params_alloc
     allocate(er_sum(neco))
     allocate(er_counts(neco, 10))
     
+    
+
     return
 end
     
