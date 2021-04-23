@@ -77,6 +77,8 @@ subroutine set_io
     read(001,*) monthly_ow_sed_dep_file,dump_txt
     read(001,*) monthly_mi_sed_dep_file,dump_txt
     read(001,*) monthly_me_sed_dep_file,dump_txt
+    read(001,*) monthly_mean_sal_file,dump_txt
+    read(001,*) monthly_mean_tss_file,dump_txt
     read(001,*) bi_dem_xyz_file,dump_txt
 
     !  output files     
@@ -94,6 +96,7 @@ subroutine set_io
     read(001,*) grid_depth_file_GwT,dump_txt
     read(001,*) grid_depth_file_MtD,dump_txt
     read(001,*) grid_pct_edge_file,dump_txt
+    read(001,*) grid_sav_file,dump_txt
     read(001,*) comp_elev_file,dump_txt
     read(001,*) comp_wat_file,dump_txt
     read(001,*) comp_upl_file,dump_txt

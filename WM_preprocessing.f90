@@ -353,12 +353,18 @@ subroutine preprocessing
     open(unit=115, file=trim(adjustL(monthly_ow_sed_dep_file)))
     open(unit=116, file=trim(adjustL(monthly_mi_sed_dep_file)))
     open(unit=117, file=trim(adjustL(monthly_me_sed_dep_file)))
+    open(unit=118, file=trim(adjustL(monthly_mean_sal_file)))
+    open(unit=117, file=trim(adjustL(monthly_mean_tss_file)))
+
     
     read(113,*) dump_txt        ! dump header
     read(114,*) dump_txt        ! dump header
     read(115,*) dump_txt        ! dump header
     read(116,*) dump_txt        ! dump header
     read(117,*) dump_txt        ! dump header
+    read(118,*) dump_txt        ! dump header
+    read(119,*) dump_txt        ! dump header
+
     
     do i = 1,ncomp
         read(113,*) dump_int,                   &
@@ -430,7 +436,35 @@ subroutine preprocessing
    &         sed_dp_me_mons(i,10),              &
    &         sed_dp_me_mons(i,11),              &
    &         sed_dp_me_mons(i,12)        
-  
+   
+           read(118,*) dump_int,                   &
+   &         sal_av_mons(i,1),               &
+   &         sal_av_mons(i,2),               &
+   &         sal_av_mons(i,3),               &
+   &         sal_av_mons(i,4),               &
+   &         sal_av_mons(i,5),               &
+   &         sal_av_mons(i,6),               &
+   &         sal_av_mons(i,7),               &
+   &         sal_av_mons(i,8),               &
+   &         sal_av_mons(i,9),               &
+   &         sal_av_mons(i,10),              &
+   &         sal_av_mons(i,11),              &
+   &         sal_av_mons(i,12)        
+   
+           read(119,*) dump_int,                   &
+   &         tss_av_mons(i,1),               &
+   &         tss_av_mons(i,2),               &
+   &         tss_av_mons(i,3),               &
+   &         tss_av_mons(i,4),               &
+   &         tss_av_mons(i,5),               &
+   &         tss_av_mons(i,6),               &
+   &         tss_av_mons(i,7),               &
+   &         tss_av_mons(i,8),               &
+   &         tss_av_mons(i,9),               &
+   &         tss_av_mons(i,10),              &
+   &         tss_av_mons(i,11),              &
+   &         tss_av_mons(i,12)        
+
     end do
     
     close(113)
@@ -438,6 +472,8 @@ subroutine preprocessing
     close(115)
     close(116)            
     close(117)
+    close(118)
+    close(119)
     
     ! read ICM-LAVegMod grid output file into arrays
     write(  *,*) ' - reading in ICM-LAVegMod grid-level output'
@@ -453,20 +489,20 @@ subroutine preprocessing
     grid_land_z = 0.0
     grid_FIBS_score = dem_NoDataVal
     
-    open(unit=118, file=trim(adjustL(veg_out_file)))
+    open(unit=120, file=trim(adjustL(veg_out_file)))
 
     do i = 1,6
-        read(118,*) dump_txt        ! dump ASCI grid header rows    
+        read(120,*) dump_txt        ! dump ASCI grid header rows    
     end do
 
     do i = 1,615
-        read(118,*) dump_txt        ! dump ASCI grid
+        read(120,*) dump_txt        ! dump ASCI grid
     end do
 
-    read(118,1234) dump_txt         ! dump column header row ! format 1234 must match structure of veg_out_file column headers
+    read(120,1234) dump_txt         ! dump column header row ! format 1234 must match structure of veg_out_file column headers
 
     do i = 1,ngrid
-        read(118,*) dump_flt,                                       &      ! CELLID, 
+        read(120,*) dump_flt,                                       &      ! CELLID, 
    &                dump_flt,                                       &      ! NYAQ2, 
    &                dump_flt,                                       &      ! SANI, 
    &                dump_flt,                                       &      ! TADI2, 
@@ -524,7 +560,7 @@ subroutine preprocessing
    &                grid_pct_vglnd_SM(i)                                   ! pL_SM, 
 
     end do
-    close(118)
+    close(120)
 
     ! read ICM-LAVegMod grid output file into arrays
     write(  *,*) ' - reading in ecoregion orgranic accumulation tables'
@@ -532,11 +568,11 @@ subroutine preprocessing
     
     er_omar = 0.0
     
-    open(unit=119, file=trim(adjustL(eco_omar_file)))
-    read(119,*) dump_txt        ! dump header
+    open(unit=121, file=trim(adjustL(eco_omar_file)))
+    read(121,*) dump_txt        ! dump header
     
     do i=1,neco                               
-        read(119,*) dump_int,                                       &      ! er_n,
+        read(121,*) dump_int,                                       &      ! er_n,
    &                dump_txt,                                       &      ! er,
    &                dump_flt,                                       &      ! SwampOrgAccum_g_cm^-2_yr^-1_lower,
    &                er_omar(i,1),                                   &      ! SwampOrgAccum_g_cm^-2_yr^-1_median,
@@ -557,7 +593,7 @@ subroutine preprocessing
    &                er_omar(i,6),                                   &      ! ActiveFreshOrgAccum_g_cm^-2_yr^-1_median,
    &                dump_flt                                               ! ActiveFreshOrgAccum_g_cm^-2_yr^-1_upper
     end do                                                                 
-    close(119)                                                             
+    close(121)                                                             
                                                                            
     ! read ICM-BI-DEM area map file into arrays
     write(  *,*) ' - reading in ICM-BI-DEM and mapping lookup to main DEM'
@@ -565,10 +601,10 @@ subroutine preprocessing
 
     dem_to_bidem = dem_NoDataVal                                            ! initialize DEM-to-ICM-BI-DEM map lookup array to NoData
 
-    open(unit=120, file=trim(adjustL(bi_dem_xyz_file)))    
+    open(unit=122, file=trim(adjustL(bi_dem_xyz_file)))    
 !    read(120,*) dump_txt        ! dump header
     do i = 1,ndem_bi
-        read(120,*) dem_x_bi, dem_y_bi, dem_z_bi(i)
+        read(122,*) dem_x_bi, dem_y_bi, dem_z_bi(i)
    
         col_lookup = 1+(dem_x_bi - dem_LLx)/dem_res                         ! find column number in mapped DEM that corresponds to BI-DEM X-coord
         row_lookup = 1+(dem_y_bi - dem_LLy)/dem_res                         ! find row number in mapped DEM that corresponds to BI-DEM Y-coord
@@ -576,7 +612,7 @@ subroutine preprocessing
         dem_to_bidem(dem_i) = i
     
     end do    
-    close(120)    
+    close(122)    
 
     ! read in SAV statistical model priors file
     write(  *,*) ' - reading in parameters defining SAV statistical model priors by ecoregion'
@@ -586,10 +622,10 @@ subroutine preprocessing
     prior_int = dem_NoDataVal
     prior_slope = dem_NoDataVal
 
-    open(unit=121, file=trim(adjustL(sav_priors_file)))
-    read(121,*) dump_txt                               ! dump header
+    open(unit=123, file=trim(adjustL(sav_priors_file)))
+    read(123,*) dump_txt                               ! dump header
     do i = 1,neco
-        read(121,*) en,                             &       ! ecoregion number
+        read(123,*) en,                             &       ! ecoregion number
    &                dump_txt,                       &       ! ecoregion abbreviation
    &                dump_txt,                       &       ! ecoregion name
    &                dump_txt,                       &       ! CWPPRA basin name
@@ -597,7 +633,7 @@ subroutine preprocessing
    &                prior_int(en),                  &       ! intercept value for SAV statstical prior model for basin
    &                prior_slope(en)                         ! slope value for SAV statstical prior model for basin
     end do
-    close(121) 
+    close(123) 
     
     
     
