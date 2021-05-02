@@ -93,7 +93,6 @@ ADD_EXECUTABLE( ${MORPH} WM_distance_to_land.f90
                          WM_update_landtype.f90
                          WM_write_output_asci_rasters.f90
                          WM_write_output_binary_rasters.f90
-                         WM_write_output_netcdf_rasters.f90 
                          WM_write_output_QAQC_points.f90
                          WM_write_output_summaries.f90      )
 SET_TARGET_PROPERTIES( ${MORPH} PROPERTIES Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/CMakeFiles/mod)
