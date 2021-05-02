@@ -41,8 +41,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/CMakeFiles)
 ###########################################################################
 #...Set the version string (used for libraries)
 SET(ICMMORPH_VERSION_MAJOR 23)
-SET(ICMMORPH_VERSION_MINOR  G030)
-SET(ICMMORPH_VERSION_PATCH  2)
+SET(ICMMORPH_VERSION_MINOR  1)
+SET(ICMMORPH_VERSION_PATCH  0)
 SET(ICMMORPH_VERSION_STRING ${ICMMORPH_VERSION_MAJOR}.${ICMMORPH_VERSION_MINOR}.${ICMMORPH_VERSION_PATCH})
 ###########################################################################
 
@@ -71,7 +71,8 @@ ENDIF()
 # ICM_Morph
 ###########################################################################
 SET( MORPH morph_v${ICMMORPH_VERSION_STRING} )
-ADD_EXECUTABLE( ${MORPH} WM_edge_delineation.f90
+ADD_EXECUTABLE( ${MORPH} WM_distance_to_land.f90
+                         WM_edge_delineation.f90
                          WM_edge_erosion.f90
                          WM_flotant.f90
                          WM_inundation_depths.f90
@@ -81,10 +82,12 @@ ADD_EXECUTABLE( ${MORPH} WM_edge_delineation.f90
                          WM_map_bareground.f90
                          WM_mineral_deposition.f90
                          WM_netcdf.F90
+                         WM_new_subaerial_land.f90
                          WM_organic_accretion.f90
                          WM_params.f90
                          WM_params_alloc.f90
                          WM_preprocessing.f90
+                         WM_sav.f90
                          WM_set_io.f90
                          WM_summaries.f90
                          WM_update_elevation.f90
