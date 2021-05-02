@@ -59,6 +59,7 @@ module params
     character*fn_len :: grid_file                                   ! file name, with relative path, to ICM-LAVegMod grid map file that is same resolution and structure as DEM XYZ
     character*fn_len :: dsub_file                                   ! file name, with relative path, to deep subsidence rate map file that is same resolution and structure as DEM XYZ (mm/yr; positive values are for downward VLM)
     character*fn_len :: ssub_file                                   ! file name, with relative path, to shallow subsidence table with statistics by ecoregion (mm/yr; positive values are for downward VLM)
+    integer :: ssub_col                                             ! column of shallow subsidence rates to use for current scenario (1=25th percentile; 2=50th percentile; 3=75th percentile)
     character*fn_len :: act_del_file                                ! file name, with relative path, to lookup table that identifies whether an ICM-Hydro compartment is assigned as an 'active delta' site for use with Fresh Marsh organic accretion
     character*fn_len :: eco_omar_file                               ! file name, with relative path, to lookup table of organic accumulation rates by marsh type/ecoregion
     character*fn_len :: comp_eco_file                               ! file name, with relative path, to lookup table that assigns an ecoregion to each ICM-Hydro compartment    
@@ -118,7 +119,7 @@ module params
     real(sp),dimension(:),allocatable :: dem_meer                   ! marsh edge erosion rate of DEM pixel (m / yr)
     real(sp),dimension(:),allocatable :: dem_pldr                   ! polder flag of DEM pixel (1 = pixel is in polder; 0 = not in polder)
     real(sp),dimension(:),allocatable :: dem_dpsb                   ! deep subsidence rate of DEM pixel (mm / yr; positive indicates downward VLM)
-    real(sp),dimension(:),allocatable :: er_shsb                    ! shallow subsidence for ecoregion (mm/yr; positive indicates downward VLM)
+    real(sp),dimension(:,:),allocatable :: er_shsb                  ! shallow subsidence for ecoregion (mm/yr; positive indicates downward VLM), multiple values are provided for each ecoregion (25th, 50th, and 75th percentiles)
     integer,dimension(:),allocatable ::  comp_eco                   ! ecoregion number of ICM-Hydro compartment
     integer,dimension(:),allocatable ::  comp_act_dlt               ! flag indicating whether ICM-Hydro compartment is considered an active delta for fresh marsh organic accretion (0=inactive; 1=active)
     character*10,dimension(:),allocatable :: er_codes               ! array to store ecoregion name codes - array location will correspond to ecoregion number - mucst match 

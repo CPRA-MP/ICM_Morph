@@ -97,7 +97,7 @@ subroutine write_output_QAQC_points
             if (econum > 0) then
                 if (econum < neco) then
                     ecotxt = trim(adjustL(er_codes(econum)))
-                    shsb = er_shsb(econum)
+                    shsb = er_shsb(econum,ssub_col)
                 else
                     ecotxt = 'na'
                     shsb = dem_NoDataVal

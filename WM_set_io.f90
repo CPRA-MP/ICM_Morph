@@ -65,6 +65,7 @@ subroutine set_io
     read(001,*) grid_file,dump_txt      
     read(001,*) dsub_file,dump_txt
     read(001,*) ssub_file,dump_txt
+    read(001,*) ssub_col
     read(001,*) act_del_file,dump_txt
     read(001,*) eco_omar_file,dump_txt
     read(001,*) comp_eco_file,dump_txt

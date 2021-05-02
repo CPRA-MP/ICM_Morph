@@ -48,14 +48,14 @@ subroutine update_elevation
                             if (dem_pldr(i) == 1) then                                                                          ! poldered vegetated land dz_cm = f(deep)
                                 dz_cm = 0.0 - dem_dpsb(i)/10.0 + dz_cm_lndtyp                                                   ! convert subsidence from mm/yr to cm/yr
                             elseif (lnd_change_flag(i) == 0) then                                                                  ! non-polder vegetated land dz_cm = f(organic, mineral, deep, shallow),
-                                dz_cm = org_accr_cm(i) + min_accr_cm(i) - dem_dpsb(i)/10.0 - er_shsb(er)/10.0 + dz_cm_lndtyp    ! convert subsidence from mm/yr to cm/yr
+                                dz_cm = org_accr_cm(i) + min_accr_cm(i) - dem_dpsb(i)/10.0 - er_shsb(er,ssub_col)/10.0 + dz_cm_lndtyp    ! convert subsidence from mm/yr to cm/yr
                             else
-                                dz_cm = min_accr_cm(i) - dem_dpsb(i)/10.0 - er_shsb(er)/10.0 + dz_cm_lndtyp
+                                dz_cm = min_accr_cm(i) - dem_dpsb(i)/10.0 - er_shsb(er,ssub_col)/10.0 + dz_cm_lndtyp
                             end if
                         else if (dem_lndtyp(i) == 2) then                                                                       ! water bottom dz_cm = f(mineral, deep)
                             dz_cm = min_accr_cm(i) - dem_dpsb(i)/10.0 + dz_cm_lndtyp                                            ! convert subsidence from mm/yr to cm/yr
                         else if (dem_lndtyp(i) == 3) then                                                                       ! nonvegetated wetland dz_cm = f(mineral, deep, shallow)
-                            dz_cm = min_accr_cm(i) - dem_dpsb(i)/10.0 - er_shsb(er)/10.0  + dz_cm_lndtyp                        ! convert subsidence from mm/yr to cm/yr
+                            dz_cm = min_accr_cm(i) - dem_dpsb(i)/10.0 - er_shsb(er,ssub_col)/10.0  + dz_cm_lndtyp                        ! convert subsidence from mm/yr to cm/yr
                         else if (dem_lndtyp(i) == 4) then                                                                       ! upland/developed dz_cm = f(deep)
                             dz_cm = 0.0 - dem_dpsb(i)/10.0 + dz_cm_lndtyp                                                       ! convert subsidence from mm/yr to cm/yr
                         else                                                                                                    ! flotant dz_cm = 0
