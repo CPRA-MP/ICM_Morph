@@ -354,7 +354,7 @@ subroutine preprocessing
     open(unit=116, file=trim(adjustL(monthly_mi_sed_dep_file)))
     open(unit=117, file=trim(adjustL(monthly_me_sed_dep_file)))
     open(unit=118, file=trim(adjustL(monthly_mean_sal_file)))
-    open(unit=117, file=trim(adjustL(monthly_mean_tss_file)))
+    open(unit=119, file=trim(adjustL(monthly_mean_tss_file)))
 
     
     read(113,*) dump_txt        ! dump header
