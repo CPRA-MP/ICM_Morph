@@ -6,7 +6,7 @@ subroutine set_io
     use params
     implicit none
     
-
+    call params_alloc_io
     
     open(unit=001, file=trim(adjustL('geomorph/input_params.csv')))
  
