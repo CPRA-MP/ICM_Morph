@@ -636,7 +636,7 @@ subroutine preprocessing
     
     
     
-1234    format(A,54(',',A))
+1234    format(A,53(',',A))
     
     return
 end
