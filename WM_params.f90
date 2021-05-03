@@ -7,7 +7,7 @@ module params
     ! generic variables used across all subroutines
     integer,parameter :: sp=selected_real_kind(p=6)                 ! determine compiler KIND value for 4-byte (single precision) floating point real numbers
     integer,parameter :: dp=selected_real_kind(p=15)                ! determine compiler KIND value for 8-byte (double precision) floating point real numbers
-    integer,parameter :: fn_len=100                                 ! maximum character length allowed for filename character strings read in from input_params.csv
+    integer,parameter :: fn_len=300                                 ! maximum character length allowed for filename character strings read in from input_params.csv
     character*3000 :: dump_txt                                      ! dummy variable to use for skipping lines in input files
     integer :: dump_int                                             ! dummy variable to use for data in input files
     real(sp) :: dump_flt                                            ! dummy variable to use for data in input files
