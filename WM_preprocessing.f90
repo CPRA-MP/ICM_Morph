@@ -491,73 +491,72 @@ subroutine preprocessing
     
     open(unit=120, file=trim(adjustL(veg_out_file)))
 
-    do i = 1,6
+    do i = 1,5
         read(120,*) dump_txt        ! dump ASCI grid header rows    
     end do
 
-    do i = 1,615
+    do i = 1,365
         read(120,*) dump_txt        ! dump ASCI grid
     end do
 
     read(120,1234) dump_txt         ! dump column header row ! format 1234 must match structure of veg_out_file column headers
 
     do i = 1,ngrid
-        read(120,*) dump_flt,                                       &      ! CELLID, 
-   &                dump_flt,                                       &      ! NYAQ2, 
-   &                dump_flt,                                       &      ! SANI, 
-   &                dump_flt,                                       &      ! TADI2, 
-   &                dump_flt,                                       &      ! ELBA2_Flt, 
-   &                dump_flt,                                       &      ! PAHE2_Flt, 
-   &                dump_flt,                                       &      ! PAHE2, 
-   &                dump_flt,                                       &      ! BAREGRND_Flt,
-   &                grid_pct_dead_flt(i),                           &      ! DEAD_Flt, 
-   &                dump_flt,                                       &      ! COES, 
-   &                dump_flt,                                       &      ! MOCE2, 
-   &                dump_flt,                                       &      ! SALA2, 
-   &                dump_flt,                                       &      ! ZIMI, 
-   &                dump_flt,                                       &      ! CLMA10, 
-   &                dump_flt,                                       &      ! ELCE, 
-   &                dump_flt,                                       &      ! POPU5, 
-   &                dump_flt,                                       &      ! SALA, 
-   &                dump_flt,                                       &      ! IVFR, 
-   &                dump_flt,                                       &      ! PAVA, 
-   &                dump_flt,                                       &      ! PHAU7, 
-   &                dump_flt,                                       &      ! SCCA11, 
-   &                dump_flt,                                       &      ! TYDO, 
-   &                dump_flt,                                       &      ! SCAM6, 
-   &                dump_flt,                                       &      ! SCRO5, 
-   &                dump_flt,                                       &      ! SPPA, 
-   &                dump_flt,                                       &      ! SPCY, 
-   &                dump_flt,                                       &      ! DISP, 
-   &                dump_flt,                                       &      ! JURO, 
-   &                dump_flt,                                       &      ! AVGE, 
-   &                dump_flt,                                       &      ! SPAL, 
-   &                grid_pct_bare_old(i),                           &      ! BAREGRND_OLD,
-   &                grid_pct_bare_new(i),                           &      ! BAREGRND_NEW,
-   &                grid_pct_upland(i),                             &      ! NOTMOD, 
-   &                grid_pct_water(i),                              &      ! WATER, 
-   &                dump_flt,                                       &      ! SAV, 
-   &                dump_flt,                                       &      ! QULA3, 
-   &                dump_flt,                                       &      ! QULE, 
-   &                dump_flt,                                       &      ! QUNI, 
-   &                dump_flt,                                       &      ! QUTE, 
-   &                dump_flt,                                       &      ! QUVI, 
-   &                dump_flt,                                       &      ! ULAM, 
-   &                dump_flt,                                       &      ! BAHABI, 
-   &                dump_flt,                                       &      ! DISPBI, 
-   &                dump_flt,                                       &      ! PAAM2, 
-   &                dump_flt,                                       &      ! SOSE, 
-   &                dump_flt,                                       &      ! SPPABI,                               
-   &                dump_flt,                                       &      ! SPVI3,                               
-   &                dump_flt,                                       &      ! STHE9,                               
-   &                dump_flt,                                       &      ! UNPA,                                
-   &                grid_FIBS_score(i),                             &      ! FFIBS, 
-   &                grid_pct_vglnd_BLHF(i),                         &      ! pL_BF, 
-   &                grid_pct_vglnd_SWF(i),                          &      ! pL_SF, 
-   &                grid_pct_vglnd_FM(i),                           &      ! pL_FM, 
-   &                grid_pct_vglnd_IM(i),                           &      ! pL_IM, 
-   &                grid_pct_vglnd_BM(i),                           &      ! pL_BM, 
-   &                grid_pct_vglnd_SM(i)                                   ! pL_SM, 
+                read(120,*) g,                                       &      ! CELLID
+   &                grid_pct_water(g),                              &      ! WATER
+   &                grid_pct_upland(g),                             &      ! NOTMOD
+   &                grid_pct_bare_old(g),                           &      ! BAREGRND_OLD
+   &                grid_pct_bare_new(g),                           &      ! BAREGRND_NEW
+   &                dump_flt,                                       &      ! QULA3
+   &                dump_flt,                                       &      ! QULE
+   &                dump_flt,                                       &      ! QUNI
+   &                dump_flt,                                       &      ! QUTE
+   &                dump_flt,                                       &      ! QUVI
+   &                dump_flt,                                       &      ! ULAM
+   &                dump_flt,                                       &      ! NYAQ2
+   &                dump_flt,                                       &      ! SANI
+   &                dump_flt,                                       &      ! TADI2
+   &                dump_flt,                                       &      ! ELBA2_Flt
+   &                dump_flt,                                       &      ! PAHE2_Flt
+   &                dump_flt,                                       &      ! BAREGRND_Flt
+   &                grid_pct_dead_flt(g),                           &      ! DEAD_Flt
+   &                dump_flt,                                       &      ! COES
+   &                dump_flt,                                       &      ! MOCE2
+   &                dump_flt,                                       &      ! PAHE2
+   &                dump_flt,                                       &      ! SALA2
+   &                dump_flt,                                       &      ! ZIMI
+   &                dump_flt,                                       &      ! CLMA10
+   &                dump_flt,                                       &      ! ELCE
+   &                dump_flt,                                       &      ! IVFR
+   &                dump_flt,                                       &      ! PAVA
+   &                dump_flt,                                       &      ! PHAU7
+   &                dump_flt,                                       &      ! POPU5
+   &                dump_flt,                                       &      ! SALA
+   &                dump_flt,                                       &      ! SCCA11
+   &                dump_flt,                                       &      ! TYDO
+   &                dump_flt,                                       &      ! SCAM6
+   &                dump_flt,                                       &      ! SCRO5
+   &                dump_flt,                                       &      ! SPCY
+   &                dump_flt,                                       &      ! SPPA
+   &                dump_flt,                                       &      ! AVGE
+   &                dump_flt,                                       &      ! DISP
+   &                dump_flt,                                       &      ! JURO
+   &                dump_flt,                                       &      ! SPAL
+   &                dump_flt,                                       &      ! BAHABI
+   &                dump_flt,                                       &      ! DISPBI
+   &                dump_flt,                                       &      ! PAAM2
+   &                dump_flt,                                       &      ! SOSE
+   &                dump_flt,                                       &      ! SPPABI
+   &                dump_flt,                                       &      ! SPVI3
+   &                dump_flt,                                       &      ! STHE9
+   &                dump_flt,                                       &      ! UNPA
+   &                grid_FIBS_score(g),                             &      ! FFIBS
+   &                grid_pct_vglnd_BLHF(g),                         &      ! pL_BF
+   &                grid_pct_vglnd_SWF(g),                          &      ! pL_SF
+   &                grid_pct_vglnd_FM(g),                            &      ! pL_FM
+   &                grid_pct_vglnd_IM(g),                           &      ! pL_IM
+   &                grid_pct_vglnd_BM(g),                           &      ! pL_BM
+   &                grid_pct_vglnd_SM(g)                                   ! pL_SM
 
     end do
     close(120)
