@@ -42,8 +42,8 @@ subroutine distance_to_land
     
     ws = 67                                                                     ! maximum distance (in DEM pixels) to search for land
     
-    write(  *,'(A,4I,A)') ' - determining distance to land for each DEM pixel (search limited to ',ws*dem_res,' m)'
-    write(000,'(A,4I,A)') ' - determining distance to land for each DEM pixel (search limited to ',ws*dem_res,' m)'
+    write(  *,'(A,I,A)') ' - determining distance to land for each DEM pixel (search limited to ',ws*dem_res,' m)'
+    write(000,'(A,I,A)') ' - determining distance to land for each DEM pixel (search limited to ',ws*dem_res,' m)'
     
     dem_dtl = ws*dem_res+1                                                      ! initialize distance to land for each DEM pixel to maximum distance-to-land value
                                                                                 ! if ws is 67 and dem_res is 30, than the maximum distance searched will be 2010

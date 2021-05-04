@@ -18,129 +18,6 @@ subroutine preprocessing
     
     
     
-    
-    
-    
-    
-    
-    
-    
-     ! read ICM-LAVegMod grid output file into arrays
-    write(  *,*) ' - reading in ICM-LAVegMod grid-level output'
-    write(000,*) ' - reading in ICM-LAVegMod grid-level output'
-    
-    ! initialize grid data arrays
-    grid_pct_water = 0.0
-    grid_pct_upland = 0.0
-    grid_pct_bare_old = 0.0
-    grid_pct_bare_new = 0.0
-    grid_pct_dead_flt = 0.0
-    grid_bed_z = 0.0
-    grid_land_z = 0.0
-    grid_FIBS_score = dem_NoDataVal
-    
-    open(unit=120, file=trim(adjustL(veg_out_file)))
-
-    do i = 1,6
-        read(120,*) dump_txt        ! dump ASCI grid header rows    
-    end do
-
-    do i = 1,365
-        read(120,*) dump_txt        ! dump ASCI grid
-    end do
-
-    read(120,1234) dump_txt         ! dump column header row ! format 1234 must match structure of veg_out_file column headers
-    write(*,*) dump_txt
-    
-    do i = 1,ngrid
-                read(120,*) g,                                      &      ! CELLID
-   &                grid_pct_water(g),                              &      ! WATER
-   &                grid_pct_upland(g),                             &      ! NOTMOD
-   &                grid_pct_bare_old(g),                           &      ! BAREGRND_OLD
-   &                grid_pct_bare_new(g),                           &      ! BAREGRND_NEW
-   &                dump_flt,                                       &      ! QULA3
-   &                dump_flt,                                       &      ! QULE
-   &                dump_flt,                                       &      ! QUNI
-   &                dump_flt,                                       &      ! QUTE
-   &                dump_flt,                                       &      ! QUVI
-   &                dump_flt,                                       &      ! ULAM
-   &                dump_flt,                                       &      ! NYAQ2
-   &                dump_flt,                                       &      ! SANI
-   &                dump_flt,                                       &      ! TADI2
-   &                dump_flt,                                       &      ! ELBA2_Flt
-   &                dump_flt,                                       &      ! PAHE2_Flt
-   &                dump_flt,                                       &      ! BAREGRND_Flt
-   &                grid_pct_dead_flt(g),                           &      ! DEAD_Flt
-   &                dump_flt,                                       &      ! COES
-   &                dump_flt,                                       &      ! MOCE2
-   &                dump_flt,                                       &      ! PAHE2
-   &                dump_flt,                                       &      ! SALA2
-   &                dump_flt,                                       &      ! ZIMI
-   &                dump_flt,                                       &      ! CLMA10
-   &                dump_flt,                                       &      ! ELCE
-   &                dump_flt,                                       &      ! IVFR
-   &                dump_flt,                                       &      ! PAVA
-   &                dump_flt,                                       &      ! PHAU7
-   &                dump_flt,                                       &      ! POPU5
-   &                dump_flt,                                       &      ! SALA
-   &                dump_flt,                                       &      ! SCCA11
-   &                dump_flt,                                       &      ! TYDO
-   &                dump_flt,                                       &      ! SCAM6
-   &                dump_flt,                                       &      ! SCRO5
-   &                dump_flt,                                       &      ! SPCY
-   &                dump_flt,                                       &      ! SPPA
-   &                dump_flt,                                       &      ! AVGE
-   &                dump_flt,                                       &      ! DISP
-   &                dump_flt,                                       &      ! JURO
-   &                dump_flt,                                       &      ! SPAL
-   &                dump_flt,                                       &      ! BAHABI
-   &                dump_flt,                                       &      ! DISPBI
-   &                dump_flt,                                       &      ! PAAM2
-   &                dump_flt,                                       &      ! SOSE
-   &                dump_flt,                                       &      ! SPPABI
-   &                dump_flt,                                       &      ! SPVI3
-   &                dump_flt,                                       &      ! STHE9
-   &                dump_flt,                                       &      ! UNPA
-   &                grid_FIBS_score(g),                             &      ! FFIBS
-   &                grid_pct_vglnd_BLHF(g),                         &      ! pL_BF
-   &                grid_pct_vglnd_SWF(g),                          &      ! pL_SF
-   &                grid_pct_vglnd_FM(g),                            &      ! pL_FM
-   &                grid_pct_vglnd_IM(g),                           &      ! pL_IM
-   &                grid_pct_vglnd_BM(g),                           &      ! pL_BM
-   &                grid_pct_vglnd_SM(g)                                   ! pL_SM
-
-    end do
-    close(120)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     ! read pixel-to-compartment mapping file into arrays
     write(  *,*) ' - reading in DEM-pixel-to-compartment map data'
     write(000,*) ' - reading in DEM-pixel-to-compartment map data'
@@ -600,59 +477,96 @@ subroutine preprocessing
     close(118)
     close(119)
     
-   
     
     
+     ! read ICM-LAVegMod grid output file into arrays
+    write(  *,*) ' - reading in ICM-LAVegMod grid-level output'
+    write(000,*) ' - reading in ICM-LAVegMod grid-level output'
     
+    ! initialize grid data arrays
+    grid_pct_water = 0.0
+    grid_pct_upland = 0.0
+    grid_pct_bare_old = 0.0
+    grid_pct_bare_new = 0.0
+    grid_pct_dead_flt = 0.0
+    grid_bed_z = 0.0
+    grid_land_z = 0.0
+    grid_FIBS_score = dem_NoDataVal
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    open(unit=120, file=trim(adjustL(veg_out_file)))
 
+    do i = 1,6
+        read(120,*) dump_txt        ! dump ASCI grid header rows    
+    end do
+
+    do i = 1,365
+        read(120,*) dump_txt        ! dump ASCI grid
+    end do
+
+    read(120,1234) dump_txt         ! dump column header row ! format 1234 must match structure of veg_out_file column headers
+
+    do i = 1,ngrid
+                read(120,*) g,                                      &      ! CELLID
+   &                grid_pct_water(g),                              &      ! WATER
+   &                grid_pct_upland(g),                             &      ! NOTMOD
+   &                grid_pct_bare_old(g),                           &      ! BAREGRND_OLD
+   &                grid_pct_bare_new(g),                           &      ! BAREGRND_NEW
+   &                dump_flt,                                       &      ! QULA3
+   &                dump_flt,                                       &      ! QULE
+   &                dump_flt,                                       &      ! QUNI
+   &                dump_flt,                                       &      ! QUTE
+   &                dump_flt,                                       &      ! QUVI
+   &                dump_flt,                                       &      ! ULAM
+   &                dump_flt,                                       &      ! NYAQ2
+   &                dump_flt,                                       &      ! SANI
+   &                dump_flt,                                       &      ! TADI2
+   &                dump_flt,                                       &      ! ELBA2_Flt
+   &                dump_flt,                                       &      ! PAHE2_Flt
+   &                dump_flt,                                       &      ! BAREGRND_Flt
+   &                grid_pct_dead_flt(g),                           &      ! DEAD_Flt
+   &                dump_flt,                                       &      ! COES
+   &                dump_flt,                                       &      ! MOCE2
+   &                dump_flt,                                       &      ! PAHE2
+   &                dump_flt,                                       &      ! SALA2
+   &                dump_flt,                                       &      ! ZIMI
+   &                dump_flt,                                       &      ! CLMA10
+   &                dump_flt,                                       &      ! ELCE
+   &                dump_flt,                                       &      ! IVFR
+   &                dump_flt,                                       &      ! PAVA
+   &                dump_flt,                                       &      ! PHAU7
+   &                dump_flt,                                       &      ! POPU5
+   &                dump_flt,                                       &      ! SALA
+   &                dump_flt,                                       &      ! SCCA11
+   &                dump_flt,                                       &      ! TYDO
+   &                dump_flt,                                       &      ! SCAM6
+   &                dump_flt,                                       &      ! SCRO5
+   &                dump_flt,                                       &      ! SPCY
+   &                dump_flt,                                       &      ! SPPA
+   &                dump_flt,                                       &      ! AVGE
+   &                dump_flt,                                       &      ! DISP
+   &                dump_flt,                                       &      ! JURO
+   &                dump_flt,                                       &      ! SPAL
+   &                dump_flt,                                       &      ! BAHABI
+   &                dump_flt,                                       &      ! DISPBI
+   &                dump_flt,                                       &      ! PAAM2
+   &                dump_flt,                                       &      ! SOSE
+   &                dump_flt,                                       &      ! SPPABI
+   &                dump_flt,                                       &      ! SPVI3
+   &                dump_flt,                                       &      ! STHE9
+   &                dump_flt,                                       &      ! UNPA
+   &                grid_FIBS_score(g),                             &      ! FFIBS
+   &                grid_pct_vglnd_BLHF(g),                         &      ! pL_BF
+   &                grid_pct_vglnd_SWF(g),                          &      ! pL_SF
+   &                grid_pct_vglnd_FM(g),                            &      ! pL_FM
+   &                grid_pct_vglnd_IM(g),                           &      ! pL_IM
+   &                grid_pct_vglnd_BM(g),                           &      ! pL_BM
+   &                grid_pct_vglnd_SM(g)                                   ! pL_SM
+
+    end do
+    close(120)
+    
+    
+    
     ! read ICM-LAVegMod grid output file into arrays
     write(  *,*) ' - reading in ecoregion orgranic accumulation tables'
     write(000,*) ' - reading in ecoregion orgranic accumulation tables'
