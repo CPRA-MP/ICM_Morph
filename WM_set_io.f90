@@ -115,9 +115,7 @@ subroutine set_io
     uterm = fnc_tag(22:24)
     vterm = fnc_tag(26:28)
     
-    
-    
-    er_summary_file = fnc_tag//'_land_veg.csv'
+
     
     close(001)
 
