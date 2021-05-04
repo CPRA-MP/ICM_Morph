@@ -41,7 +41,7 @@ subroutine preprocessing
     
     open(unit=120, file=trim(adjustL(veg_out_file)))
 
-    do i = 1,5
+    do i = 1,6
         read(120,*) dump_txt        ! dump ASCI grid header rows    
     end do
 
@@ -53,7 +53,7 @@ subroutine preprocessing
     write(*,*) dump_txt
     
     do i = 1,ngrid
-                read(120,*) g,                                       &      ! CELLID
+                read(120,*) g,                                      &      ! CELLID
    &                grid_pct_water(g),                              &      ! WATER
    &                grid_pct_upland(g),                             &      ! NOTMOD
    &                grid_pct_bare_old(g),                           &      ! BAREGRND_OLD
