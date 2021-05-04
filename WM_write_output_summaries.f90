@@ -158,10 +158,10 @@ subroutine write_output_summaries
     
     close(906)
     close(907)
-    close(908)    
+    close(908)
     
     ! write ecoregion summary file (each year will be appended to bottom of file)
-    open(unit=909, file = 'geomorph/output/'//trim(adjustL(er_summary_file)),position='append')
+    open(unit=909, file = 'geomorph/output/'//trim(adjustL(fnc_tag))//'_land_veg.csv',position='append')
     allocate(lnd_codes(10))
     lnd_codes(1) = 'LND'                                                !       er_counts(neco,1) = count of land pixels within ecoregion
     lnd_codes(2) = 'FOR'                                                !       er_counts(neco,2) = count of fresh forested pixels within ecoregion (FFIBS <= 0.15)

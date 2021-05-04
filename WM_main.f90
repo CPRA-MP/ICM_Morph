@@ -161,7 +161,7 @@ program main
     write(  *,*) 'Distance-to-land subroutine ended at: ',dtstr
     write(000,*) 'Distance-to-land subroutine ended at: ',dtstr 
     
-!    call sav
+    call sav
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
     write(  *,*) 'SAV subroutine ended at: ',dtstr

@@ -97,7 +97,7 @@ module params
     character*fn_len :: comp_elev_file                              ! file name, with relative path, to elevation summary compartment file used internally by ICM
     character*fn_len :: comp_wat_file                               ! file name, with relative path, to percent water summary compartment file used internally by ICM
     character*fn_len :: comp_upl_file                               ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
-    character*fn_len :: er_summary_file                             ! file name, with relative path, to ecoregion summary file
+
     ! QAQC save point information in subroutine: SET_IO
     integer :: nqaqc                                                ! number of QAQC points for reporting - as listed in qaqc_site_list_file
     character*fn_len :: qaqc_site_list_file                         ! file name, with relative path, to percent upland summary compartment file used internally by ICM 

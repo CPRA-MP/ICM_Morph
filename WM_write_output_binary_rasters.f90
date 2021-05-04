@@ -100,7 +100,7 @@ subroutine write_output_binary_rasters
         end if
     end do
     open(unit=812, file = trim(adjustL(salav_xyz_file))//'.b',form='unformatted')
-    write(812,*) dem_sal_av_yr
+    write(812) dem_sal_av_yr
     close(812)
      
     write(  *,*) ' - writing output raster binary file for maximum 2-wk mean salinity'
@@ -114,13 +114,13 @@ subroutine write_output_binary_rasters
         end if
     end do
     open(unit=813, file = trim(adjustL(salmx_xyz_file))//'.b',form='unformatted')
-    write(813,*) dem_sal_mx_14d_yr
+    write(813) dem_sal_mx_14d_yr
     close(813)
     
     write(  *,*) ' - writing output raster binary file for annual mean inundation depth'
     write(000,*) ' - writing output raster binary file for annual mean inundation depth'
     open(unit=814, file = trim(adjustL(inun_xyz_file))//'.b',form='unformatted')
-    write(814,*) dem_inun_dep(:,13)
+    write(814) dem_inun_dep(:,13)
     close(814)
     
     return
