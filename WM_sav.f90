@@ -49,17 +49,18 @@ subroutine sav
     write(000,*) ' - calculating probability for SAV in each LAVegMod grid cell'
     
     open(unit=8888, file = trim(adjustL(grid_sav_file) ))
+    write(8888,'(A)') 'gridID,SAV_presence,SAV_prob,mean_spring_sal_ppt,mean_spring_tss_mgL,distance_to_land_m,FFIBS'
     
-     do i=1,ndem
+    do i=1,ndem
         g = dem_grid(i)
         if ( dem_dtl(i) < grid_dtl(g) ) then
             grid_dtl(g) = dem_dtl(i)
         end if
-     end do       
+    end do       
      
      
-     ! start calculations of prob of each predictor with (1) and without (0) SAV    
-     do ig = 1,ngrid
+    ! start calculations of prob of each predictor with (1) and without (0) SAV    
+    do ig = 1,ngrid
         ! initialize SAV variables to NoData before calculating so print outs account for NoData grid cells
         spsal = -9999
         sptss = -9999
@@ -67,7 +68,7 @@ subroutine sav
         ffibs = -9999
         prob = -9999 
          
-        c = grid_comp(ig)                     
+        c = grid_comp(ig)
         if (c > 0) then
             dfl = grid_dtl(ig)
             ffibs = grid_FIBS_score(ig)
@@ -115,14 +116,13 @@ subroutine sav
         end if
 
 
-        write(8888,'(A)') 'gridID,SAV_presence,SAV_prob,mean_spring_sal_ppt,mean_spring_tss_mgL,distance_to_land_m,FFIBS'
         write(8888,9999) ig,pres,prob,spsal,sptss,dfl,ffibs
     
     end do
     
     close(8888)
     
-9999 format(I0,',',I0,5(',',I0))
+9999 format( 3(I0,','), F0.4, 3(',',F0.4) )
      
     return
 end

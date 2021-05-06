@@ -183,7 +183,7 @@ subroutine write_output_summaries
     
     close(909)
     
-1900    format(I0,I0,19(',',F0.4),',',F0.2)
+1900    format(I0,',',I0,19(',',F0.4),',',F0.2)
 1901    format(I0,2(',',F0.4),3(',',F0.2))
 1902    format(I0,',',F0.2)  
 1903    format(I0,14(',',I0))
