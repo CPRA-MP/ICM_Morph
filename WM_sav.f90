@@ -1,6 +1,17 @@
 subroutine sav
-! global arrays updated by subroutine:
-    !      none
+    ! global arrays/variables used by subroutine:
+    !   comp_eco
+    !   dem_dtl
+    !   dfl_params
+    !   grid_FIBS_score
+    !   ndem
+    !   prior_int
+    !   prior_slope
+    !   sal_av_mons
+    !   spsal_params
+    !   sptss_params
+    !   tss_av_mons
+    !
     !
     ! Subroutine that calculates the probability of occurrence and non-occurrence of submerged aquatic vegetation (SAV) within each LAVegMod grid cell.
     ! The probability of occurence is converted to presence/absence based on the relative probability of occurrence/non-occurrence of SAV.
@@ -17,6 +28,7 @@ subroutine sav
     
     use params
     implicit none
+    
     
     ! local variables
     real(sp),parameter :: pi = 3.1415927
@@ -51,6 +63,7 @@ subroutine sav
     open(unit=8888, file = trim(adjustL(grid_sav_file) ))
     write(8888,'(A)') 'gridID,SAV_presence,SAV_prob,mean_spring_sal_ppt,mean_spring_tss_mgL,distance_to_land_m,FFIBS'
     
+    ! assign minimum distance-to-land found in each ICM-LAVegMod grid cell
     do i=1,ndem
         g = dem_grid(i)
         if ( dem_dtl(i) < grid_dtl(g) ) then
@@ -70,6 +83,7 @@ subroutine sav
          
         c = grid_comp(ig)
         if (c > 0) then
+            en = comp_eco(c)
             dfl = grid_dtl(ig)
             ffibs = grid_FIBS_score(ig)
             if (dfl > 2010) then            ! grid cell is further than 2 km from land - too much exposure for SAV cannot occur

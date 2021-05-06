@@ -1,6 +1,11 @@
 subroutine distance_to_land
-    ! global arrays updated by subroutine:
-    !      dem_dtl
+    ! global arrays updated or used by subroutine:
+    !       dem_dtl
+    !       dem_index_mapped
+    !       dem_lndtyp
+    !       dem_NoDataVal
+    !       dem_res
+    !       ndem
     !
     ! Subroutine that uses a moving window across entire map to determine distance to nearest land pixel.
     ! The moving window search is limited to 2010 meters within each pixel due to the SAV function ignoring all
@@ -27,6 +32,8 @@ subroutine distance_to_land
     use params
     implicit none
     
+
+    
     ! local variables
     integer :: ws                                                               ! size of moving window (number of pixels to look in each direction around central pixel)
     integer :: ic                                                               ! iterator over DEM columns
@@ -39,20 +46,45 @@ subroutine distance_to_land
     integer :: land_ho                                                          ! flag set to 1 when land is found in current concentric ring being looped over
     real(sp) :: local_dtl                                                       ! local distance to land for pixel d00 when land is found at pixel dxx
     real(sp) :: ring_dtl_mn                                                     ! minimum distance-to-land for the current concentric ring
-    
+    integer :: bins                                                             ! number of bins to report out progress of looping
+    integer ::  pn                                                              ! iterator
+    integer ::np                                                                ! counter tracking looping progress
+    integer :: nprogress                                                        ! progress of looping in pixel count
+    integer :: progress                                                         ! progress of looping as percentage
+    integer,dimension(:),allocatable :: progress_bin                            ! array to track progress of loops for report out
+
     ws = 67                                                                     ! maximum distance (in DEM pixels) to search for land
     
-    write(  *,'(A,I,A)') ' - determining distance to land for each DEM pixel (search limited to ',ws*dem_res,' m)'
-    write(000,'(A,I,A)') ' - determining distance to land for each DEM pixel (search limited to ',ws*dem_res,' m)'
+    write(  *,'(A,I6,A)') ' - determining distance to land for each DEM pixel (search limited to ',ws*dem_res,' m)'
+    write(000,'(A,I6,A)') ' - determining distance to land for each DEM pixel (search limited to ',ws*dem_res,' m)'
     
     dem_dtl = ws*dem_res+1                                                      ! initialize distance to land for each DEM pixel to maximum distance-to-land value
                                                                                 ! if ws is 67 and dem_res is 30, than the maximum distance searched will be 2010
                                                                                 ! therefore, if the entire search window was examined and no land was found, 
                                                                                 ! the distance to land will be set equal to 2011 (e.g. more than 2010 meters to land)
-
+    bins = 100
+    allocate(progress_bin(bins))
+    do pn = 1,bins
+        progress_bin(pn) = pn*ndem/bins
+    end do
+    nprogress = 0
+    np = 0
+    
     do ic = ws+1,n_dem_col-ws-1                                                 ! loop over mapped array of pixel index values
         do ir = ws+1,n_dem_row-ws-1                                             ! this will not allow any pixel on the outside border of the raster be included in search
+            
+            nprogress = nprogress + 1
+            progress = 100*nprogress/ndem
+            if (ANY(progress_bin == progress) ) then
+                write(  *,'(A,I3)')  ' progress: ',progress_bin(np)
+                write(000,'(A,I3)')  ' progress: ',progress_bin(np)
+                np = np+1
+            end if
+            
             d00 = dem_index_mapped(ic, ir)                                      ! current pixel being calculated is d00 with grid coordinates of (ic,ir)
+            
+            
+            
             if (dem_lndtyp(d00) /= dem_NoDataVal) then                          ! check if dem_lndtyp is assigned - if not, pixel is skipped
                 if (dem_lndtyp(d00) /= 2) then                                  ! check if dem_lndtyp is water, if not water, set distance to land to zero - and move on to next pixel
                     dem_dtl(d00) = 0
