@@ -76,7 +76,7 @@ subroutine summaries
                         grid_elv_sums(g,lt) = grid_elv_sums(g,lt) + z
                         grid_counts_edge(g) = grid_counts_edge(g) + e
                         
-                        comp_counts(c,lt)   = grid_counts(c,lt)   + 1
+                        comp_counts(c,lt)   = comp_counts(c,lt)   + 1
                         comp_elv_sums(c,lt) = comp_elv_sums(c,lt) + z
                         comp_counts_edge(c) = comp_counts_edge(c) + e
                         
