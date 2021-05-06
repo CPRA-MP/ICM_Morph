@@ -74,12 +74,18 @@ subroutine distance_to_land
         do ir = ws+1,n_dem_row-ws-1                                             ! this will not allow any pixel on the outside border of the raster be included in search
             
             nprogress = nprogress + 1
-            progress = 100*nprogress/ndem
-            if (ANY(progress_bin == progress) ) then
-                write(  *,'(A,I3)')  ' progress: ',progress_bin(np)
-                write(000,'(A,I3)')  ' progress: ',progress_bin(np)
-                np = np+1
+            if (nprogress == 100000) then
+                write(*,*) 'finished checking 100k pixels'
+                nprogress=0
             end if
+            
+!            progress = 100*nprogress/ndem
+!           
+!            if (ANY(progress_bin == progress) ) then
+!                write(  *,'(A,I3)')  ' progress: ',progress_bin(np)
+!                write(000,'(A,I3)')  ' progress: ',progress_bin(np)
+!                np = np+1
+!            end if
             
             d00 = dem_index_mapped(ic, ir)                                      ! current pixel being calculated is d00 with grid coordinates of (ic,ir)
             
