@@ -143,11 +143,17 @@ subroutine summaries
     end do    
 
     do ic=1,ncomp
-        pixels_in_comp = float( comp_ndem_all(ic) + comp_land_outside_grid_pixels(ic) )
-        comp_pct_water(ic)  = min( 1.0, float(comp_counts(ic,2))  / max(0.001,pixels_in_comp) ) 
-        comp_pct_upland(ic) = min( 1.0, ( float(comp_counts(ic,4)) + comp_land_outside_grid_pixels(ic) ) / max(0.001,pixels_in_comp) )
-        comp_edge_area(ic)  = comp_counts_edge(ic) * dem_res**2
-        
+        if (comp_ndem_all(ic) > 0) then
+            pixels_in_comp = float( comp_ndem_all(ic) + comp_land_outside_grid_pixels(ic) + comp_watr_outside_grid_pixels(ic) )
+            comp_pct_water(ic)  = min( 1.0, ( float(comp_counts(ic,2)) + comp_watr_outside_grid_pixels(ic) ) / max(0.001,pixels_in_comp) ) 
+            comp_pct_upland(ic) = min( 1.0, ( float(comp_counts(ic,4)) + comp_land_outside_grid_pixels(ic) ) / max(0.001,pixels_in_comp) )
+            comp_edge_area(ic)  = comp_counts_edge(ic) * dem_res**2
+        ! if compartment is completely outside of the LAVegMod/Morph domain, set values to NoData value
+        else
+            comp_pct_water(ic)  = -9999
+            comp_pct_upland(ic) = -9999
+            comp_edge_area(ic)  = -9999
+        end if
         ! calculate average elevation, in compartment, of water bottom (lndtype=2)
         ! if no pixels with water are in compartment set to NoData (-9999)
         if (comp_counts(ic,2) == 0) then

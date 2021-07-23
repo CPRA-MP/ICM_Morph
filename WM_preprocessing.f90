@@ -201,8 +201,11 @@ subroutine preprocessing
    &                 comp_eco(i),                       &       ! ecoregion number 
    &                 dump_txt,                          &       ! ecoregion code
    &                 dump_txt,                          &       ! descriptive name
-   &                 comp_land_outside_grid_m2(i)               ! area of compartment that is outside of ICM-LAVegMod grid
+   &                 comp_land_outside_grid_m2(i),      &       ! area of compartment that is outside of ICM-LAVegMod grid and is assumed to always be land
+   &                 comp_watr_outside_grid_m2(i)               ! area of compartment that is outside of ICM-LAVegMod grid and is assumed to always be water
+        
         comp_land_outside_grid_pixels(i) = int(comp_land_outside_grid_m2(i))/dem_res**2
+        comp_watr_outside_grid_pixels(i) = int(comp_watr_outside_grid_m2(i))/dem_res**2
     end do
     close(1115)
   

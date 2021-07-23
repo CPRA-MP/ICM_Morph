@@ -132,14 +132,17 @@ module params
                                                                     !               5 = swamp forest
                                                                     !               6 = fresh marsh in active delta regions
       
-    integer :: dem_LLx                                              ! lower left X-coordinate of DEM grid
-    integer :: dem_LLy                                              ! lower left Y-coordinate of DEM grid
-    integer :: dem_URx                                              ! upper right X-coordinate of DEM grid
-    integer :: dem_URy                                              ! upper right Y-coordinate of DEM grid
-    integer,dimension(:),allocatable :: comp_ndem_all               ! number of DEM pixels within each ICM-Hydro compartment (-)
-    integer,dimension(:),allocatable :: grid_ndem_all               ! number of DEM pixels within each ICM-LAVegMod grid cell (-)
-    real(sp),dimension(:),allocatable :: comp_land_outside_grid_m2  ! area of ICm-Hydro compartment that is outside of ICM-LAVegMod grid domain (m^2)
-    integer,dimension(:),allocatable :: comp_land_outside_grid_pixels ! number of ICM-Morph DEM pixels in ICM-Hydro compartment outside of ICM-LAVegMod grid domain (-)
+    integer :: dem_LLx                                                ! lower left X-coordinate of DEM grid
+    integer :: dem_LLy                                                ! lower left Y-coordinate of DEM grid
+    integer :: dem_URx                                                ! upper right X-coordinate of DEM grid
+    integer :: dem_URy                                                ! upper right Y-coordinate of DEM grid
+    integer,dimension(:),allocatable :: comp_ndem_all                 ! number of DEM pixels within each ICM-Hydro compartment (-)
+    integer,dimension(:),allocatable :: grid_ndem_all                 ! number of DEM pixels within each ICM-LAVegMod grid cell (-)
+    real(sp),dimension(:),allocatable :: comp_land_outside_grid_m2    ! area of ICm-Hydro compartment that is outside of ICM-LAVegMod grid domain assumed always land (m^2)
+    integer,dimension(:),allocatable :: comp_land_outside_grid_pixels ! number of ICM-Morph DEM pixels in ICM-Hydro compartment outside of ICM-LAVegMod grid domain assumed always land (-)
+    real(sp),dimension(:),allocatable :: comp_watr_outside_grid_m2    ! area of ICm-Hydro compartment that is outside of ICM-LAVegMod grid domain assumed always water (m^2)
+    integer,dimension(:),allocatable :: comp_watr_outside_grid_pixels ! number of ICM-Morph DEM pixels in ICM-Hydro compartment outside of ICM-LAVegMod grid domain assumed always water (-)
+    
     integer,dimension(:),allocatable :: dem_lndtyp                  ! Land type classification of DEM pixel
                                                                     ! ****dem_lntyp must correspond with nlt variable defined above****
                                                                     !               1 = vegetated wetland

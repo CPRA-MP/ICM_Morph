@@ -45,6 +45,8 @@ subroutine params_alloc
     allocate(grid_ndem_all(ngrid))
     allocate(comp_land_outside_grid_m2(ngrid))
     allocate(comp_land_outside_grid_pixels(ngrid))
+    allocate(comp_watr_outside_grid_m2(ngrid))
+    allocate(comp_watr_outside_grid_pixels(ngrid))
     
     
     ! allocate memory for variables read in or calculated from compartment_out Hydro summary file in subroutine: PREPROCESSING
