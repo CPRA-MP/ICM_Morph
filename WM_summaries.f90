@@ -37,7 +37,7 @@ subroutine summaries
     integer,dimension(:),allocatable :: comp_counts_edge            ! local array for counting number of edge pixels in each ICM-Hydro compartment
     integer :: comp_counts_land                                     ! local count of all pixels that are used in average elevation of land within each ICM-Hydro compartment
     real(sp) :: comp_elv_sums_land                                  ! local sum of all elevation values used in calculating average elevation of land within each ICM-Hydro compartment
-
+    real(sp) :: pixels_in_comp                                      ! total number of DEM pixels in ICM-Hydro compartment - this includes areas outside of the ICM-LAVegMod grid domain
     
     allocate(grid_counts(ngrid,nlt))
     allocate(grid_elv_sums(ngrid,nlt))
@@ -143,8 +143,9 @@ subroutine summaries
     end do    
 
     do ic=1,ncomp
-        comp_pct_water(ic)  = float(comp_counts(ic,2))  / max(0.001,float(comp_ndem_all(ic)))
-        comp_pct_upland(ic) = float(comp_counts(ic,4))  / max(0.001,float(comp_ndem_all(ic)))
+        pixels_in_comp = float( comp_ndem_all(ic) + comp_land_outside_grid_pixels(ic) )
+        comp_pct_water(ic)  = min( 1.0, float(comp_counts(ic,2))  / max(0.001,pixels_in_comp) ) 
+        comp_pct_upland(ic) = min( 1.0, ( float(comp_counts(ic,4)) + comp_land_outside_grid_pixels(ic) ) / max(0.001,pixels_in_comp) )
         comp_edge_area(ic)  = comp_counts_edge(ic) * dem_res**2
         
         ! calculate average elevation, in compartment, of water bottom (lndtype=2)
