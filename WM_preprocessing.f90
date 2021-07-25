@@ -197,7 +197,6 @@ subroutine preprocessing
     open(unit=1115, file=trim(adjustL(comp_eco_file)))
     read(1115,*) dump_txt                            ! dump header
     do i = 1,ncomp
-        write(*,*) i
         read(1115,*) dump_int,                          &       ! ICM-Hydro_comp
    &                 comp_eco(i),                       &       ! ecoregion number 
    &                 dump_txt,                          &       ! ecoregion code
