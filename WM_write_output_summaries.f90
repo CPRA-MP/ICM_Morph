@@ -128,6 +128,15 @@ subroutine write_output_summaries
     close(904)
     close(905)
 
+    
+    ! write debug file that prints out number of DEM pixels in each ICM-LAVegMod grid cell
+    open(unit=9050, file = 'grid_ndem.csv')    
+    write(9050,*) 'CELL_ID,ndem_pixels'
+    do i = 1,ngrid
+        write(9050,'(I0,A,I0)') i,',',grid_ndem_all(i)
+    end do
+    close(9050)
+    
     ! write end-of-year ICM-Hydro compartment elevation data file    
     write(  *,*) ' - writing end-of-year compartment data files'
     write(000,*) ' - writing end-of-year compartment data files'
@@ -135,12 +144,12 @@ subroutine write_output_summaries
     open(unit=906, file = trim(adjustL(comp_elev_file)))
     open(unit=907, file = trim(adjustL(comp_wat_file)))
     open(unit=908, file = trim(adjustL(comp_upl_file)))
-    
+
     ! write headers
     write(906,'(A)') 'ICM_ID,MEAN_BED_ELEV,MEAN_MARSH_ELEV,MARSH_EDGE_AREA'
     !write(907,*) 'there is no header for this file'
     !write(908,*) 'there is no header for this file'
-    
+
     do i = 1,ncomp
         
         write(906,1906) i,                          &
@@ -153,12 +162,20 @@ subroutine write_output_summaries
         
         write(908,1907) i,                          &
    &                comp_pct_upland(i)
-    
+
     end do
     
     close(906)
     close(907)
     close(908)
+    
+    ! write debug file that prints out number of DEM pixels in each ICM-Hydro compartment
+    open(unit=9080, file = 'comp_ndem.csv')    
+    write(9080,*) 'ICM_ID,ndem_pixels'
+    do i = 1,ncomp
+        write(9080,'(I0,A,I0)') i,',',comp_ndem_all(i)
+    end do
+    close(9080)
     
     ! write ecoregion summary file (each year will be appended to bottom of file)
     open(unit=909, file = 'geomorph/output/'//trim(adjustL(fnc_tag))//'_land_veg.csv',position='append')

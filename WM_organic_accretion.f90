@@ -52,13 +52,18 @@ subroutine organic_accretion
                                             omar_low = er_omar(e,1)                                                 ! use default fresh marsh OMAR
                                             omar_upr = er_omar(e,2)
                                         else                                                                        ! if compartment is flagged as active delta
-                                            omar_low = er_omar(e,6)                                                 ! use OMAR for fresh marsh in active deltas
-                                            omar_low = er_omar(e,6)
+                                            omar_low = er_omar(e,6)                                                 ! use OMAR for fresh/int marsh in active deltas
+                                            omar_upr = er_omar(e,6)                                                 ! there is no interpolation on active delta OMAR so use same value
                                         end if
                                     else if (FIBS < FIBS_intvals(3)) then                                           ! FIBS indicates intermediate marsh
                                         int_wgt = (FIBS - FIBS_intvals(2)) / (FIBS_intvals(3) - FIBS_intvals(2))    
-                                        omar_low = er_omar(e,2)
-                                        omar_upr = er_omar(e,3)
+                                        if (comp_act_dlt(c) == 0) then                                              ! if compartment is not active delta
+                                            omar_low = er_omar(e,2)                                                 ! use default int marsh OMAR
+                                            omar_upr = er_omar(e,3)
+                                        else
+                                            omar_low = er_omar(e,6)                                                 ! use OMAR for fresh/int marsh in active deltas
+                                            omar_upr = er_omar(e,6)                                                 ! there is no interpolation on active delta OMAR so use same value
+                                        end if
                                     else if (FIBS < FIBS_intvals(4)) then                                           ! FIBS indicates brackish marsh
                                         int_wgt = (FIBS - FIBS_intvals(3)) / (FIBS_intvals(4) - FIBS_intvals(3))    
                                         omar_low = er_omar(e,3)

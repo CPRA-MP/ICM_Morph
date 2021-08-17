@@ -46,7 +46,7 @@ subroutine summaries
     allocate(comp_elv_sums(ncomp,nlt))
     allocate(comp_counts_edge(ncomp))
 
-    
+    ! initialize local arrays to zero before use    
     grid_counts = 0
     grid_elv_sums = 0.0
     grid_counts_edge = 0
@@ -56,8 +56,14 @@ subroutine summaries
     er_counts = 0
     er_sum = 0
     
-    
-    
+    ! initialize global arrays to NoData (these have not been used anywhere prior to this subroutine
+    comp_wetland_z = dem_NoDataVal
+    comp_water_z = dem_NoDataVal
+    comp_pct_water = dem_NoDataVal
+    comp_pct_upland = dem_NoDataVal
+    comp_edge_area = dem_NoDataVal
+
+       
     write(  *,*) ' - calculating spatial averages of end-of-year landscape'
     write(000,*) ' - calculating spatial averages of end-of-year landscape'
     
