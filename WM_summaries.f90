@@ -120,7 +120,14 @@ subroutine summaries
             end if
         end if
     end do
-
+    
+    open(unit=42, file = 'geomorph/output/'//trim(adjustL(fnc_tag))//'landtype_count_per_grid.csv')    
+    write(42,'(A)') 'gridID,grid_count1,grid_count2,grid_count3,grid_count4,grid_count5,grid_countall'
+    do ig = 1,ngrid
+        write(42,4242) ig,grid_counts(ig,1),grid_counts(ig,2),grid_counts(ig,3),grid_counts(ig,4),grid_counts(ig,5),grid_ndem_all(ig)
+    end do
+4242 format(I0,6(',',I0))
+     
     do ig = 1,ngrid
         grid_pct_water(ig)  = float(grid_counts(ig,2))    / max(0.001,float(grid_ndem_all(ig)))
         grid_pct_bare(ig)   = float(grid_counts(ig,3))    / max(0.001,float(grid_ndem_all(ig)))
