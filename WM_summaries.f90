@@ -56,7 +56,7 @@ subroutine summaries
     er_counts = 0
     er_sum = 0
     
-    ! initialize global arrays to NoData (these have not been used anywhere prior to this subroutine
+    ! initialize global arrays to NoData (these have not been used anywhere prior to this subroutine)
     comp_wetland_z = dem_NoDataVal
     comp_water_z = dem_NoDataVal
     comp_pct_water = dem_NoDataVal
