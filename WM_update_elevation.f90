@@ -68,6 +68,10 @@ subroutine update_elevation
                         end if 
                     end if
                     
+                    if (isnan(dz_cm) ) then
+                        dz_cm = 0.0
+                    end if
+                    
                     dem_z(i) = dem_z(i) + dz_cm/100.0                                                                                   ! dz_cm is in cm, DEM is in meters
                     dem_dz_cm(i) = dz_cm                                                                                                ! update dZ array for writing output file
                 

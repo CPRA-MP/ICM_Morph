@@ -93,6 +93,9 @@ subroutine mineral_deposition
                 min_accr_cm(i) = min(min_accretion_limit_cm, min_accr_cm(i))
             end if
         end if
+        if (isnan(min_accr_cm(i))) then
+            min_accr_cm(i) = 0.0
+        end if
     end do
     
     return
