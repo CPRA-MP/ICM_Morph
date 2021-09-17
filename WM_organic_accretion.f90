@@ -68,7 +68,7 @@ subroutine organic_accretion
                                         int_wgt = (FIBS - FIBS_intvals(3)) / (FIBS_intvals(4) - FIBS_intvals(3))    
                                         if (comp_act_dlt(c) == 0) then                                              ! if compartment is not active delta
                                             omar_low = er_omar(e,3)
-                                            mar_upr = er_omar(e,4)
+                                            omar_upr = er_omar(e,4)
                                         else
                                             omar_low = er_omar(e,6)                                                 ! use OMAR for fresh/int marsh in active deltas
                                             omar_upr = er_omar(e,6)                                                 ! there is no interpolation on active delta OMAR so use same value

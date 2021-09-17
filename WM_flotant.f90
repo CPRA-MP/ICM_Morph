@@ -58,7 +58,7 @@ subroutine flotant
     do i = 1,ngrid
         if (grid_pct_dead_flt(i) > 0.0) then                        ! if there's dead flotant in grid cell
             if (grid_flt_all(i) > 0) then                           ! and there's flotant marsh to remove in grid cell
-                grid_dead_flt_all(i) = int( grid_pct_dead_flt(i)*grid_flt_all(i) )
+                grid_dead_flt_all(i) = floor( grid_pct_dead_flt(i)*grid_ndem_all(i) )   ! convert percentage of grid cell that is dead float (output from LAVegMod) to number of pixels to remove - round down to be consistent with LAVegMod (which will save remainder of the rounding operation to add to next year's dead float)
             end if
         end if
     end do
