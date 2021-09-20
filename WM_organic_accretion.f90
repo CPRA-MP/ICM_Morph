@@ -85,7 +85,7 @@ subroutine organic_accretion
                                     OMAR = omar_low + int_wgt*(omar_upr - omar_low)
                                     org_accr_cm(i) = OMAR / om_k1                                                   ! OMAR [g/cm2] * k1 [g/cm3] = cm organic accretion            
                                     if (c == 226) then
-                                        write(*,*) c,FIBS,comp_act_dlt(c),int_wgt,omar_low,omar_upr,OMAR
+                                        write(*,'(I,F0.4,I,F0.4,F0.4,F0.4,F0.4)') c,FIBS,comp_act_dlt(c),int_wgt,omar_low,omar_upr,OMAR
                                     end if
                                 end if
                             end if
