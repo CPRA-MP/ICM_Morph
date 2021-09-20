@@ -63,10 +63,6 @@ program main
     write(  *,*) 'Preprocessing subroutine ended at: ',dtstr
     write(000,*) 'Preprocessing subroutine ended at: ',dtstr
 
-    do tp=1,ncomp
-        write(*,*) i,comp_act_dlt(tp) 
-    end do
-    pause
     
     do tp = 1,14
         dem_inun_dep(:,tp)  = 0.0                       ! initialize arrays for tp to 0
