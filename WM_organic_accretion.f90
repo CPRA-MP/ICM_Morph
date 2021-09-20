@@ -66,21 +66,12 @@ subroutine organic_accretion
                                         end if
                                     else if (FIBS < FIBS_intvals(4)) then                                           ! FIBS indicates start of brackish marsh range of FFIBS values
                                         int_wgt = (FIBS - FIBS_intvals(3)) / (FIBS_intvals(4) - FIBS_intvals(3))    
-                                        if (c == 226) then
-                                            write(*,*) c,e,g,FIBS,comp_act_dlt(c),'a',int_wgt
-                                        end if
                                         if (comp_act_dlt(c) == 0) then                                              ! if compartment is not active delta
                                             omar_low = er_omar(e,3)
                                             omar_upr = er_omar(e,4)
-                                            if (c == 226) then
-                                                write(*,*) c,e,g,FIBS,comp_act_dlt(c),'b',omar_low,omar_upr
-                                            end if
                                         else
                                             omar_low = er_omar(e,6)                                                 ! use OMAR for fresh/int marsh in active deltas
                                             omar_upr = er_omar(e,6)                                                 ! there is no interpolation on active delta OMAR so use same value
-                                            if (c == 226) then
-                                                write(*,*) c,e,g,FIBS,comp_act_dlt(c),'c',omar_low,omar_upr
-                                            end if
                                         end if
                                     else if (FIBS < FIBS_intvals(5)) then                                           ! FIBS indicates start of saline marsh range of FFIBS values
                                         int_wgt = (FIBS - FIBS_intvals(4)) / (FIBS_intvals(5) - FIBS_intvals(4))
@@ -91,12 +82,11 @@ subroutine organic_accretion
                                         omar_low = er_omar(e,5)
                                         omar_upr = er_omar(e,5)
                                     end if
-                                    if (c == 226) then
-                                        write(*,*) c,e,g,FIBS,comp_act_dlt(c),'d',int_wgt,omar_low,omar_upr
-                                        pause
-                                    end if
                                     OMAR = omar_low + int_wgt*(omar_upr - omar_low)
                                     org_accr_cm(i) = OMAR / om_k1                                                   ! OMAR [g/cm2] * k1 [g/cm3] = cm organic accretion            
+                                    if (c == 226) then
+                                        write(*,*) c,FIBS,comp_act_dlt(c),int_wgt,omar_low,omar_upr,OMAR
+                                    end if
                                 end if
                             end if
                         end if
