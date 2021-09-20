@@ -16,19 +16,6 @@ subroutine preprocessing
     integer :: dem_i                    ! local variable that determined DEM pixel index corresponding to ICM-BI-DEM pixel location
     integer :: en                       ! local variable of ecoregion number used for reading in ecoregion name codes
     
-    ! initialize grid data arrays to 0.0
-    comp_act_dlt = 0.0
-    
-    open(unit=1116, file=trim(adjustL(act_del_file)))
-    read(1116,*) dump_txt                               ! dump header
-    write(*,*) dump_txt
-    do i = 1,ncomp
-        read(1116,*) dump_int,comp_act_dlt(i)           ! compartment ID, active delta flag
-        write(*,*) ncomp,comp_act_dlt(i),dump_int
-    end do
-    close(1116)
-    pause
-    
     ! read pixel-to-compartment mapping file into arrays
     write(  *,*) ' - reading in DEM-pixel-to-compartment map data'
     write(000,*) ' - reading in DEM-pixel-to-compartment map data'
