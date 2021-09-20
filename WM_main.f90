@@ -64,7 +64,7 @@ program main
     write(000,*) 'Preprocessing subroutine ended at: ',dtstr
 
     do tp=1,ncomp
-        write(*,*) i,comp_act_dlt(tp) 
+        write(*,*) tp,comp_act_dlt(tp) 
     end do
     pause
     
