@@ -63,11 +63,6 @@ program main
     write(  *,*) 'Preprocessing subroutine ended at: ',dtstr
     write(000,*) 'Preprocessing subroutine ended at: ',dtstr
 
-    do tp=1,ncomp
-        write(*,*) tp,comp_act_dlt(tp) 
-    end do
-    pause
-    
     do tp = 1,14
         dem_inun_dep(:,tp)  = 0.0                       ! initialize arrays for tp to 0
         comp_ndem_wet(:,tp) =   0                       ! initialize arrays for tp to 0
@@ -93,6 +88,12 @@ program main
     write(  *,*) 'Mineral Deposition subroutine ended at: ',dtstr
     write(000,*) 'Mineral Deposition subroutine ended at: ',dtstr
 
+    
+    do tp=1,ncomp
+        write(*,*) tp,comp_act_dlt(tp) 
+    end do
+    pause
+    
     
     call organic_accretion
     call date_and_time(VALUES=dtvalues)
