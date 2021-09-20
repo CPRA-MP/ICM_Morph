@@ -42,6 +42,10 @@ subroutine organic_accretion
                             if (maxval(dem_inun_dep(i,:)) > 0) then                                                    ! check that the pixel was inundated at some point during year
                                 FIBS = grid_FIBS_score(g)
                                 if (FIBS >= 0.0) then                                                               ! check that there is a FIBS score for grid cell
+                                    if (c == 226) then
+                                        write(*,*) c,e,g,comp_act_dlt(c)
+                                        pause
+                                    end if
                                     if (FIBS < FIBS_intvals(1)) then                                                ! FIBS indicates start of forested wetland range of FFIBS values
                                         int_wgt = 0                                                                 ! no interpolation for lowest FIBS score (forested) - use lowest OMAR     
                                         omar_low = er_omar(e,1)
