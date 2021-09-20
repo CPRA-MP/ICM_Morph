@@ -29,7 +29,7 @@ subroutine organic_accretion
     
     
     org_accr_cm = 0.0                                                                                       ! initialize organic accretion array to 0
-
+    write(*,*) 'c,FIBS,comp_act_dlt(c),int_wgt,omar_low,omar_upr,OMAR,org_acc_cm'
     do i = 1,ndem
         if (dem_to_bidem(i) == dem_NoDataVal) then                                                          ! only proceed if pixel is not within barrier island domain
             if (dem_lndtyp(i) == 1) then                                                                    ! if pixel is vegetated land, calculate organic accretion
@@ -85,7 +85,7 @@ subroutine organic_accretion
                                     OMAR = omar_low + int_wgt*(omar_upr - omar_low)
                                     org_accr_cm(i) = OMAR / om_k1                                                   ! OMAR [g/cm2] * k1 [g/cm3] = cm organic accretion            
                                     if (c == 226) then
-                                        write(*,'(I,F0.4,I,F0.4,F0.4,F0.4,F0.4)') c,FIBS,comp_act_dlt(c),int_wgt,omar_low,omar_upr,OMAR
+                                        write(*,'(I,x,F0.4,x,I,x,F0.4,x,F0.4,x,F0.4,x,F0.4,x,F0.4)') c,FIBS,comp_act_dlt(c),int_wgt,omar_low,omar_upr,OMAR,org_accr_cm(i)
                                     end if
                                 end if
                             end if
