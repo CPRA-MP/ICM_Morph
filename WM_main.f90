@@ -89,12 +89,6 @@ program main
     write(000,*) 'Mineral Deposition subroutine ended at: ',dtstr
 
     
-    do tp=1,ncomp
-        write(*,*) tp,comp_act_dlt(tp) 
-    end do
-    pause
-    
-    
     call organic_accretion
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
