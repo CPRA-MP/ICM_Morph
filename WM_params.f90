@@ -109,6 +109,19 @@ module params
     character*3 :: uterm                                            ! file naming convention uncertainty term
     character*3 :: vterm                                            ! file naming convention variance term
     
+    ! project implementation inputs in subroutine: SET_IO
+    integer :: n_mc                                                 ! number of marsh creation rasters that will be used to update the landscape during current model year
+    integer :: n_rr                                                 ! number of linear ridge or levee project features that will be used to update the landscape during current model year
+    integer :: n_bs                                                 ! number of bank stabilization project features that will be used to reduce marsh edge erosion rate - unlike other project types, this is the cumulative number of BS projects implemented so far
+    character*fn_len :: project_list_MC_file                        ! file name, with relative path, for the list of marsh creation project raster files for current year
+    character*fn_len :: project_list_RR_file                        ! file name, with relative path, for the list of ridge and levee project raster files for current year
+    character*fn_len :: project_list_BS_file                        ! file name, with relative path, for the list of BS MEE reduction raster files for current year and all previously implemented BS projects
+    
+    
+    ! project implemntation inputs in subroutine: BUILD_PROJECTS
+    
+    
+    
     ! define variables read in or calculated from xyz files in subroutine: PREPROCESSING
     integer,dimension(:),allocatable ::  dem_x                      ! x-coordinate of DEM pixel (UTM m, zone 15N)
     integer,dimension(:),allocatable ::  dem_y                      ! y-coordinate of DEM pixel (UTM m, zone 15N)

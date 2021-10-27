@@ -107,6 +107,14 @@ subroutine set_io
     read(001,*) qaqc_site_list_file
     read(001,*) fnc_tag
     
+    ! project implementation inputs
+    read(001,*) n_mc
+    read(001,*) project_list_MC_file
+    read(001,*) n_rr
+    read(001,*) project_list_RR_file
+    read(001,*) n_bs
+    read(001,*) project_list_BS_file
+
     fnc_tag =trim(adjustL(fnc_tag))
     mterm = fnc_tag(1:6)
     sterm = fnc_tag(8:10)
