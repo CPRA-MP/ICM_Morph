@@ -114,6 +114,7 @@ module params
     integer :: n_rr                                                 ! number of linear ridge or levee project features that will be used to update the landscape during current model year
     integer :: n_bs                                                 ! number of bank stabilization project features that will be used to reduce marsh edge erosion rate - unlike other project types, this is the cumulative number of BS projects implemented so far
     character*fn_len :: project_list_MC_file                        ! file name, with relative path, for the list of marsh creation project raster files for current year
+    character*fn_len :: project_list_MC_VA_file                     ! file name, with relative path, for the file that will save project volumes and footprints for MC projects implemented in current year
     character*fn_len :: project_list_RR_file                        ! file name, with relative path, for the list of ridge and levee project raster files for current year
     character*fn_len :: project_list_BS_file                        ! file name, with relative path, for the list of BS MEE reduction raster files for current year and all previously implemented BS projects
     
