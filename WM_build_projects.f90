@@ -54,7 +54,7 @@ subroutine build_projects
             write(000,'(A,I,A,A)') '      - building ',ElementID,' from XYZ file:',prj_xyz_file
             
             ! open XYZ file for specific project element
-            open(403,  file=trim(adjustL('geomorph/output/'//prj_xyz_file)))
+            open(403,  file=trim(adjustL('geomorph/input/'//prj_xyz_file)))
             
             ! read in project DEM
             do i = 1,ndem
