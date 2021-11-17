@@ -16,10 +16,13 @@ subroutine build_projects
     integer :: c                                                        ! local compartment ID variable
             
     character*fn_len :: prj_xyz_file                                    ! local variable to store filepath to project raster file
+    integer :: ElementID                                         ! local variable to store ElementID string
     integer :: prj_dem_x                                                ! local variable to store X-coordinates of project DEM
     integer :: prj_dem_y                                                ! local variable to store Y-coordinates of project DEM
     real(sp) :: design_elev                                             ! temporary variable to store the calculated design elevation for marsh creation projects to convert from MWL datum to NAVD88
     real(sp),dimension(:),allocatable :: prj_dem_z                      ! project design elevation of DEM pixel (m NAVD88) - for ridge/levee projects and meters above MWL for marsh creation projects
+    real(sp) :: prj_dz_m                                                ! local variable to store the change in elevation (m) due to the project being implemented on a given pixel
+    real(sp) :: depth                                                   ! local variable to store water depth (m) of local pixel
     real(sp) :: element_volume_m3                                       ! cumulative sediment volume needed to build current ElementID of project
     real(sp) :: element_footprint_m2                                    ! cumulative sediment volume needed to build current ElementID of project
     
@@ -46,6 +49,7 @@ subroutine build_projects
             design_elev = -9999                 ! initialize design elevation to NoData value used in project DEM files
             
             read(401,*) ElementID,prj_xyz_file  ! ElementID and filepath to XYZ raster
+            
             write(  *,'(A,I,A,A)') '      - building ',ElementID,' from XYZ file:',prj_xyz_file
             write(000,'(A,I,A,A)') '      - building ',ElementID,' from XYZ file:',prj_xyz_file
             
@@ -94,23 +98,23 @@ subroutine build_projects
                     end if
                     if (depth <= mc_depth_threshold) then
                         
-                        proj_dz_m = prj_dem_z(i) - dem_z(i)     ! calculate change in pixel elevation due to project
+                        prj_dz_m = prj_dem_z(i) - dem_z(i)     ! calculate change in pixel elevation due to project
                         dem_dz_cm(i) = prj_dz_m*100.0           ! update dZ raster for project implementation *note that for pixels under a project, the dZ raster will be calculated from the end-of-year raster that already has subsidence and accretion update added for the year
                         
                         if (dem_lndtyp(i) == 2) then            ! if pixel originally water, set land change flag to new land
-                            lnd_change_flag(i) == 1
-                        end 
+                            lnd_change_flag(i) = 1
+                        end if
                         
                         dem_z(i) = prj_dem_z(i)                 ! set pixel elevation to project elevation
                         dem_lndtyp(i) = 3                       ! set pixel landtype to bare ground/unvegetated wetland
                         
-                        element_volume_m3 = element_volume_m3 + proj_dz_m*dem_res*dem_res
+                        element_volume_m3 = element_volume_m3 + prj_dz_m*dem_res*dem_res
                         element_footprint_m2 = element_footprint_m2 + dem_res*dem_res
                     end if
                 end if
             end do
             ! write summary volumes and footprints to output file for MC projects
-            write(402, '(I,x,F0.4,x,I)') elementID,',',element_volume_m3,',',element_footprint_m2
+            write(402, '(I,x,F0.4,x,I)') ElementID,',',element_volume_m3,',',element_footprint_m2
         end do    
                 
         close(402)
