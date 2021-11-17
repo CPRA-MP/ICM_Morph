@@ -38,7 +38,7 @@ subroutine build_projects
         open(unit=401, file=trim(adjustL(project_list_MC_file)))
         read(401,*) dump_txt            ! dump header
         
-        open(unit=402, file=trim(adjustL(project_list_MCva_file)))
+        open(unit=402, file=trim(adjustL(project_list_MC_VA_file)))
         write(402,'(A)') 'ElementID,SedimentVolume_m3,ProjectFootprint_m2'
         
         do imc = 1,n_mc
