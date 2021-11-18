@@ -114,7 +114,7 @@ subroutine build_projects
                 end if
             end do
             ! write summary volumes and footprints to output file for MC projects
-            write(402, '(I,x,F0.4,x,I)') ElementID,',',element_volume_m3,',',element_footprint_m2
+            write(402, '(I,x,F0.4,x,F0.4)') ElementID,',',element_volume_m3,',',element_footprint_m2
         end do    
                 
         close(402)
