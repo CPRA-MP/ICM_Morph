@@ -1,9 +1,9 @@
-subroutine build_projects
+subroutine build_marsh_projects
     ! global arrays updated by subroutine:
 
     !
     ! Subroutine updates the elevation and landtype for pixels
-    ! that have a project implemented on the landscape for the year
+    ! that have a marsh creation project implemented on the landscape for the year
     !
     ! 
     
@@ -20,7 +20,7 @@ subroutine build_projects
     integer :: prj_dem_x                                                ! local variable to store X-coordinates of project DEM
     integer :: prj_dem_y                                                ! local variable to store Y-coordinates of project DEM
     real(sp) :: design_elev                                             ! temporary variable to store the calculated design elevation for marsh creation projects to convert from MWL datum to NAVD88
-    real(sp),dimension(:),allocatable :: prj_dem_z                      ! project design elevation of DEM pixel (m NAVD88) - for ridge/levee projects and meters above MWL for marsh creation projects
+    real(sp),dimension(:),allocatable :: prj_dem_z                      ! project design elevation of DEM pixel (meters above MWL for marsh creation projects)
     real(sp) :: prj_dz_m                                                ! local variable to store the change in elevation (m) due to the project being implemented on a given pixel
     real(sp) :: depth                                                   ! local variable to store water depth (m) of local pixel
     real(sp) :: element_volume_m3                                       ! cumulative sediment volume needed to build current ElementID of project
@@ -30,13 +30,12 @@ subroutine build_projects
     allocate (prj_dem_z(ndem))
     prj_dem_z = dem_NoDataVal           ! intialize project elevation raster to NoData
     
-    write(  *,*) ' - implementing FWA projects'
-    write(000,*) ' - implementing FWA projects'
- 
-    ! IMPLEMENT MARSH CREATION PROJECTS
+    write(  *,*) ' - implementing FWA marsh creation projects'
+    write(000,*) ' - implementing FWA marsh creation projects'
+
     if (n_mc > 0) then
-        write(  *,'(A,I,A)') '    - ',n_mc,' marsh creation projects being implemented'
-        write(000,'(A,I,A)') '    - ',n_mc,' marsh creation projects being implemented'
+        write(  *,'(A,I0,A)') '    - ',n_mc,' marsh creation projects being implemented'
+        write(000,'(A,I0,A)') '    - ',n_mc,' marsh creation projects being implemented'
         
         open(unit=401, file=trim(adjustL(project_list_MC_file)))
         read(401,*) dump_txt            ! dump header
@@ -50,8 +49,8 @@ subroutine build_projects
             
             read(401,*) ElementID,prj_xyz_file  ! ElementID and filepath to XYZ raster
             
-            write(  *,'(A,I,A,A)') '      - building ',ElementID,' from XYZ file:',prj_xyz_file
-            write(000,'(A,I,A,A)') '      - building ',ElementID,' from XYZ file:',prj_xyz_file
+            write(  *,'(A,I0,A,A)') '      - building ',ElementID,' from XYZ file:',prj_xyz_file
+            write(000,'(A,I0,A,A)') '      - building ',ElementID,' from XYZ file:',prj_xyz_file
             
             ! open XYZ file for specific project element
             open(403,  file=trim(adjustL('geomorph/input/'//prj_xyz_file)))
@@ -59,15 +58,16 @@ subroutine build_projects
             ! read in project DEM
             do i = 1,ndem
                 read(403,*) prj_dem_x,prj_dem_y,prj_dem_z(i)
+                
                 ! check that coordinates of project DEM match the initial DEM used by the model - exit if they do not match structure
                 if (prj_dem_x /= dem_x(i)) then
-                    write(  *,'(A,I,A,I)') ' !!! EXITING !!! project XYZ file X value does not match input DEM structure, dem_x = ', dem_x(i), ', prj_dem_x = ', prj_dem_x
-                    write(000,'(A,I,A,I)') ' !!! EXITING !!! project XYZ file X value does not match input DEM structure, dem_x = ', dem_x(i), ', prj_dem_x = ', prj_dem_x
+                    write(  *,'(A,I0,A,I0)') ' !!! EXITING !!! project XYZ file X value does not match input DEM structure, dem_x = ', dem_x(i), ', prj_dem_x = ', prj_dem_x
+                    write(000,'(A,I0,A,I0)') ' !!! EXITING !!! project XYZ file X value does not match input DEM structure, dem_x = ', dem_x(i), ', prj_dem_x = ', prj_dem_x
                     stop
                 end if
                 if (prj_dem_y /= dem_y(i)) then
-                    write(  *,'(A,I,A,I)') ' !!! EXITING !!! project XYZ file X value does not match input DEM structure, dem_x = ', dem_y(i), ', prj_dem_x = ', prj_dem_y
-                    write(000,'(A,I,A,I)') ' !!! EXITING !!! project XYZ file X value does not match input DEM structure, dem_x = ', dem_y(i), ', prj_dem_x = ', prj_dem_y
+                    write(  *,'(A,I0,A,I0)') ' !!! EXITING !!! project XYZ file X value does not match input DEM structure, dem_x = ', dem_y(i), ', prj_dem_x = ', prj_dem_y
+                    write(000,'(A,I0,A,I0)') ' !!! EXITING !!! project XYZ file X value does not match input DEM structure, dem_x = ', dem_y(i), ', prj_dem_x = ', prj_dem_y
                     stop
                 end if
                 
@@ -114,7 +114,7 @@ subroutine build_projects
                 end if
             end do
             ! write summary volumes and footprints to output file for MC projects
-            write(402, '(I,A,F0.4,A,F0.4)') ElementID,',',element_volume_m3,',',element_footprint_m2
+            write(402, '(I0,A,F0.4,A,F0.4)') ElementID,',',element_volume_m3,',',element_footprint_m2
         end do    
                 
         close(402)
