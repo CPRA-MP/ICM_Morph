@@ -106,6 +106,13 @@ program main
     write(000,*) 'Flotant Marsh subroutine ended at: ',dtstr
  
     
+    call build_shoreline_projects
+    call date_and_time(VALUES=dtvalues)
+    write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
+    write(  *,*) 'Build Shoreline Protection Projects subroutine ended at: ',dtstr
+    write(000,*) 'Build Shoreline Protection Projects subroutine ended at: ',dtstr    
+    
+    
     call edge_erosion
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
@@ -167,6 +174,17 @@ program main
 !    write(  *,*) 'SAV subroutine ended at: ',dtstr
 !    write(000,*) 'SAV subroutine ended at: ',dtstr 
     
+    call build_marsh_projects
+    call date_and_time(VALUES=dtvalues)
+    write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
+    write(  *,*) 'Build Marsh Projects subroutine ended at: ',dtstr
+    write(000,*) 'Build Marsh Projects subroutine ended at: ',dtstr  
+    
+    call build_ridge_projects
+    call date_and_time(VALUES=dtvalues)
+    write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
+    write(  *,*) 'Build Ridge (and Levee) Projects subroutine ended at: ',dtstr
+    write(000,*) 'Build Ridge (and Levee) Projects subroutine ended at: ',dtstr  
     
     
     call summaries

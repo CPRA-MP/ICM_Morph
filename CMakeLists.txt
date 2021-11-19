@@ -41,8 +41,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/CMakeFiles)
 ###########################################################################
 #...Set the version string (used for libraries)
 SET(ICMMORPH_VERSION_MAJOR 23)
-SET(ICMMORPH_VERSION_MINOR  1)
-SET(ICMMORPH_VERSION_PATCH  1)
+SET(ICMMORPH_VERSION_MINOR  2)
+SET(ICMMORPH_VERSION_PATCH  0)
 SET(ICMMORPH_VERSION_STRING ${ICMMORPH_VERSION_MAJOR}.${ICMMORPH_VERSION_MINOR}.${ICMMORPH_VERSION_PATCH})
 ###########################################################################
 
@@ -71,7 +71,10 @@ ENDIF()
 # ICM_Morph
 ###########################################################################
 SET( MORPH morph_v${ICMMORPH_VERSION_STRING} )
-ADD_EXECUTABLE( ${MORPH} WM_distance_to_land.f90
+ADD_EXECUTABLE( ${MORPH} WM_build_marsh_projects.f90
+                         WM_build_ridge_projects.f90
+                         WM_build_shoreline_projects.f90
+                         WM_distance_to_land.f90
                          WM_edge_delineation.f90
                          WM_edge_erosion.f90
                          WM_flotant.f90

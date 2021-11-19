@@ -34,6 +34,7 @@ subroutine edge_erosion
     real(sp) :: yr_ratio                                                                ! elapsed model year divided by number of years needed for edge erosion - when this ratio is a whole number, the edge erosion occurs
     real(sp) :: dec                                                                     ! decimal portion of yr_ratio
     real(sp) :: meer                                                                    ! local variable for marsh edge erosion rate of pixel
+    
     do i = 1,ndem
         meer = dem_meer(i)
         if (meer /= dem_NoDataVal) then
