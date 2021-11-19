@@ -73,6 +73,7 @@ ENDIF()
 SET( MORPH morph_v${ICMMORPH_VERSION_STRING} )
 ADD_EXECUTABLE( ${MORPH} WM_build_marsh_projects.f90
                          WM_build_ridge_projects.f90
+                         WM_build_shoreline_projects.f90
                          WM_distance_to_land.f90
                          WM_edge_delineation.f90
                          WM_edge_erosion.f90
