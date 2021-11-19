@@ -49,8 +49,8 @@ subroutine build_marsh_projects
             
             read(401,*) ElementID,prj_xyz_file  ! ElementID and filepath to XYZ raster
             
-            write(  *,'(A,I0,A,A)') '      - building ',ElementID,' from XYZ file:',trim(adjustL(prj_xyz_file))
-            write(000,'(A,I0,A,A)') '      - building ',ElementID,' from XYZ file:',trim(adjustL(prj_xyz_file))
+            write(  *,'(A,I0,A,A)') '      - building ',ElementID,' from XYZ file: ',trim(adjustL(prj_xyz_file))
+            write(000,'(A,I0,A,A)') '      - building ',ElementID,' from XYZ file: ',trim(adjustL(prj_xyz_file))
             
             ! open XYZ file for specific project element
             open(403,  file=trim(adjustL('geomorph/input/'//prj_xyz_file)))

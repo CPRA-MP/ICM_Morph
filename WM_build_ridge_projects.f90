@@ -40,8 +40,8 @@ subroutine build_ridge_projects
             
             read(401,*) ProjectID,prj_xyz_file  ! ProjectID and filepath to XYZ raster
             
-            write(  *,'(A,I0,A,A)') '      - building ',ProjectID,' from XYZ file:',trim(adjustL(prj_xyz_file))
-            write(000,'(A,I0,A,A)') '      - building ',ProjectID,' from XYZ file:',trim(adjustL(prj_xyz_file))
+            write(  *,'(A,I0,A,A)') '      - building ',ProjectID,' from XYZ file: ',trim(adjustL(prj_xyz_file))
+            write(000,'(A,I0,A,A)') '      - building ',ProjectID,' from XYZ file: ',trim(adjustL(prj_xyz_file))
             
             ! open XYZ file for specific project 
             open(403,  file=trim(adjustL('geomorph/input/'//prj_xyz_file)))
