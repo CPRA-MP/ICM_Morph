@@ -71,32 +71,13 @@ ENDIF()
 # ICM_Morph
 ###########################################################################
 SET( MORPH morph_v${ICMMORPH_VERSION_STRING} )
-ADD_EXECUTABLE( ${MORPH} WM_build_marsh_projects.f90
-                         WM_build_ridge_projects.f90
-                         WM_build_shoreline_projects.f90
-                         WM_distance_to_land.f90
-                         WM_edge_delineation.f90
-                         WM_edge_erosion.f90
-                         WM_flotant.f90
-                         WM_inundation_depths.f90
+ADD_EXECUTABLE( ${MORPH} WM_inundation_depths.f90
                          WM_inundation_HSI_bins.f90
-                         WM_inundation_thresholds.f90
                          WM_main.f90
-                         WM_map_bareground.f90
-                         WM_mineral_deposition.f90
-                         WM_new_subaerial_land.f90
-                         WM_organic_accretion.f90
                          WM_params.f90
                          WM_params_alloc.f90
                          WM_preprocessing.f90
-                         WM_sav.f90
                          WM_set_io.f90
-                         WM_summaries.f90
-                         WM_update_elevation.f90
-                         WM_update_landtype.f90
-                         WM_write_output_asci_rasters.f90
-                         WM_write_output_binary_rasters.f90
-                         WM_write_output_QAQC_points.f90
                          WM_write_output_summaries.f90      )
 SET_TARGET_PROPERTIES( ${MORPH} PROPERTIES Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/CMakeFiles/mod)
 SET_TARGET_PROPERTIES( ${MORPH} PROPERTIES COMPILE_FLAGS "${Fortran_LINELENGTH_FLAG} ${Fortran_COMPILER_SPECIFIC_FLAG}" )
