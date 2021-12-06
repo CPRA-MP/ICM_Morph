@@ -75,7 +75,6 @@ program main
     write(  *,*) 'Inundation Depths subroutine ended at: ',dtstr
     write(000,*) 'Inundation Depths subroutine ended at: ',dtstr
 
-   
 
     call inundation_HSI_bins
     call date_and_time(VALUES=dtvalues)
@@ -83,13 +82,6 @@ program main
     write(  *,*) 'HSI Inundation subroutine ended at: ',dtstr
     write(000,*) 'HSI Inundation subroutine ended at: ',dtstr    
     
-
-    call summaries
-    call date_and_time(VALUES=dtvalues)
-    write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
-    write(  *,*) 'Summaries subroutine ended at: ',dtstr
-    write(000,*) 'Summaries subroutine ended at: ',dtstr  
- 
 
     call write_output_summaries
     call date_and_time(VALUES=dtvalues)
