@@ -3,8 +3,7 @@ subroutine inundation_HSI_bins
     !
     ! global arrays updated by subroutine:
     !      grid_gadwl_dep
-    !      grid_gwteal_dep 
-    !      grid_motduck_dep   
+
 
     use params
     implicit none
@@ -19,9 +18,7 @@ subroutine inundation_HSI_bins
 
     ! initialize depth area arrays to zero
     grid_gadwl_dep = 0
-    grid_gwteal_dep = 0
-    grid_motduck_dep = 0
-    
+
     write(  *,'(A)') '  - tabulating area within each depth bin for waterfowl HSIs'
     write(000,'(A)') '  - tabulating area within each depth bin for waterfowl HSIs'
     
@@ -88,50 +85,6 @@ subroutine inundation_HSI_bins
         end if
         
 
-        ! tabulate area of grid cell within each Greenwing Teal depth bin
-        ! depth thresholds (in m) are: [0,0.06,0.18,0.22,0.26,0.30,0.34,1.0]
-        if (dep_sep_mar <= 0.0) then
-            grid_gwteal_dep(g,1) = grid_gwteal_dep(g,1) + dem_res**2
-        else if (dep_sep_mar <= 0.06) then
-            grid_gwteal_dep(g,2) = grid_gwteal_dep(g,2) + dem_res**2
-        else if (dep_sep_mar <= 0.18) then
-            grid_gwteal_dep(g,3) = grid_gwteal_dep(g,3) + dem_res**2
-        else if (dep_sep_mar <= 0.22) then
-            grid_gwteal_dep(g,4) = grid_gwteal_dep(g,4) + dem_res**2
-        else if (dep_sep_mar <= 0.26) then
-            grid_gwteal_dep(g,5) = grid_gwteal_dep(g,5) + dem_res**2
-        else if (dep_sep_mar <= 0.30) then
-            grid_gwteal_dep(g,6) = grid_gwteal_dep(g,6) + dem_res**2
-        else if (dep_sep_mar <= 0.34) then
-            grid_gwteal_dep(g,7) = grid_gwteal_dep(g,7) + dem_res**2
-        else if (dep_sep_mar <= 1.0) then
-            grid_gwteal_dep(g,8) = grid_gwteal_dep(g,8) + dem_res**2
-        else
-            grid_gwteal_dep(g,9) = grid_gwteal_dep(g,9) + dem_res**2
-        end if        
-           
-        ! tabulate area of grid cell within each Mottled Duck depth bin
-        ! depth thresholds (in m) are: [0,0.08,0.30,0.36,0.42,0.46,0.50,0.56]
-        if (dep_ann <= 0.0) then        
-            grid_motduck_dep(g,1) = grid_motduck_dep(g,1) + dem_res**2
-        else if (dep_ann <= 0.08) then            
-            grid_motduck_dep(g,2) = grid_motduck_dep(g,2) + dem_res**2
-        else if (dep_ann <= 0.30) then            
-            grid_motduck_dep(g,3) = grid_motduck_dep(g,3) + dem_res**2
-        else if (dep_ann <= 0.36) then            
-            grid_motduck_dep(g,4) = grid_motduck_dep(g,4) + dem_res**2
-        else if (dep_ann <= 0.42) then            
-            grid_motduck_dep(g,5) = grid_motduck_dep(g,5) + dem_res**2
-        else if (dep_ann <= 0.46) then            
-            grid_motduck_dep(g,6) = grid_motduck_dep(g,6) + dem_res**2
-        else if (dep_ann <= 0.50) then            
-            grid_motduck_dep(g,7) = grid_motduck_dep(g,7) + dem_res**2
-        else if (dep_ann <= 0.56) then            
-            grid_motduck_dep(g,8) = grid_motduck_dep(g,8) + dem_res**2
-        else
-            grid_motduck_dep(g,9) = grid_motduck_dep(g,9) + dem_res**2
-        endif
-        
     end do
         
     return
