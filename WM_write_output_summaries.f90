@@ -21,7 +21,8 @@ subroutine write_output_summaries
     
     open(unit=900, file = trim(adjustL(grid_summary_eoy_file) ))
     open(unit=901, file = trim(adjustL(grid_data_file) ))
-    open(unit=902, file = trim(adjustL(grid_depth_file_Gdw) ))
+    open(unit=902, file = trim(adjustL(grid_pct_edge_file) ))
+    open(unit=903, file = trim(adjustL(grid_depth_file_Gdw) ))
     open(unit=904, file = trim(adjustL(grid_depth_file_GwT) ))
     open(unit=905, file = trim(adjustL(grid_depth_file_MtD) ))
     
@@ -66,7 +67,7 @@ subroutine write_output_summaries
    &                grid_pct_vglnd_BM(i),           &
    &                grid_pct_vglnd_SM(i),           &
    &                grid_FIBS_score(i)
-        
+       
 
 
         ! Grid data file passed into ICM-Hydro reports percentages from 0-100 instead of 0-1
