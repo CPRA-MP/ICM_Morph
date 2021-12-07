@@ -11,27 +11,29 @@ subroutine build_marsh_projects
     implicit none
     
     ! local variables
-    integer :: i                                                        ! iterator
-    integer :: imc                                                      ! iterator
-    integer :: c                                                        ! local compartment ID variable
+    integer :: i                                                ! iterator
+    integer :: imc                                              ! iterator
+    integer :: c                                                ! local compartment ID variable
             
-    character*fn_len :: prj_xyz_file                                    ! local variable to store filepath to project raster file
-    integer :: ElementID                                         ! local variable to store ElementID string
-    integer :: prj_dem_x                                                ! local variable to store X-coordinates of project DEM
-    integer :: prj_dem_y                                                ! local variable to store Y-coordinates of project DEM
-    real(sp) :: design_elev                                             ! temporary variable to store the calculated design elevation for marsh creation projects to convert from MWL datum to NAVD88
-    real(sp),dimension(:),allocatable :: prj_dem_z                      ! project design elevation of DEM pixel (meters above MWL for marsh creation projects)
-    real(sp) :: prj_dz_m                                                ! local variable to store the change in elevation (m) due to the project being implemented on a given pixel
-    real(sp) :: depth                                                   ! local variable to store water depth (m) of local pixel
-    real(sp) :: element_volume_m3                                       ! cumulative sediment volume needed to build current ElementID of project
-    real(sp) :: element_footprint_m2                                    ! cumulative sediment volume needed to build current ElementID of project
-    
+    character*fn_len :: prj_xyz_file                            ! local variable to store filepath to project raster file
+    integer :: ElementID                                        ! local variable to store ElementID string
+    integer :: prj_dem_x                                        ! local variable to store X-coordinates of project DEM
+    integer :: prj_dem_y                                        ! local variable to store Y-coordinates of project DEM
+    real(sp) :: design_elev                                     ! temporary variable to store the calculated design elevation for marsh creation projects to convert from MWL datum to NAVD88
+    real(sp),dimension(:),allocatable :: prj_dem_z              ! project design elevation of DEM pixel (meters above MWL for marsh creation projects)
+    real(sp) :: prj_dz_m                                        ! local variable to store the change in elevation (m) due to the project being implemented on a given pixel
+    real(sp) :: depth                                           ! local variable to store water depth (m) of local pixel
+    real(sp) :: element_volume_m3                               ! cumulative sediment volume needed to build current ElementID of project
+    real(sp) :: element_footprint_m2                            ! cumulative sediment volume needed to build current ElementID of project
+    real(sp) :: mc_depth_threshold_element                      ! element-specific depth threshold for marsh creation projects
     
     allocate (prj_dem_z(ndem))
     prj_dem_z = dem_NoDataVal           ! intialize project elevation raster to NoData
     
     write(  *,*) ' - implementing FWA marsh creation projects'
     write(000,*) ' - implementing FWA marsh creation projects'
+
+    mc_depth_threshold_element = mc_depth_threshold             ! initialize marsh creation fill threshold to the default value set in input_params.csv
 
     if (n_mc > 0) then
         write(  *,'(A,I0,A)') '    - ',n_mc,' marsh creation projects being implemented'
@@ -47,7 +49,7 @@ subroutine build_marsh_projects
             prj_dem_z = dem_NoDataVal           ! intialize project elevation raster to NoData
             design_elev = -9999                 ! initialize design elevation to NoData value used in project DEM files
             
-            read(401,*) ElementID,prj_xyz_file  ! ElementID and filepath to XYZ raster
+            read(401,*) ElementID,prj_xyz_file,mc_depth_threshold_element  ! ElementID, filepath to XYZ raster, & element-specific fill depth threshold
             
             write(  *,'(A,I0,A,A)') '      - building ',ElementID,' from XYZ file: ',trim(adjustL(prj_xyz_file))
             write(000,'(A,I0,A,A)') '      - building ',ElementID,' from XYZ file: ',trim(adjustL(prj_xyz_file))
@@ -96,7 +98,7 @@ subroutine build_marsh_projects
                     if (c /= dem_NoDataVal) then
                         depth = ( stg_av_yr(c) - dem_z(i) )     ! negative depth values mean elevation is greater than mean water level
                     end if
-                    if (depth <= mc_depth_threshold) then
+                    if (depth <= mc_depth_threshold_element) then
                         
                         prj_dz_m = prj_dem_z(i) - dem_z(i)     ! calculate change in pixel elevation due to project
                         dem_dz_cm(i) = prj_dz_m*100.0           ! update dZ raster for project implementation *note that for pixels under a project, the dZ raster will be calculated from the end-of-year raster that already has subsidence and accretion update added for the year
