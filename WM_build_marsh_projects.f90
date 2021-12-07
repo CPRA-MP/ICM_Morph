@@ -43,7 +43,7 @@ subroutine build_marsh_projects
         read(401,*) dump_txt            ! dump header
         
         open(unit=402, file=trim(adjustL(project_list_MC_VA_file)))
-        write(402,'(A)') 'ElementID,SedimentVreadolume_m3,ProjectFootprint_m2'
+        write(402,'(A)') 'ElementID,SedimentVolume_m3,ProjectFootprint_m2'
         
         do imc = 1,n_mc
             prj_dem_z = dem_NoDataVal           ! intialize project elevation raster to NoData
