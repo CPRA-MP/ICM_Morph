@@ -35,7 +35,8 @@ subroutine write_output_summaries
    &                grid_gadwl_dep(i,12),           &
    &                grid_gadwl_dep(i,13),           &
    &                grid_gadwl_dep(i,14)
- 
+    end do
+    
     close(903)
  
     
