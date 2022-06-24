@@ -87,6 +87,13 @@ subroutine write_output_binary_rasters
         open(unit=811, file=trim(adjustL(dsub_file))//'.b',form='unformatted')
         write(811) dem_dpsb
         close(811)
+        
+        write(  *,*) ' - writing output raster binary file for dredged channel elevations'
+        write(000,*) ' - writing output raster binary file for dredged channel elevations'
+        open(unit=8011, file=trim(adjustL(dredge_dem_xyz_file))//'.b',form='unformatted')
+        write(8011) dem_dredge_z
+        close(8011)
+        
     end if
     
     write(  *,*) ' - writing output raster binary file for annual mean salinity'
