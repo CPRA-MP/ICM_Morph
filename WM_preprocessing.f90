@@ -223,6 +223,16 @@ subroutine preprocessing
     end do
     close(1116)
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     ! read in deep subsidence data
     write(  *,*) ' - reading in deep susidence rate map'
     write(000,*) ' - reading in deep susidence rate map'
@@ -645,7 +655,23 @@ subroutine preprocessing
     end do
     close(123) 
     
+    ! read elevation of dredged channels into arrays
+    write(  *,*) ' - reading in dredged channel elevation data'
+    write(000,*) ' - reading in dredged channel elevation data'
     
+    if (binary_in == 1) then
+        write(  *,*) '   - using binary file'
+        write(000,*) '   - using binary file'
+        open(unit=124, file=trim(adjustL(dredge_dem_xyz_file))//'.b',form='unformatted')
+        read(124) dem_dredge_z 
+    else
+        open(unit=124, file=trim(adjustL(dredge_dem_xyz_file)))
+        !    read(1113,*) dump_txt        ! dump header
+        do i = 1,ndem 
+            read(124,*) dump_int,dump_int,dem_dredge_z(i)
+        end do
+    end if
+    close(124)
     
 1234    format(A,53(',',A))
     
