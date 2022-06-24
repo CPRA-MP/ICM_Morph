@@ -76,6 +76,7 @@ module params
     character*fn_len :: monthly_mean_sal_file                       ! file name, with relative path, to compartment summary file with monthly mean salinity
     character*fn_len :: monthly_mean_tss_file                       ! file name, with relative path, to compartment summary file with monthly mean TSS concentration
     character*fn_len :: bi_dem_xyz_file                             ! file name, with relative path, to XYZ DEM file for ICM-BI-DEM model domain - XY resolution must be snapped to XY resolution of main DEM
+    character*fn_len :: dredge_dem_xyz_file                         ! file name, with relative path, to XYZ DEM file for raster that will have elevations for all maintained/dredged channels/locations, these elevations will be maintained for every year regardless of calculated deposition/erosion rates
     
     ! output files in subroutine: SET_IO
     character*fn_len :: morph_log_file                              ! file name of text file that logs all Morph print statements - no filepath will save this in executable directory
@@ -168,6 +169,7 @@ module params
                                                                     !               5 = flotant marsh
     integer,dimension(:),allocatable :: dem_bi_zone                 ! flag for DEM pixel identifyin g whether it is within the barrier island model domain
     integer,dimension(:),allocatable :: dem_bi_map                  ! if pixel is in BI model domain, map the interpolated BI-DEM raster to the corresponding DEM pixel index
+    real(sp),dimension(:),allocatable :: dem_dredge_z               ! elevation of pixels that will have maintained elevations due to assumed dredgeing (m NAVD88)
     
     ! define variables read in or calculated from compartment_out Hydro summary file in subroutine: PREPROCESSING
     real(sp),dimension(:),allocatable :: stg_mx_yr                  ! max stage - annual (m NAVD88)
