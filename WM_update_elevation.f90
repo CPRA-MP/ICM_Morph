@@ -74,7 +74,13 @@ subroutine update_elevation
                     
                     dem_z(i) = dem_z(i) + dz_cm/100.0                                                                                   ! dz_cm is in cm, DEM is in meters
                     dem_dz_cm(i) = dz_cm                                                                                                ! update dZ array for writing output file
-                
+                    
+                    !! check if pixel is located in a dredged/maintained channel
+                    if (dem_dredge_z(i) /= dem_NoDataVal) then
+                        dem_z(i) = dem_dredge_z(i)
+                        dem_dz_cm(i) = 0.0
+                    end if
+                    
                 else        
                     dem_z(i) = dem_z_bi(dem_to_bidem(i))                                                                                ! if in BI-DEM domain,, use ICM-BI-DEM elevation as final elevation
                 end if
