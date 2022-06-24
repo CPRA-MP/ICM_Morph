@@ -81,7 +81,8 @@ subroutine set_io
     read(001,*) monthly_mean_sal_file,dump_txt
     read(001,*) monthly_mean_tss_file,dump_txt
     read(001,*) bi_dem_xyz_file,dump_txt
-
+    read(001,*) dredge_dem_xyz_file,dump_txt
+    
     !  output files     
     read(001,*) edge_eoy_xyz_file,dump_txt
     read(001,*) dem_eoy_xyz_file,dump_txt
