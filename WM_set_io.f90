@@ -101,6 +101,8 @@ subroutine set_io
     read(001,*) comp_elev_file,dump_txt
     read(001,*) comp_wat_file,dump_txt
     read(001,*) comp_upl_file,dump_txt
+    read(001,*) write_zonal_stats,dump_txt
+    read(001,*) dem_grid_out_summary_file,dump_txt 
     
     ! QAQC save point information
     read(001,*) nqaqc                    
