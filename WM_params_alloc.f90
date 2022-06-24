@@ -35,6 +35,7 @@ subroutine params_alloc
     allocate(dem_lndtyp(ndem))
     allocate(dem_bi_zone(ndem))
     allocate(dem_bi_map(ndem))
+    allocate(dem_dredge_z(ndem))
     allocate(dem_dpsb(ndem))
     allocate(er_codes(neco))
     allocate(er_shsb(neco,3))
