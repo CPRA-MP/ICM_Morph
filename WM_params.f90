@@ -97,7 +97,9 @@ module params
     character*fn_len :: comp_elev_file                              ! file name, with relative path, to elevation summary compartment file used internally by ICM
     character*fn_len :: comp_wat_file                               ! file name, with relative path, to percent water summary compartment file used internally by ICM
     character*fn_len :: comp_upl_file                               ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
-
+    integer :: write_zonal_stats                                    ! integer flag to indicate whether zonal statitics are to be conducted in ICM-Morph (1) or whether a CSV file will be saved to do external zonal statistics(0)
+    character*fn_len :: dem_grid_out_summary_file                   ! file name, with relative path, to CSV output file that will save DEM-resolution landscape data to be used in zonal statistics
+    
     ! QAQC save point information in subroutine: SET_IO
     integer :: nqaqc                                                ! number of QAQC points for reporting - as listed in qaqc_site_list_file
     character*fn_len :: qaqc_site_list_file                         ! file name, with relative path, to percent upland summary compartment file used internally by ICM 
