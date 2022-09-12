@@ -39,8 +39,8 @@ subroutine new_subaerial_land
                     if (lnd_change_flag(i) == 0) then
                         ! if water - check if current year elevation is above MWL by depth threshold defining whether vegetation can establish
                         if (dem_lndtyp(i) == 2) then
-                            !! check if pixel is located in a dredged/maintained channel
-                            if (dem_dredge_z(i) /= dem_NoDataVal) then
+                            !! check if pixel is located in a dredged/maintained channel - if not then can build new land
+                            if (dem_dredge_z(i) == dem_NoDataVal) then
                                 if (dep_yr < ht_abv_mwl_est) then
                                     dep_prev_yr = dem_inun_dep(i,14)
                                     ! if both current year and previous year have elevation above threshold for establishment, convert water to land eligible for vegetation
