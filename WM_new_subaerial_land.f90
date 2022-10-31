@@ -45,7 +45,9 @@ subroutine new_subaerial_land
                                     dep_prev_yr = dem_inun_dep(i,14)
                                     ! if both current year and previous year have elevation above threshold for establishment, convert water to land eligible for vegetation
                                     if (dep_prev_yr < ht_abv_mwl_est) then
-                                       lnd_change_flag(i) = 1                          ! lnd_change_flag = 1 for conversion from open water to land eligible for vegetation
+                                        if (comp_no_gain(c) == 0) then                      ! if comp_no_gain flag is 1, then no new subaerial land should occur due to inundation criterion
+                                            lnd_change_flag(i) = 1                          ! lnd_change_flag = 1 for conversion from open water to land eligible for vegetation
+                                        end if
                                     end if
                                 end if
                             end if
