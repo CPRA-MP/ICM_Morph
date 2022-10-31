@@ -61,6 +61,7 @@ module params
     character*fn_len :: ssub_file                                   ! file name, with relative path, to shallow subsidence table with statistics by ecoregion (mm/yr; positive values are for downward VLM)
     integer :: ssub_col                                             ! column of shallow subsidence rates to use for current scenario (1=25th percentile; 2=50th percentile; 3=75th percentile)
     character*fn_len :: act_del_file                                ! file name, with relative path, to lookup table that identifies whether an ICM-Hydro compartment is assigned as an 'active delta' site for use with Fresh Marsh organic accretion
+    character*fn_len :: no_gain_file                                ! file name, with relative path, to lookup table that identifies whether an ICM-Hydro compartment is allowed to have land gain from natural shoaling processes or not
     character*fn_len :: eco_omar_file                               ! file name, with relative path, to lookup table of organic accumulation rates by marsh type/ecoregion
     character*fn_len :: comp_eco_file                               ! file name, with relative path, to lookup table that assigns an ecoregion to each ICM-Hydro compartment    
     character*fn_len :: sav_priors_file                             ! file name, with relative path, to CSV containing parameters defining the priors (per basin) for the SAV stasticial model
@@ -139,6 +140,7 @@ module params
     real(sp),dimension(:,:),allocatable :: er_shsb                  ! shallow subsidence for ecoregion (mm/yr; positive indicates downward VLM), multiple values are provided for each ecoregion (25th, 50th, and 75th percentiles)
     integer,dimension(:),allocatable ::  comp_eco                   ! ecoregion number of ICM-Hydro compartment
     integer,dimension(:),allocatable ::  comp_act_dlt               ! flag indicating whether ICM-Hydro compartment is considered an active delta for fresh marsh organic accretion (0=inactive; 1=active)
+    integer,dimension(:),allocatable ::  comp_no_gain               ! flag indicating whether ICM-Hydro compartment is allowed to have land gain from shoaling processes (won't apply to built projects) (0=land gain allowed; 1=no land gain)
     character*10,dimension(:),allocatable :: er_codes               ! array to store ecoregion name codes - array location will correspond to ecoregion number - mucst match 
     real(sp),dimension(:,:),allocatable :: er_omar                  ! organic matter accumulation rate by marsh type by ecoregion (g/cm^2/yr)
                                                                     ! value for second dimension of array indicates marsh type
