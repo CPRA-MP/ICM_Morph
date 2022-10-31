@@ -224,6 +224,20 @@ subroutine preprocessing
     close(1116)
     
     
+    ! read in no land gain compartment flags
+    write(  *,*) ' - reading in ICM-Hydro compartment table turning off land gain locations'
+    write(000,*) ' - reading in ICM-Hydro compartment table turning off land gain locations'
+    
+    ! initialize grid data arrays to 0.0
+    comp_no_gain = 0.0
+    
+    open(unit=11166, file=trim(adjustL(no_gain_file)))
+    read(11166,*) dump_txt                               ! dump header
+    do i = 1,ncomp
+        read(11166,*) dump_int,comp_no_gain(i)           ! compartment ID, active delta flag
+    end do
+    close(11166)
+     
     
     
     
