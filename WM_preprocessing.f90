@@ -275,24 +275,24 @@ subroutine preprocessing
     close(1117)
     
     ! read in shallow subsidence lookup table
-    write(  *,*) ' - reading in shallow subsidence statistics by ecoregion'
-    write(000,*) ' - reading in shallow subsidence statistics by ecoregion'
+    write(  *,*) ' - NOT reading in shallow subsidence statistics by ecoregion - SINCE THIS IS FOR S18, DEEP SUBSIDENCE ONLY'
+    write(000,*) ' - NOT reading in shallow subsidence statistics by ecoregion - SINCE THIS IS FOR S18, DEEP SUBSIDENCE ONLY'
     
     ! initialize table to 0.0
     er_shsb = 0.0
     
-    open(unit=1118, file=trim(adjustL(ssub_file)))
-    read(1118,*) dump_txt                               ! dump header
-    do i = 1,neco
-        read(1118,*) en,                        &       ! ecoregion number
-   &                er_codes(en),               &       ! ecoregion abbreviation
-   &                dump_txt,                   &       ! ecoregion name
-   &                er_shsb(i,1),               &       ! 25th %ile shallow subsidence rate (mm/yr) - positive is downward
-   &                er_shsb(i,2),               &       ! 50th %ile shallow subsidence rate (mm/yr) - positive is downward
-   &                er_shsb(i,3),               &       ! 75th %ile shallow subsidence rate (mm/yr) - positive is downward
-   &                dump_txt                            ! notes
-    end do
-    close(1118) 
+    !open(unit=1118, file=trim(adjustL(ssub_file)))
+    !read(1118,*) dump_txt                               ! dump header
+    !do i = 1,neco
+    !    read(1118,*) en,                        &       ! ecoregion number
+   !&                er_codes(en),               &       ! ecoregion abbreviation
+   !&                dump_txt,                   &       ! ecoregion name
+   !&                er_shsb(i,1),               &       ! 25th %ile shallow subsidence rate (mm/yr) - positive is downward
+   !&                er_shsb(i,2),               &       ! 50th %ile shallow subsidence rate (mm/yr) - positive is downward
+   !&                er_shsb(i,3),               &       ! 75th %ile shallow subsidence rate (mm/yr) - positive is downward
+   !&                dump_txt                            ! notes
+    !end do
+    !close(1118) 
     
 
     ! read polder area map file into arrays
