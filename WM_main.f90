@@ -113,11 +113,11 @@ program main
     write(000,*) 'Build Shoreline Protection Projects subroutine ended at: ',dtstr    
     
     
-    call edge_erosion
-    call date_and_time(VALUES=dtvalues)
-    write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
-    write(  *,*) 'Edge Erosion subroutine ended at: ',dtstr
-    write(000,*) 'Edge Erosion subroutine ended at: ',dtstr    
+    !call edge_erosion
+    !call date_and_time(VALUES=dtvalues)
+    !write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
+    write(  *,*) 'Edge Erosion subroutine not run.'
+    write(000,*) 'Edge Erosion subroutine not run.'    
 
     
     call map_bareground
