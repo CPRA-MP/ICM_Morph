@@ -70,7 +70,7 @@ ENDIF()
 ###########################################################################
 # ICM_Morph
 ###########################################################################
-SET( MORPH morph_UBDP_v{ICMMORPH_VERSION_STRING} )
+SET( MORPH morph_UBDP_v${ICMMORPH_VERSION_STRING} )
 ADD_EXECUTABLE( ${MORPH} WM_build_marsh_projects.f90
                          WM_build_ridge_projects.f90
                          WM_build_shoreline_projects.f90
