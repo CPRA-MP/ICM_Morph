@@ -74,21 +74,26 @@ subroutine inundation_thresholds
                                 MuDepth = B0 + B1*sal_yr
                                 SigmaDepth = B2 + B3*exp(B4*sal_yr)
                                 DepthThreshold_Wet =  MuDepth  + ptile_Z*SigmaDepth
+
+                                ! only checking current year for inundation threshold
+                                if (dep_yr >= DepthThreshold_Wet) then
+                                    lnd_change_flag(i) = -1                         ! lnd_change_flag = -1 for conversion from vegetated wetland to open water 
+                                end if
                                 
                                 ! if current year inundation is above threshold, check previous year            
-                                if (dep_yr >= DepthThreshold_Wet) then
-                                    dep_prev_yr = dem_inun_dep(i,14)
-                                    sal_prev_yr = sal_av_prev_yr(c)
-                                    
-                                    MuDepth_prv = B0 + B1*sal_prev_yr
-                                    SigmaDepth_prv = B2 + B3*exp(B4*sal_prev_yr)
-                                    DepthThreshold_Wet_prv =  MuDepth_prv  + ptile_Z*SigmaDepth_prv
-                                    
-                                    ! if both current year and previous year have inundation above threshold, set flag to collapse land
-                                    if (dep_prev_yr >= DepthThreshold_Wet_prv) then
-                                        lnd_change_flag(i) = -1                         ! lnd_change_flag = -1 for conversion from vegetated wetland to open water
-                                    end if
-                                end if
+                                !if (dep_yr >= DepthThreshold_Wet) then
+                                    !dep_prev_yr = dem_inun_dep(i,14)
+                                    !sal_prev_yr = sal_av_prev_yr(c)
+                                    !
+                                    !MuDepth_prv = B0 + B1*sal_prev_yr
+                                    !SigmaDepth_prv = B2 + B3*exp(B4*sal_prev_yr)
+                                    !DepthThreshold_Wet_prv =  MuDepth_prv  + ptile_Z*SigmaDepth_prv
+                                    !
+                                    !! if both current year and previous year have inundation above threshold, set flag to collapse land
+                                    !if (dep_prev_yr >= DepthThreshold_Wet_prv) then
+                                    !    lnd_change_flag(i) = -1                         ! lnd_change_flag = -1 for conversion from vegetated wetland to open water
+                                    !end if
+                                !end if
                             end if
 
                         ! if upland - check if inundation would allow for wetland vegetation to establish
