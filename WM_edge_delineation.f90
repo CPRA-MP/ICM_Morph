@@ -1,6 +1,7 @@
 subroutine edge_delineation
     ! global arrays updated by subroutine:
     !      dem_edge
+    !      dem_edge_near_z
     !
     ! Subroutine that uses a moving window across entire map to determine which land pixels are adjacent to water
     ! and are therefore classified as an edge pixel.
@@ -19,6 +20,9 @@ subroutine edge_delineation
     ! are not subjected to edge erosional processes, nor will they receive sediment deposition - which are the two
     ! ICM-Morph model processes that utilize edge classification.
     ! Both vegetated and nonvegetated land will be eligible for classification as edge (dem_lndtyp = 1 or dem_lndtyp = 3)
+    !
+    ! If a pixel is identified as edge, then the closest water bed elevation will be saved for use in updating elevations if the edge pixel is lost to erosion.
+    !
         
     
     use params
@@ -32,8 +36,9 @@ subroutine edge_delineation
     write(  *,*) ' - identifying marsh edge pixels'
     write(000,*) ' - identifying marsh edge pixels'
     
-    ! initialize edge flag for each DEM pixel to zero
+    ! initialize edge flag and nearest water bottom elevation arrays for each DEM pixel
     dem_edge = 0
+    dem_edge_near_z = dem_NoDataVal
     
     ! loop over mapped array of pixel index values
     ! this will not allow any pixel on the outside border of the raster be classified as edge
@@ -46,34 +51,42 @@ subroutine edge_delineation
                         d1 = dem_index_mapped(ic-1, ir+1)               ! grab DEM pixel index for first neighbor, d1
                         if (dem_lndtyp(d1) == 2) then                   ! if neighbor, d1, is water then 
                             dem_edge(d0) = 1                            ! set edge value for d0 to 1
+                            dem_edge_near_z(d0) = dem_z(d1)             ! save elevation of nearest water pixel
                         else                                            ! if first neighbor is not water, check second neighbor, d2 and so on.
                             d2 = dem_index_mapped(ic  , ir+1)           ! use of else statements will stop the moving window at the first instance where d0 is set to edge
                             if(dem_lndtyp(d2) == 2) then
                                 dem_edge(d0) = 1
+                                dem_edge_near_z(d0) = dem_z(d2)
                             else                                        
                                 d3 = dem_index_mapped(ic+1, ir  )
                                 if(dem_lndtyp(d3) == 2) then
                                     dem_edge(d0) = 1
+                                    dem_edge_near_z(d0) = dem_z(d3)
                                 else
                                     d4 = dem_index_mapped(ic+1, ir  )
                                     if(dem_lndtyp(d4) == 2) then
                                         dem_edge(d0) = 1
+                                        dem_edge_near_z(d0) = dem_z(d4)
                                     else
                                         d5 = dem_index_mapped(ic+1, ir-1)
                                         if(dem_lndtyp(d5) == 2) then
                                             dem_edge(d0) = 1
+                                            dem_edge_near_z(d0) = dem_z(d5)
                                         else
                                             d6 = dem_index_mapped(ic  , ir-1)
                                             if(dem_lndtyp(d6) == 2) then
                                                 dem_edge(d0) = 1
+                                                dem_edge_near_z(d0) = dem_z(d6)
                                             else
                                                 d7 = dem_index_mapped(ic-1, ir-1)
                                                 if(dem_lndtyp(d7) == 2) then
                                                     dem_edge(d0) = 1
+                                                    dem_edge_near_z(d0) = dem_z(d7)
                                                 else
                                                     d8 = dem_index_mapped(ic-1, ir  )
                                                     if(dem_lndtyp(d8) == 2) then
                                                         dem_edge(d0) = 1
+                                                        dem_edge_near_z(d0) = dem_z(d8)
                                                     end if
                                                 end if
                                             end if

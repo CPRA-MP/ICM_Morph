@@ -28,7 +28,7 @@
 50, ow_accretion_limit_cm -  upper limit to allowable accretion on the water bottom during any given year [cm]
 -50, ow_erosion_limit_cm -  upper limit to allowable erosion of the water bottom during any given year [cm]
 0.05, bg_lowerZ_m -  height that bareground is lowered [m]
--9999, me_lowerDepth_m -  depth to which eroded marsh edge is lowered to [m] - DEPRECATED AS OF ICMv24 - MEE now sets elevation of eroded edge to the same elevation as the nearest water body bottom
+0.25, me_lowerDepth_m -  depth to which eroded marsh edge is lowered to [m]
 1.0, flt_lowerDepth_m -  depth to which dead floating marsh is lowered to [m]
 -0.762, mc_depth_threshold - water depth threshold (meters) defining deep water area to be excluded from marsh creation projects footprint
 1.1211425, spsal_params[1] - SAV parameter - spring salinity parameter 1

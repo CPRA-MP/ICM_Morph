@@ -110,6 +110,7 @@ subroutine params_alloc
     
     ! allocate memory for global variables calculated in subroutine: EDGE_DELINEATION
     allocate(dem_edge(ndem))
+    allocate(dem_edge_near_z(ndem))
     
     ! allocate memory for global variables calculated in subroutine: INUNDATION_DEPTHS
     allocate(dem_inun_dep(ndem,14))
