@@ -37,8 +37,13 @@ subroutine update_elevation
                     else 
                         if (lnd_change_flag(i) == -2) then                                                                      ! lower dead flotant pixels (lnd_change = -2) to a given depth below mean water level
                             dz_cm_lndtyp = min(0.00,-100.0*( dem_z(i) - (stg_av_yr(c) - flt_lowerDepth_m) ))                    ! if current elevation is already lower than this depth do not allow for elevation gain
-                        else if (lnd_change_flag(i) == -3) then                                                                 ! lower eroded edge pixels (lnd_change = -3) to  25 cm below mean water level
-                            dz_cm_lndtyp = min(0.00,-100.0*( dem_z(i) - (stg_av_yr(c) - me_lowerDepth_m) )) 
+                        else if (lnd_change_flag(i) == -3) then                                                                 ! lower eroded edge pixels (lnd_change = -3)
+                            if (dem_edge_near_z(i) /= dem_NoDataVal) then
+                                dz_cm_lndtyp = min(0.00,-100.0*( dem_z(i) - dem_edge_near_z(i) ) )                               ! lower eroded edge pixels to the elevation of the nearest water body bottom elevation (enforce only lowering - max will be no change)
+                                !dz_cm_lndtyp = min(0.00,-100.0*( dem_z(i) - (stg_av_yr(c) - me_lowerDepth_m) ))                 ! lower eroded edge pixels by value set in input_params.csv
+                            else
+                                dz_cm_lndtyp = 0.0
+                            end if
                         end if
                     end if
                 

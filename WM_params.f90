@@ -234,6 +234,7 @@ module params
     
     ! define variables calculated in subroutine: EDGE_DELINEATION
     integer,dimension(:),allocatable :: dem_edge                    ! flag indicating whether DEM pixel is edge (0=non edge; 1=edge)
+    real(sp),dimension(:),allocatable :: dem_edge_near_z            ! elevation of the nearest water body bottom for every edge-identified pixel (m NAVD88)
     
     ! define global variables calculated in subroutine: INUNDATION
     real(sp),dimension(:,:),allocatable :: dem_inun_dep             ! inundation depth at each DEM pixel from monthly and annual mean water levels (m)

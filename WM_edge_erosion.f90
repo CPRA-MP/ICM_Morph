@@ -40,7 +40,7 @@ subroutine edge_erosion
         if (meer /= dem_NoDataVal) then
             if (meer > 0.0) then
                 if (dem_edge(i) == 1) then                                              ! check if DEM pixel is edge
-                    mee_yr_increment = ceiling(float(dem_res) / meer )                  ! calculate number of years needed to erode one DEM pixel for given rate; ceiling results in a pixel that needs 24.5 years to erode to be eroded during year 25
+                    mee_yr_increment = nint(float(dem_res) / meer )                     ! calculate number of years needed to erode one DEM pixel for given rate; nint rounds to nearest integer year [nint(24.51) = 25; nint(24.49) = 24]; ceiling would round up, floor would round down
                     yr_ratio = float(elapsed_year) / float(mee_yr_increment)
                     dec = int(yr_ratio) - yr_ratio
                     if( dec == 0) then
