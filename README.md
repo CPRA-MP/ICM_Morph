@@ -11,9 +11,9 @@ Reed, D., Wang, Y., & White, E.D. (2024). *2029 Coastal Master Plan: Task 5.1: M
 
 ---
 
-# ICM_Morph v23.2.1 Release Notes
+# ICM_Morph v23.3.1 Release Notes
 
-ICMv23.2.1 was the official, final, version of ICM-Morph (coded in Fortran) used for the 2023 Coastal Master Plan simulations. Refer to Foster-Martinez, et al., (2023) for the technical documentation for ICM-Morph v23.2.1. Refer to Couvillion et al., (2008) for the theoretical documentation and White et al., (2017) for the conceptual framework of ICM-Morph.
+ICMv23.3.1 was the official, final, version of ICM-Morph (coded in Fortran) used for the 2023 Coastal Master Plan simulations. Refer to Foster-Martinez, et al., (2023) for the technical documentation for ICM-Morph v23.2.1. Refer to Couvillion et al., (2008) for the theoretical documentation and White et al., (2017) for the conceptual framework of ICM-Morph.
 
 ### References
 
