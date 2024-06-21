@@ -42,11 +42,11 @@ subroutine organic_accretion
                             if (maxval(dem_inun_dep(i,:)) > 0) then                                                    ! check that the pixel was inundated at some point during year
                                 FIBS = grid_FIBS_score(g)
                                 if (FIBS >= 0.0) then                                                               ! check that there is a FIBS score for grid cell
-                                    if (FIBS < FIBS_intvals(1)) then                                                ! FIBS indicates start of forested wetland range of FFIBS values
+                                    if (FIBS < FIBS_intvals(1)) then                                                ! FORESTED - FIBS_intvals(1) indicates *start* of forested wetland range of FFIBS values
                                         int_wgt = 0                                                                 ! no interpolation for lowest FIBS score (forested) - use lowest OMAR     
                                         omar_low = er_omar(e,1)
                                         omar_upr = er_omar(e,1)
-                                    else if (FIBS < FIBS_intvals(2)) then                                           ! FIBS indicates start of fresh marsh range of FFIBS values
+                                    else if (FIBS < FIBS_intvals(2)) then                                           ! FRESH MARSH: FORESTED/FRESH MIX - FIBS_intvals(2) indicates start of fresh marsh range of FFIBS values
                                         int_wgt = (FIBS - FIBS_intvals(1)) / (FIBS_intvals(2) - FIBS_intvals(1))    
                                         if (comp_act_dlt(c) == 0) then                                              ! if compartment is not active delta
                                             omar_low = er_omar(e,1)                                                 ! use default fresh marsh OMAR
@@ -55,7 +55,7 @@ subroutine organic_accretion
                                             omar_low = er_omar(e,6)                                                 ! use OMAR for fresh/int marsh in active deltas
                                             omar_upr = er_omar(e,6)                                                 ! there is no interpolation on active delta OMAR so use same value
                                         end if
-                                    else if (FIBS < FIBS_intvals(3)) then                                           ! FIBS indicates start of intermediate marsh range of FFIBS values
+                                    else if (FIBS < FIBS_intvals(3)) then                                           ! FRESH MARSH: FRESH/INTERMEDIATE MIX- FIBS_intvals(3) indicates *start* of intermediate marsh range of FFIBS values
                                         int_wgt = (FIBS - FIBS_intvals(2)) / (FIBS_intvals(3) - FIBS_intvals(2))    
                                         if (comp_act_dlt(c) == 0) then                                              ! if compartment is not active delta
                                             omar_low = er_omar(e,2)                                                 ! use default int marsh OMAR
@@ -64,7 +64,7 @@ subroutine organic_accretion
                                             omar_low = er_omar(e,6)                                                 ! use OMAR for fresh/int marsh in active deltas
                                             omar_upr = er_omar(e,6)                                                 ! there is no interpolation on active delta OMAR so use same value
                                         end if
-                                    else if (FIBS < FIBS_intvals(4)) then                                           ! FIBS indicates start of brackish marsh range of FFIBS values
+                                    else if (FIBS < FIBS_intvals(4)) then                                           ! INTERMEDIATE MARSH: INTERMEDIATE/BRACKISH MIX - FIBS_intvals(4) indicates *start* of brackish marsh range of FFIBS values
                                         int_wgt = (FIBS - FIBS_intvals(3)) / (FIBS_intvals(4) - FIBS_intvals(3))    
                                         if (comp_act_dlt(c) == 0) then                                              ! if compartment is not active delta
                                             omar_low = er_omar(e,3)
@@ -73,11 +73,11 @@ subroutine organic_accretion
                                             omar_low = er_omar(e,6)                                                 ! use OMAR for fresh/int marsh in active deltas
                                             omar_upr = er_omar(e,6)                                                 ! there is no interpolation on active delta OMAR so use same value
                                         end if
-                                    else if (FIBS < FIBS_intvals(5)) then                                           ! FIBS indicates start of saline marsh range of FFIBS values
+                                    else if (FIBS < FIBS_intvals(5)) then                                           ! BRACKISH MARSH: BRACKISH/SALINE MIX - FIBS_intvals(5) indicates *start* of saline marsh range of FFIBS values
                                         int_wgt = (FIBS - FIBS_intvals(4)) / (FIBS_intvals(5) - FIBS_intvals(4))
                                         omar_low = er_omar(e,4)
                                         omar_upr = er_omar(e,5)
-                                    else                                                                            ! no interpolation for highest FIBS score (saline) - use highest OMAR                                                               
+                                    else                                                                            ! SALINE MARSH - no interpolation for highest FIBS score (saline) - use highest OMAR                                                               
                                         int_wgt = 0   
                                         omar_low = er_omar(e,5)
                                         omar_upr = er_omar(e,5)
