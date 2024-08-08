@@ -195,7 +195,7 @@ module params
     real(sp),dimension(:),allocatable :: totalland_m2               ! land area in ICM-Hydro compartmnet (m^2)
 
     ! define variables read in from previous year's compartment_out Hydro summary file in subroutine: PREPROCESSING
-    real(sp),dimension(:),allocatable :: stg_av_prev_yr             ! mean stage from previous year - annual (ppt)
+    real(sp),dimension(:),allocatable :: stg_av_prev_yr             ! mean stage from previous year - annual (m NAVD88)
     real(sp),dimension(:),allocatable :: sal_av_prev_yr             ! mean salinity from previous year - annual (ppt)
     
     ! define variables read in or calculated from vegtype ICM-LAVegMod summary file in subroutine: PREPROCESSING
