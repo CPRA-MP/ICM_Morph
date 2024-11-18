@@ -142,13 +142,13 @@ module params
     integer,dimension(:),allocatable ::  comp_act_dlt               ! flag indicating whether ICM-Hydro compartment is considered an active delta for fresh marsh organic accretion (0=inactive; 1=active)
     integer,dimension(:),allocatable ::  comp_no_gain               ! flag indicating whether ICM-Hydro compartment is allowed to have land gain from shoaling processes (won't apply to built projects) (0=land gain allowed; 1=no land gain)
     character*10,dimension(:),allocatable :: er_codes               ! array to store ecoregion name codes - array location will correspond to ecoregion number - mucst match 
-    real(sp),dimension(:,:),allocatable :: er_omar                  ! organic matter accumulation rate by marsh type by ecoregion (g/cm^2/yr)
+    real(sp),dimension(:,:),allocatable :: er_omar                  ! organic matter accumulation rate by marsh type by ecoregion (g/cm^2/yr) - must match column order of input OMAR file read in during POSTPROCESSING
                                                                     ! value for second dimension of array indicates marsh type
-                                                                    !               1 = fresh marsh
-                                                                    !               2 = intermediate marsh
-                                                                    !               3 = brackish marsh
-                                                                    !               4 = saline marsh
-                                                                    !               5 = swamp forest
+                                                                    !               1 = swamp forest
+                                                                    !               2 = fresh marsh
+                                                                    !               3 = intermediate marsh
+                                                                    !               4 = brackish marsh
+                                                                    !               5 = saline marsh
                                                                     !               6 = fresh marsh in active delta regions
       
     integer :: dem_LLx                                                ! lower left X-coordinate of DEM grid
