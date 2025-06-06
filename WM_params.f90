@@ -36,6 +36,7 @@ module params
     real(sp) :: ow_bd                                               ! bulk density of open water body bed material (g/cm3)
     real(sp) :: om_k1                                               ! organic matter self-packing density  of wetland soils (g/cm3)
     real(sp) :: mn_k2                                               ! mineral sediment self-packing density of wetland soils (g/cm3)
+    integer :: OMAR_interp                                          ! flag used to identify how to calculate OMAR: (1) interpolate between OMAR values input file or (0) use hard-coded OMAR equations [OMAR = f(FFIBS)]
     real(sp),dimension(:),allocatable :: FIBS_intvals               ! local array that stores FIBS values used to interpolate between **allocated in SET_IO instead of PARAMS_ALLOC**
     real(sp) :: min_accretion_limit_cm                              ! upper limit to allowable mineral accretion on the marsh surface during any given year [cm]
     real(sp) :: ow_accretion_limit_cm                               ! upper limit to allowable accretion on the water bottom during any given year [cm]
@@ -68,7 +69,8 @@ module params
 
     character*fn_len :: hydro_comp_out_file                         ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro
     character*fn_len :: prv_hydro_comp_out_file                     ! file name, with relative path, to compartment_out.csv file saved by ICM-Hydro for previous year
-    character*fn_len :: veg_out_file                                ! file name, with relative path, to *vegty.asc+ file saved by ICM-LAVegMod    
+    character*fn_len :: veg_out_file                                ! file name, with relative path, to *vegty.csv file saved by ICM-LAVegMod that has species-level relative coverage values
+    character*fn_len :: veg_out_summary_file                        ! file name, with relative path, to *vegsm.csv file saved by ICM-LAVegMod that has the FFIBS coverage values for vegetated land area
     character*fn_len :: monthly_mean_stage_file                     ! file name, with relative path, to compartment summary file with monthly mean water levels
     character*fn_len :: monthly_max_stage_file                      ! file name, with relative path, to compartment summary file with monthly maximum water levels 
     character*fn_len :: monthly_ow_sed_dep_file                     ! file name, with relative path, to compartment summary file with monthly sediment deposition in open water
@@ -139,6 +141,7 @@ module params
     real(sp),dimension(:),allocatable :: dem_dpsb                   ! deep subsidence rate of DEM pixel (mm / yr; positive indicates downward VLM)
     real(sp),dimension(:,:),allocatable :: er_shsb                  ! shallow subsidence for ecoregion (mm/yr; positive indicates downward VLM), multiple values are provided for each ecoregion (25th, 50th, and 75th percentiles)
     integer,dimension(:),allocatable ::  comp_eco                   ! ecoregion number of ICM-Hydro compartment
+    integer,dimension(:),allocatable ::  comp_dlt_chnr              ! is compartment located in Deltaic Plain (1) or Chenier Plain (2)
     integer,dimension(:),allocatable ::  comp_act_dlt               ! flag indicating whether ICM-Hydro compartment is considered an active delta for fresh marsh organic accretion (0=inactive; 1=active)
     integer,dimension(:),allocatable ::  comp_no_gain               ! flag indicating whether ICM-Hydro compartment is allowed to have land gain from shoaling processes (won't apply to built projects) (0=land gain allowed; 1=no land gain)
     character*10,dimension(:),allocatable :: er_codes               ! array to store ecoregion name codes - array location will correspond to ecoregion number - mucst match 

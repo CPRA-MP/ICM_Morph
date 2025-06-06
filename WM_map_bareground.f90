@@ -99,7 +99,7 @@ subroutine map_bareground
             do bg = 1,grid_n_bare_old                                               ! loop over the number of old bareground pixels in grid cell               
                 do gin = 1, grid_lnd_cntr(gi)                                       ! loop over all land pixels in grid cell 
                     if (grid_lnd_z(gi,gin) == minval(grid_lnd_z(gi,:))) then        ! find the pixel with lowest elevation
-                        grid_lnd_z(gi,gin) = 9999                                   ! set current elevation to NoData so it won't be a minval in next loop
+                        grid_lnd_z(gi,gin) = 9999                                   ! set current elevation to positive NoData so it won't be a minval in next loop
                         dem_i = grid_lnd_i(gi,gin)                                  ! find DEM pixel index for lowest land pixel
                         dem_lndtyp(dem_i) = 3                                       ! set lndtype for pixel to bareground
                         dem_bg_flag(dem_i) = 1                                      ! set bareground flag for pixel to old bareground (1)
@@ -114,7 +114,7 @@ subroutine map_bareground
             do bg = 1,grid_n_bare_new                                               ! loop over the number of new bareground pixels in grid cell               
                 do gin = 1, grid_lnd_cntr(gi)                                       ! loop over all land pixels in grid cell 
                     if (grid_lnd_z(gi,gin) == minval(grid_lnd_z(gi,:))) then        ! find the pixel with lowest elevation
-                        grid_lnd_z(gi,gin) = 9999                                   ! set current elevation to NoData so it won't be a minval in next loop
+                        grid_lnd_z(gi,gin) = 9999                                   ! set current elevation to positive NoData so it won't be a minval in next loop
                         dem_i = grid_lnd_i(gi,gin)                                  ! find DEM pixel index for lowest land pixel
                         dem_lndtyp(dem_i) = 3                                       ! set lndtype for pixel to bareground
                         dem_bg_flag(dem_i) = 2                                      ! set bareground flag for pixel to new bareground (2)

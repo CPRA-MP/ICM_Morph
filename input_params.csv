@@ -18,6 +18,7 @@
 0.835, ow_bd -  bulk density of water bottoms (g/cm3)
 0.076, om_k1  -  organic matter self-packing density (g/cm3) from CRMS soil data (see 2023 Wetlands Model Improvement report)
 2.106, mn_k2 -  mineral soil self-packing density (g/cm3) from CRMS soil data (see 2023 Wetlands Model Improvement report)
+2, OMAR_interp - flag used to identify how to calculate OMAR: (1) interpolate between OMAR values input file or (0) use hard-coded OMAR equations [OMAR = f(FFIBS)]
 0.0, FIBS_intvals(1)  -  FFIBS score that will serve as lower end for Fresh forested
 0.15, FIBS_intvals(2)  -  FFIBS score that will serve as lower end for Fresh marsh
 1.5, FIBS_intvals(3)  -  FFIBS score that will serve as lower end for Intermediate marsh
@@ -51,7 +52,7 @@
 'geomorph/input/MP2023_S00_G000_C000_U00_V00_SLA_I_00_00_W_dpsub.xyz', dsub_file -  file name with relative path to deep subsidence rate map file that is same resolution and structure as DEM XYZ (mm/yr; positive value
 'geomorph/input/ecoregion_shallow_subsidence_mm.csv', ssub_file -  file name with relative path to shallow subsidence table with statistics by ecoregion (mm/yr; positive values are for downward VLM)
  1,ssub_col - column of shallow subsidence rates to use for current scenario (1=25th percentile; 2=50th percentile; 3=75th percentile)
- 'geomorph/input/compartment_active_delta.csv', act_del_file -  file name with relative path to lookup table that identifies whether an ICM-Hydro compartment is assigned as an active delta site
+'geomorph/input/compartment_active_delta.csv', act_del_file -  file name with relative path to lookup table that identifies whether an ICM-Hydro compartment is assigned as an active delta site
 'geomorph/input/ecoregion_organic_matter_accum.csv', eco_omar_file -  file name with relative path to lookup table of organic accumulation rates by marsh type/ecoregion
 'geomorph/input/compartment_ecoregion.csv', comp_eco_file -  file name with relative path to lookup table that assigns an ecoregion to each ICM-Hydro compartment
 'geomorph/input/ecoregion_sav_priors.csv', sav_priors_file - file name with relative path to CSV containing parameters defining the periors (per basin) for the SAV statistical model

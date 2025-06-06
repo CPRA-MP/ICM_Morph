@@ -31,6 +31,7 @@ subroutine set_io
     read(001,*) ow_bd,dump_txt
     read(001,*) om_k1,dump_txt
     read(001,*) mn_k2,dump_txt
+    read(001,*) OMAR_interp
     read(001,*) FIBS_intvals(1),dump_txt
     read(001,*) FIBS_intvals(2),dump_txt
     read(001,*) FIBS_intvals(3),dump_txt
@@ -67,13 +68,14 @@ subroutine set_io
     read(001,*) ssub_file,dump_txt
     read(001,*) ssub_col
     read(001,*) act_del_file,dump_txt
-    no_gain_file = "geomorph/input/compartment_no_land_gain.csv"
+    read(001,*) no_gain_file,dump_txt !"geomorph/input/compartment_no_land_gain.csv"
     read(001,*) eco_omar_file,dump_txt
     read(001,*) comp_eco_file,dump_txt
     read(001,*) sav_priors_file,dump_txt
     read(001,*) hydro_comp_out_file,dump_txt
     read(001,*) prv_hydro_comp_out_file,dump_txt
     read(001,*) veg_out_file,dump_txt
+    read(001,*) veg_out_summary_file,dump_txt
     read(001,*) monthly_mean_stage_file,dump_txt
     read(001,*) monthly_max_stage_file,dump_txt
     read(001,*) monthly_ow_sed_dep_file,dump_txt

@@ -193,12 +193,14 @@ subroutine preprocessing
     
     ! initialize grid data arrays to 0.0
     comp_eco = 0.0
+    comp_act_dlt = 0.0
     
     open(unit=1115, file=trim(adjustL(comp_eco_file)))
     read(1115,*) dump_txt                            ! dump header
     do i = 1,ncomp
         read(1115,*) dump_int,                          &       ! ICM-Hydro_comp
-   &                 comp_eco(i),                       &       ! ecoregion number 
+   &                 comp_eco(i),                       &       ! ecoregion number
+   &                 comp_dlt_chnr(i)                   &       ! compartment located in Deltaic Plain (1) or Chenier Plain (2)   
    &                 comp_land_outside_grid_m2(i),      &       ! area of compartment that is outside of ICM-LAVegMod grid and is assumed to always be land
    &                 comp_watr_outside_grid_m2(i),      &       ! area of compartment that is outside of ICM-LAVegMod grid and is assumed to always be water
    &                 dump_txt,                          &       ! ecoregion code
@@ -219,7 +221,7 @@ subroutine preprocessing
     open(unit=1116, file=trim(adjustL(act_del_file)))
     read(1116,*) dump_txt                               ! dump header
     do i = 1,ncomp
-        read(1116,*) dump_int,comp_act_dlt(i)           ! compartment ID, active delta flag
+        read(1116,*) dump_int,comp_act_dlt(i)           ! compartment ID, active delta flag (1) or not active (0)
     end do
     close(1116)
     
@@ -238,14 +240,7 @@ subroutine preprocessing
     end do
     close(11166)
      
-    
-    
-    
-    
-    
-    
-    
-    
+   
     
     ! read in deep subsidence data
     write(  *,*) ' - reading in deep susidence rate map'
@@ -506,34 +501,31 @@ subroutine preprocessing
     close(118)
     close(119)
     
-    
-    
-     ! read ICM-LAVegMod grid output file into arrays
-    write(  *,*) ' - reading in ICM-LAVegMod grid-level output'
-    write(000,*) ' - reading in ICM-LAVegMod grid-level output'
+   
     
     ! initialize grid data arrays
+    grid_bed_z = 0.0
+    grid_land_z = 0.0
     grid_pct_water = 0.0
     grid_pct_upland = 0.0
     grid_pct_bare_old = 0.0
     grid_pct_bare_new = 0.0
     grid_pct_dead_flt = 0.0
-    grid_bed_z = 0.0
-    grid_land_z = 0.0
+
     grid_FIBS_score = dem_NoDataVal
+    grid_pct_vglnd_BLHF = 0.0
+    grid_pct_vglnd_SWF  = 0.0
+    grid_pct_vglnd_FM   = 0.0
+    grid_pct_vglnd_IM   = 0.0
+    grid_pct_vglnd_BM   = 0.0
+    grid_pct_vglnd_SM   = 0.0
+    
+    ! read ICM-LAVegMod grid output species coverage file into arrays
+    write(  *,*) ' - reading in ICM-LAVegMod grid-level species coverage output'
+    write(000,*) ' - reading in ICM-LAVegMod grid-level species coverage output'
     
     open(unit=120, file=trim(adjustL(veg_out_file)))
-
-    do i = 1,6
-        read(120,*) dump_txt        ! dump ASCI grid header rows    
-    end do
-
-    do i = 1,365
-        read(120,*) dump_txt        ! dump ASCI grid
-    end do
-
     read(120,1234) dump_txt         ! dump column header row ! format 1234 must match structure of veg_out_file column headers
-
     do i = 1,ngrid
                 read(120,*) g,                                      &      ! CELLID
    &                grid_pct_water(g),                              &      ! WATER
@@ -582,18 +574,30 @@ subroutine preprocessing
    &                dump_flt,                                       &      ! SPPABI
    &                dump_flt,                                       &      ! SPVI3
    &                dump_flt,                                       &      ! STHE9
-   &                dump_flt,                                       &      ! UNPA
-   &                grid_FIBS_score(g),                             &      ! FFIBS
-   &                grid_pct_vglnd_BLHF(g),                         &      ! pL_BF
-   &                grid_pct_vglnd_SWF(g),                          &      ! pL_SF
-   &                grid_pct_vglnd_FM(g),                            &      ! pL_FM
-   &                grid_pct_vglnd_IM(g),                           &      ! pL_IM
-   &                grid_pct_vglnd_BM(g),                           &      ! pL_BM
-   &                grid_pct_vglnd_SM(g)                                   ! pL_SM
-
+   &                dump_flt                                        &      ! UNPA
     end do
     close(120)
     
+    
+
+    ! read ICM-LAVegMod grid output habitat type summary file into arrays
+    write(  *,*) ' - reading in ICM-LAVegMod grid-level habitat type summary output'
+    write(000,*) ' - reading in ICM-LAVegMod grid-level habitat type summary output'
+    
+    open(unit=1200, file=trim(adjustL(veg_out_summary_file)))
+    
+    read(1200,12344) dump_txt        ! dump column header row ! format 12344 must match structure of veg_out_summary_file column headers
+    do i = 1,ngrid
+                read(1200,*) g,                                     &      ! CELLID
+   &                grid_FIBS_score(g),                             &      ! FFIBS
+   &                grid_pct_vglnd_BLHF(g),                         &      ! pL_BF
+   &                grid_pct_vglnd_SWF(g),                          &      ! pL_SF
+   &                grid_pct_vglnd_FM(g),                           &      ! pL_FM
+   &                grid_pct_vglnd_IM(g),                           &      ! pL_IM
+   &                grid_pct_vglnd_BM(g),                           &      ! pL_BM
+   &                grid_pct_vglnd_SM(g)                                   ! pL_SM
+    end do
+    close(1200)
     
     
     ! read ICM-LAVegMod grid output file into arrays
@@ -687,7 +691,7 @@ subroutine preprocessing
     end if
     close(124)
     
-1234    format(A,53(',',A))
-    
+1234    format(A,46(',',A))
+12344   format(A,7(',',A))    
     return
 end
