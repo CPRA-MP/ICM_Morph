@@ -27,12 +27,12 @@ module params
     integer :: comp_ndem_mx                                         ! maximum number of DEM pixels within a ICM-Hydro compartment
     integer :: nlt                                                  ! number of landtype classification
     real(sp) :: ht_abv_mwl_est                                      ! elevation (meters) , relative to annual mean water level, at which point vegetation can establish
-    real(sp) :: ptile_Z                                             ! Z-value for quantile (Z=1.96 is 97.5th percentile)
-    real(sp) :: B0                                                  ! beta-0 coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-    real(sp) :: B1                                                  ! beta-1 coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-    real(sp) :: B2                                                  ! beta-2 coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-    real(sp) :: B3                                                  ! beta-3 coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-    real(sp) :: B4                                                  ! beta-4 coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+    real(sp) :: inun_thr_C0                                         ! Y-intercept for the inundation threshold depth-salinity function "Blue Line Curve" [ Y = C0 + C1*x + C2*x^2 + C3*x^3 + C4*x^4 + C5*x^5 ]
+    real(sp) :: inun_thr_C1                                         ! X^1 coeffiecent  for the inundation threshold depth-salinity function "Blue Line Curve" [ Y = C0 + C1*x + C2*x^2 + C3*x^3 + C4*x^4 + C5*x^5 ]
+    real(sp) :: inun_thr_C2                                         ! X^2 coeffiecent  for the inundation threshold depth-salinity function "Blue Line Curve" [ Y = C0 + C1*x + C2*x^2 + C3*x^3 + C4*x^4 + C5*x^5 ]
+    real(sp) :: inun_thr_C3                                         ! X^3 coeffiecent  for the inundation threshold depth-salinity function "Blue Line Curve" [ Y = C0 + C1*x + C2*x^2 + C3*x^3 + C4*x^4 + C5*x^5 ]
+    real(sp) :: inun_thr_C4                                         ! X^4 coeffiecent  for the inundation threshold depth-salinity function "Blue Line Curve" [ Y = C0 + C1*x + C2*x^2 + C3*x^3 + C4*x^4 + C5*x^5 ]
+    real(sp) :: inun_thr_C5                                         ! X^5 coeffiecent  for the inundation threshold depth-salinity function "Blue Line Curve" [ Y = C0 + C1*x + C2*x^2 + C3*x^3 + C4*x^4 + C5*x^5 ]
     real(sp) :: ow_bd                                               ! bulk density of open water body bed material (g/cm3)
     real(sp) :: om_k1                                               ! organic matter self-packing density  of wetland soils (g/cm3)
     real(sp) :: mn_k2                                               ! mineral sediment self-packing density of wetland soils (g/cm3)
@@ -250,6 +250,9 @@ module params
     
     ! define global variables used in subroutine: MAP_BAREGROUND
     integer,dimension(:),allocatable :: dem_bg_flag                 ! Bareground type classification of pixel (0 = non bareground; 1 = old bareground; 2 = new bareground)
+
+    ! define global variables used in subroutine: MAP_FORESTED
+    integer,dimension(:),allocatable :: dem_for_flag                ! Forested type classification of pixel (0 = not forested; 1 = forested)
     
     ! define global variables calculated in subroutine: DISTANCE_TO_LAND
     real(sp),dimension(:),allocatable :: dem_dtl                    ! distance to land (m) for each DEM pixel - initialized to be maximum search window size plus 1 meter

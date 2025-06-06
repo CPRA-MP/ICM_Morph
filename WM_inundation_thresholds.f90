@@ -19,12 +19,7 @@ subroutine inundation_thresholds
     real(sp) :: sal_yr                                              ! local variable for salinity at DEM pixel from current year mean salinity
     real(sp) :: dep_prev_yr                                         ! local variable for inundation depth over DEM pixel from previous year mean stage
     real(sp) :: sal_prev_yr                                         ! local variable for salinity at DEM pixel from previous year mean salinity
-    real(sp) :: MuDepth                                             ! mean depth for given salinity value from quantile regression - for current year  (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-    real(sp) :: SigmaDepth                                          ! st dev depth for given salinity value from quantile regression - for current year  (see App. A of MP2023 Wetland Vegetation Model Improvement report)
     real(sp) :: DepthThreshold_Wet                                  ! too wet for vegetation - depth threshold for given Z and given salinity value from quantile regression - for current year
-    real(sp) :: DepthThreshold_Dry                                  ! too dry for vegetation - depth threshold for given Z and given salinity value from quantile regression - for current year
-    real(sp) :: MuDepth_prv                                         ! mean depth for given salinity value from quantile regression - for previous year
-    real(sp) :: SigmaDepth_prv                                      ! st dev depth for given salinity value from quantile regression - for previous year      
     real(sp) :: DepthThreshold_Wet_prv                              ! too wet for vegetation - depth threshold for given Z and given salinity value from quantile regression - for previous year
     integer,dimension(:),allocatable :: grid_n_upland_wet           ! local count of number of upland pixels in ICM-LAVegMod grid cell that are wet enough for wetland vegetation
     integer,dimension(:),allocatable :: grid_n_upland_dry           ! local count of number of upland pixels in ICM-LAVegMod grid cell that too dry for wetland vegetation
@@ -46,14 +41,11 @@ subroutine inundation_thresholds
                 if (g /= dem_NoDataVal) then
                 
                     ! reset local variables to zero for loop
-                    MuDepth = 0.0
-                    SigmaDepth = 0.0
+
                     DepthThreshold_Wet = 0.0
-                    DepthThreshold_Dry = 0.0 
                     dep_yr = 0.0
                     sal_yr = 0.0
-                    MuDepth_prv = 0.0
-                    SigmaDepth_prv = 0.0
+
                     DepthThreshold_Wet_prv = 0.0
                     dep_prev_yr = 0.0
                     sal_prev_yr = 0.0  
@@ -62,6 +54,10 @@ subroutine inundation_thresholds
                     dep_yr = dem_inun_dep(i,13)
                     sal_yr = sal_av_yr(c)
 
+                    ! set local copies of depth and salinity variable for previous year
+                    dep_prev_yr = dem_inun_dep(i,14)
+                    sal_prev_yr = sal_av_prev_yr(c)
+                                    
                     ! check here to see if lnd_change_flag has been change by any other subroutines,
                     ! if so, skip ahead to not overwrite previously run land change functions (e.g. edge erosion)
                     ! this flag is added to any subroutine that alters lnd_change_flag so that the priority of land change
@@ -70,19 +66,14 @@ subroutine inundation_thresholds
                     if (lnd_change_flag(i) == 0) then
                         ! if vegetated land and not forested - check for inundation stress
                         if (dem_lndtyp(i) == 1) then
-                            if ( grid_FIBS_score(g) > 0.15) then        ! Fresh forested areas have FFIBS <= 0.15
-                                MuDepth = B0 + B1*sal_yr
-                                SigmaDepth = B2 + B3*exp(B4*sal_yr)
-                                DepthThreshold_Wet =  MuDepth  + ptile_Z*SigmaDepth
+                            if ( dem_for_flag(i) /= 1 ) then        ! Forested pixels were mapped to highest areas and have flag set to 1
                                 
+                                DepthThreshold_Wet = inun_thr_C0 + inun_thr_C1*sal_yr + inun_thr_C2*sal_yr**2 + inun_thr_C3*sal_yr**3 + inun_thr_C4*sal_yr**4+ inun_thr_C5*sal_yr**5
+
                                 ! if current year inundation is above threshold, check previous year            
                                 if (dep_yr >= DepthThreshold_Wet) then
-                                    dep_prev_yr = dem_inun_dep(i,14)
                                     sal_prev_yr = sal_av_prev_yr(c)
-                                    
-                                    MuDepth_prv = B0 + B1*sal_prev_yr
-                                    SigmaDepth_prv = B2 + B3*exp(B4*sal_prev_yr)
-                                    DepthThreshold_Wet_prv =  MuDepth_prv  + ptile_Z*SigmaDepth_prv
+                                    DepthThreshold_Wet_prv = inun_thr_C0 + inun_thr_C1*sal_yr_prv + inun_thr_C2*sal_yr_prv**2 + inun_thr_C3*sal_yr_prv**3 + inun_thr_C4*sal_yr_prv**4+ inun_thr_C5*sal_yr_prv**5
                                     
                                     ! if both current year and previous year have inundation above threshold, set flag to collapse land
                                     if (dep_prev_yr >= DepthThreshold_Wet_prv) then
@@ -91,18 +82,13 @@ subroutine inundation_thresholds
                                 end if
                             end if
 
-                        ! if upland - check if inundation would allow for wetland vegetation to establish
+                        ! if upland - check if annual mean water level is close enough to upland classified areas that wetland vegetation could establish
                         else if (dem_lndtyp(i) == 4) then
-                            MuDepth = B0 + B1*sal_yr
-                            SigmaDepth = B2 + B3*exp(B4*sal_yr)
-                            DepthThreshold_Dry =  MuDepth - ptile_Z*SigmaDepth
-                            
-                            if (dep_yr >= DepthThreshold_Dry) then
+                            if (dep_yr >= -1.0*ht_above_mwl_est) then
                                 grid_n_upland_wet(g) = grid_n_upland_wet(g) + 1 
                             else
                                 grid_n_upland_dry(g) = grid_n_upland_dry(g) + 1
                             end if
-                        
                         end if
                     end if
                 end if

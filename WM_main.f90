@@ -127,6 +127,13 @@ program main
     write(000,*) 'Map Bareground subroutine ended at: ',dtstr    
  
     
+    call map_forested
+    call date_and_time(VALUES=dtvalues)
+    write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)
+    write(  *,*) 'Map Forested subroutine ended at: ',dtstr
+    write(000,*) 'Map Forested subroutine ended at: ',dtstr    
+
+
     call inundation_thresholds
     call date_and_time(VALUES=dtvalues)
     write(dtstr,8889) dtvalues(1),'-',dtvalues(2),'-',dtvalues(3),' ',dtvalues(5),':',dtvalues(6),':',dtvalues(7)

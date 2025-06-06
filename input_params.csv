@@ -8,13 +8,13 @@
 173898, ngrid -  number of ICM-LAVegMod grid cells - will be an array dimension for all gridd-level data
 33, neco -  number of ecoregions
 5, nlt -  number of landtype classifications
-0.10, ht_above_mwl_est -  elevation (meters) relative to annual mean water level at which point vegetation can establish
-2.57, ptile_Z -  Z-value for quantile definining inundation curve
-0.0058, B0 -  beta-0 coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
--0.00207, B1 -  beta-1 coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-0.0809, B2 -  beta-2 coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
-0.0892, B3 -  beta-3 coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
--0.19, B4 -  beta-4 coefficient from quantile regression on CRMS annual inundation-salinity data (see App. A of MP2023 Wetland Vegetation Model Improvement report)
+0.10, ht_above_mwl_est -  elevation (meters) relative to annual mean water level at which point wetland vegetation can establish
+0.51012, inun_thr_C0 - Y-intercept for the inundation threshold depth-salinity function "Blue Line Curve" [ Y = C0 + C1*x + C2*x^2 + C3*x^3 + C4*x^4 + C5*x^5 ]
+-0.07580, inun_thr_C1 - X^1 coeffiecent  for the inundation threshold depth-salinity function "Blue Line Curve" [ Y = C0 + C1*x + C2*x^2 + C3*x^3 + C4*x^4 + C5*x^5 ]
+0.00540, inun_thr_C2 - X^2 coeffiecent  for the inundation threshold depth-salinity function "Blue Line Curve" [ Y = C0 + C1*x + C2*x^2 + C3*x^3 + C4*x^4 + C5*x^5 ]
+-0.00011, inun_thr_C3 - X^3 coeffiecent  for the inundation threshold depth-salinity function "Blue Line Curve" [ Y = C0 + C1*x + C2*x^2 + C3*x^3 + C4*x^4 + C5*x^5 ]
+0.00000, inun_thr_C4 - X^4 coeffiecent  for the inundation threshold depth-salinity function "Blue Line Curve" [ Y = C0 + C1*x + C2*x^2 + C3*x^3 + C4*x^4 + C5*x^5 ]
+0.00000, inun_thr_C5 - X^5 coeffiecent  for the inundation threshold depth-salinity function "Blue Line Curve" [ Y = C0 + C1*x + C2*x^2 + C3*x^3 + C4*x^4 + C5*x^5 ]
 0.835, ow_bd -  bulk density of water bottoms (g/cm3)
 0.076, om_k1  -  organic matter self-packing density (g/cm3) from CRMS soil data (see 2023 Wetlands Model Improvement report)
 2.106, mn_k2 -  mineral soil self-packing density (g/cm3) from CRMS soil data (see 2023 Wetlands Model Improvement report)

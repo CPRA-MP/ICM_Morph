@@ -122,8 +122,11 @@ subroutine params_alloc
     allocate(org_accr_cm(ndem))
     allocate(min_accr_cm(ndem))
     
-    ! allocate memory for global variables used in subroutine:: MAP_BAREGROUND
+    ! allocate memory for global variables used in subroutine: MAP_BAREGROUND
     allocate(dem_bg_flag(ndem))
+    
+    ! allocate memory for global variables used in subroutine: MAP_FORESTED
+    allocate(dem_for_flag))
     
     ! allocate memory for variables calculated in subroutine: DISTANCE_TO_LAND
     allocate(dem_dtl(ndem))

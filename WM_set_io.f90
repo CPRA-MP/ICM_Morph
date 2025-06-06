@@ -22,12 +22,12 @@ subroutine set_io
     read(001,*) neco,dump_txt
     read(001,*) nlt,dump_txt
     read(001,*) ht_abv_mwl_est,dump_txt
-    read(001,*) ptile_Z,dump_txt
-    read(001,*) B0,dump_txt
-    read(001,*) B1,dump_txt
-    read(001,*) B2,dump_txt
-    read(001,*) B3,dump_txt
-    read(001,*) B4,dump_txt
+    read(001,*) inun_thr_C0,dump_txt
+    read(001,*) inun_thr_C1,dump_txt
+    read(001,*) inun_thr_C2,dump_txt
+    read(001,*) inun_thr_C3,dump_txt
+    read(001,*) inun_thr_C4,dump_txt
+    read(001,*) inun_thr_C5,dump_txt
     read(001,*) ow_bd,dump_txt
     read(001,*) om_k1,dump_txt
     read(001,*) mn_k2,dump_txt
