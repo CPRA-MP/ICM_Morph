@@ -200,7 +200,7 @@ subroutine preprocessing
     do i = 1,ncomp
         read(1115,*) dump_int,                          &       ! ICM-Hydro_comp
    &                 comp_eco(i),                       &       ! ecoregion number
-   &                 comp_dlt_chnr(i)                   &       ! compartment located in Deltaic Plain (1) or Chenier Plain (2)   
+   &                 comp_dlt_chnr(i),                   &       ! compartment located in Deltaic Plain (1) or Chenier Plain (2)   
    &                 comp_land_outside_grid_m2(i),      &       ! area of compartment that is outside of ICM-LAVegMod grid and is assumed to always be land
    &                 comp_watr_outside_grid_m2(i),      &       ! area of compartment that is outside of ICM-LAVegMod grid and is assumed to always be water
    &                 dump_txt,                          &       ! ecoregion code
@@ -574,7 +574,7 @@ subroutine preprocessing
    &                dump_flt,                                       &      ! SPPABI
    &                dump_flt,                                       &      ! SPVI3
    &                dump_flt,                                       &      ! STHE9
-   &                dump_flt                                        &      ! UNPA
+   &                dump_flt                                               ! UNPA
     end do
     close(120)
     
