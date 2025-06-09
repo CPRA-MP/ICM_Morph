@@ -43,12 +43,20 @@ subroutine organic_accretion
                                 if (maxval(dem_inun_dep(i,:)) > 0) then                                     ! check that the pixel was inundated at some point during year
                                     FIBS = grid_FIBS_score(g)                                                   
                                     if (FIBS >= 0.0) then                                                   ! check that there is a FIBS score for grid cell
-                                        if (comp_dlt_chnr(c) == 1) then                                     ! OMAR equation for Deltaic Plain
-                                            FIBS = min(max(FIBS,0.258),24.000)                              ! the min/max value for FIBS in DP used to develop eqtns are 0.258 & 24.0, respectively
-                                            OMAR = 0.084059081 - 0.001607118*FIBS + 0.000082767*FIBS**2                                                              
-                                        else if (comp_dlt_chnr(c) == 2) then                                ! OMAR equation for Chenier Plain
-                                            FIBS = min(max(FIBS,0.679),23.138)                              ! the min/max value for FIBS in CP used to develop eqtns are 0.679 & 23.138, respectively
-                                            OMAR = 0.081149392 - 0.004957864*FIBS + 0.000214164*FIBS**2
+                                        if (comp_act_dlt(c) == 1) then                                      ! check if compartment is active delta and has at least some fresh and/or intermediate marsh present (based on FFIBS score)
+                                            if (FIBS > FIBS_intvals(1)) then                                ! FRESH MARSH: FORESTED/FRESH MIX - FIBS_intvals(2) indicates start of fresh marsh range of FFIBS values
+                                                if (FIBS < FIBS_intvals(4)) then                            ! FIBS_intvals(4) indicates *start* of brackish marsh range of FFIBS values
+                                                    OMAR = er_omar(e,6)                                     ! use OMAR for fresh/int marsh in active deltas
+                                                end if
+                                            end if
+                                        else
+                                            if (comp_dlt_chnr(c) == 1) then                                 ! OMAR equation for Deltaic Plain
+                                                FIBS = min(max(FIBS,0.258),24.000)                          ! the min/max value for FIBS in DP used to develop eqtns are 0.258 & 24.0, respectively
+                                                OMAR = 0.084059081 - 0.001607118*FIBS + 0.000082767*FIBS**2                                                              
+                                            else if (comp_dlt_chnr(c) == 2) then                            ! OMAR equation for Chenier Plain
+                                                FIBS = min(max(FIBS,0.679),23.138)                          ! the min/max value for FIBS in CP used to develop eqtns are 0.679 & 23.138, respectively
+                                                OMAR = 0.081149392 - 0.004957864*FIBS + 0.000214164*FIBS**2
+                                            end if
                                         end if
                                         org_accr_cm(i) = OMAR / om_k1                                       ! OMAR [g/cm2] * k1 [g/cm3] = cm organic accretion
                                     end if  
