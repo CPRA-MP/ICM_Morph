@@ -72,8 +72,8 @@ subroutine inundation_thresholds
 
                                 ! if current year inundation is above threshold, check previous year            
                                 if (dep_yr >= DepthThreshold_Wet) then
-                                    sal_prev_yr = sal_av_prev_yr(c)
-                                    DepthThreshold_Wet_prv = inun_thr_C0 + inun_thr_C1*sal_yr_prv + inun_thr_C2*sal_yr_prv**2 + inun_thr_C3*sal_yr_prv**3 + inun_thr_C4*sal_yr_prv**4+ inun_thr_C5*sal_yr_prv**5
+
+                                    DepthThreshold_Wet_prv = inun_thr_C0 + inun_thr_C1*sal_prev_yr + inun_thr_C2*sal_prev_yr**2 + inun_thr_C3*sal_prev_yr**3 + inun_thr_C4*sal_prev_yr**4+ inun_thr_C5*sal_prev_yr**5
                                     
                                     ! if both current year and previous year have inundation above threshold, set flag to collapse land
                                     if (dep_prev_yr >= DepthThreshold_Wet_prv) then
