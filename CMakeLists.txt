@@ -83,6 +83,7 @@ ADD_EXECUTABLE( ${MORPH} WM_build_marsh_projects.f90
                          WM_inundation_thresholds.f90
                          WM_main.f90
                          WM_map_bareground.f90
+                         WM_map_forested.f90
                          WM_mineral_deposition.f90
                          WM_new_subaerial_land.f90
                          WM_organic_accretion.f90
