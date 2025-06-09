@@ -126,7 +126,7 @@ subroutine params_alloc
     allocate(dem_bg_flag(ndem))
     
     ! allocate memory for global variables used in subroutine: MAP_FORESTED
-    allocate(dem_for_flag))
+    allocate(dem_for_flag(ndem))
     
     ! allocate memory for variables calculated in subroutine: DISTANCE_TO_LAND
     allocate(dem_dtl(ndem))
