@@ -84,7 +84,7 @@ subroutine inundation_thresholds
 
                         ! if upland - check if annual mean water level is close enough to upland classified areas that wetland vegetation could establish
                         else if (dem_lndtyp(i) == 4) then
-                            if (dep_yr >= -1.0*ht_above_mwl_est) then
+                            if (dep_yr >= -1.0*ht_abv_mwl_est) then
                                 grid_n_upland_wet(g) = grid_n_upland_wet(g) + 1 
                             else
                                 grid_n_upland_dry(g) = grid_n_upland_dry(g) + 1
