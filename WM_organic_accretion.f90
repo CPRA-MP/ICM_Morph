@@ -44,9 +44,11 @@ subroutine organic_accretion
                                     FIBS = grid_FIBS_score(g)                                                   
                                     if (FIBS >= 0.0) then                                                   ! check that there is a FIBS score for grid cell
                                         if (comp_dlt_chnr(c) == 1) then                                     ! OMAR equation for Deltaic Plain
-                                            OMAR = 0.0                                                              
+                                            FIBS = min(max(FIBS,0.258),24.000)                              ! the min/max value for FIBS in DP used to develop eqtns are 0.258 & 24.0, respectively
+                                            OMAR = 0.084059081 - 0.001607118*FIBS + 0.000082767*FIBS**2                                                              
                                         else if (comp_dlt_chnr(c) == 2) then                                ! OMAR equation for Chenier Plain
-                                            OMAR = 0.0                                                              
+                                            FIBS = min(max(FIBS,0.679),23.138)                              ! the min/max value for FIBS in CP used to develop eqtns are 0.679 & 23.138, respectively
+                                            OMAR = 0.081149392 - 0.004957864*FIBS + 0.000214164*FIBS**2
                                         end if
                                         org_accr_cm(i) = OMAR / om_k1                                       ! OMAR [g/cm2] * k1 [g/cm3] = cm organic accretion
                                     end if  
