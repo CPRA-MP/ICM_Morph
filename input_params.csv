@@ -6,7 +6,7 @@
 2904131, ndem_bi -  number of pixels in interpolated ICM-BI-DEM XYZ that overlap primary DEM
 1778, ncomp -  number of ICM-Hydro compartments - will be an array dimension for all compartment-level data
 173898, ngrid -  number of ICM-LAVegMod grid cells - will be an array dimension for all gridd-level data
-33, neco -  number of ecoregions
+32, neco -  number of ecoregions
 5, nlt -  number of landtype classifications
 0.1, ht_above_mwl_est -  elevation (meters) relative to annual mean water level at which point wetland vegetation can establish
 0.51012," inun_thr_C0 - Y-intercept for the inundation threshold depth-salinity function ""Blue Line Curve"" [ Y = C0 + C1*x + C2*x^2 + C3*x^3 + C4*x^4 + C5*x^5 ]"
@@ -49,10 +49,11 @@
 'geomorph/input/MP2023_S00_G000_C000_U00_V00_SLA_I_00_00_W_polder30.xyz', pldr_file -  file name with relative path to polder file that is same resolution and structure as DEM XYZ
 'geomorph/input/MP2023_S00_G000_C000_U00_V00_SLA_I_00_00_W_comp30.xyz', comp_file -  file name with relative path to ICM-Hydro compartment map file that is same resolution and structure as DEM XYZ
 'geomorph/input/MP2023_S00_G000_C000_U00_V00_SLA_I_00_00_W_grid30.xyz', grid_file -  file name with relative path to ICM-LAVegMod grid map file that is same resolution and structure as DEM XYZ
-'geomorph/input/MP2023_S00_G000_C000_U00_V00_SLA_I_00_00_W_dpsub.xyz', dsub_file -  file name with relative path to deep subsidence rate map file that is same resolution and structure as DEM XYZ (mm/yr; positive value
+'geomorph/input/MP2023_S00_G000_C000_U00_V00_SLA_I_00_00_W_dpsub30.xyz', dsub_file -  file name with relative path to deep subsidence rate map file that is same resolution and structure as DEM XYZ (mm/yr; positive value
 'geomorph/input/ecoregion_shallow_subsidence_mm.csv', ssub_file -  file name with relative path to shallow subsidence table with statistics by ecoregion (mm/yr; positive values are for downward VLM)
 1,ssub_col - column of shallow subsidence rates to use for current scenario (1=25th percentile; 2=50th percentile; 3=75th percentile)
 'geomorph/input/compartment_active_delta.csv', act_del_file -  file name with relative path to lookup table that identifies whether an ICM-Hydro compartment is assigned as an active delta site
+'geomorph/input/compartment_no_land_gain.csv', no_gain_file - file name with relative path to lookup table that identifies whether an ICM-Hydro compartment is allowed to have land gain from natural shoaling processes or not
 'geomorph/input/ecoregion_organic_matter_accum.csv', eco_omar_file -  file name with relative path to lookup table of organic accumulation rates by marsh type/ecoregion
 'geomorph/input/compartment_ecoregion.csv', comp_eco_file -  file name with relative path to lookup table that assigns an ecoregion to each ICM-Hydro compartment
 'geomorph/input/ecoregion_sav_priors.csv', sav_priors_file - file name with relative path to CSV containing parameters defining the periors (per basin) for the SAV statistical model
@@ -68,6 +69,7 @@
 'hydro/TempFiles/compartment_monthly_mean_salinity_2020.csv', monthly_mean_sal_file -  file name with relative path to compartment summary file with monthly mean salinity values
 'hydro/TempFiles/compartment_monthly_mean_tss_2020.csv', monthly_mean_tss_file -  file name with relative path to compartment summary file with monthly mean suspended sediment concentrations
 'bidem/MP2023_S07_G520_C000_U00_V00_SLA_N_03_03_W_dem30_bi.xyz', bi_dem_xyz_file -  file name with relative path to XYZ DEM file for ICM-BI-DEM model domain - XY resolution must be snapped to XY resolution of main DEM
+'geomorph/input/MP2023_S00_G000_C000_U00_V00_SLA_I_00_00_W_dem30_channels.xyz', dredge_dem_xyz_file - file name, with relative path, to XYZ DEM file for raster that will have elevations for all maintained/dredged channels/locations, these elevations will be maintained for every year regardless of calculated deposition/erosion rates
 'geomorph/output/MP2023_S07_G520_C000_U00_V00_SLA_N_01_01_W_edge30.xyz', edge_eoy_xyz_file -  file name with relative path to XYZ raster output file for edge pixels
 'geomorph/output/MP2023_S07_G520_C000_U00_V00_SLA_N_01_01_W_dem30.xyz', dem_eoy_xyz_file -  file name with relative path to XYZ raster output file for topobathy DEM
 'geomorph/output/MP2023_S07_G520_C000_U00_V00_SLA_N_01_01_W_dz30.xyz', dz_eoy_xyz_file -  file name with relative path to XYZ raster output file for elevation change raster
@@ -86,6 +88,15 @@
 'hydro/TempFiles/compelevs_end_2020.csv', comp_elev_file -  file name with relative path to elevation summary compartment file used internally by ICM
 'hydro/TempFiles/PctWater_2020.csv', comp_wat_file -  file name with relative path to percent water summary compartment file used internally by ICM
 'hydro/TempFiles/PctUpland_2020.csv', comp_upl_file -  file name with relative path to percent upland summary compartment file used internally by ICM
+0, write_zonal_stats - integer flag to indicate whether zonal statistics are to be conducted in ICM-Morph (1) or whether a CSV file will be saved to do external zonal statistics(0)
+'geomorph/output/MP2023_S07_G520_C000_U00_V00_SLA_N_03_03_W_dem_grid_data.csv',dem_grid_out_summary_file - file name, with relative path, to CSV output file that will save DEM-resolution landscape data to be used in zonal statistics
 2941, nqaqc - number of QAQC points for reporting - as listed in qaqc_site_list_file
 'geomorph/output_qaqc/qaqc_site_list.csv', qaqc_site_list_file - file name with relative path to percent upland summary compartment file used internally by ICM
 MP2023_S07_G520_C000_U00_V00_SLA_O_01_52, file naming convention prefix
+0, n_mc - number of marsh creation elements to be built in current year
+'na', project_list_MC_file - file name with relative path to list of marsh creation raster XYZ files
+'na', project_list_MC_VA_file - file name with relative path to file that will report out marsh creation volumes and footprint areas
+0, n_rr - number of ridge or levee projects to  be built in current year
+'na', project_list_RR_file - file name with relative path to list of ridge and levee raster XYZ files
+0, n_bs - number of bank stabilization projects built in current year OR PREVIOUS years
+'na', project_list_BS_file - file name with relative path to list of MEE rate multiplier XYZ files for current and all previous BS projects
