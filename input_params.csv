@@ -17,7 +17,7 @@
 0," inun_thr_C5 - X^5 coeffiecent  for the inundation threshold depth-salinity function ""Blue Line Curve"" [ Y = C0 + C1*x + C2*x^2 + C3*x^3 + C4*x^4 + C5*x^5 ]"
 0.835, ow_bd -  bulk density of water bottoms (g/cm3)
 0.076, om_k1  -  organic matter self-packing density (g/cm3) from CRMS soil data (see 2023 Wetlands Model Improvement report)
-2.106, mn_k2 -  mineral soil self-packing density (g/cm3) from CRMS soil data (see 2023 Wetlands Model Improvement report)
+2.173, mn_k2 -  mineral soil self-packing density (g/cm3) from CRMS soil data (see 2023 Wetlands Model Improvement report)
 2, OMAR_interp - flag used to identify how to calculate OMAR: (1) interpolate between OMAR values input file or (0) use hard-coded OMAR equations such that OMAR=f(FFIBS)
 0, FIBS_intvals(1)  -  FFIBS score that will serve as lower end for Fresh forested
 0.15, FIBS_intvals(2)  -  FFIBS score that will serve as lower end for Fresh marsh

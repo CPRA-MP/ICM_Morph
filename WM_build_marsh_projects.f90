@@ -19,16 +19,17 @@ subroutine build_marsh_projects
     integer :: ElementID                                        ! local variable to store ElementID string
     integer :: prj_dem_x                                        ! local variable to store X-coordinates of project DEM
     integer :: prj_dem_y                                        ! local variable to store Y-coordinates of project DEM
+    integer :: elev_datum                                       ! local variable to store datum used for MC project elevation (0:use NAVD88 as elevation datum, 1: use MWL as elevation datum)
     real(sp) :: design_elev                                     ! temporary variable to store the calculated design elevation for marsh creation projects to convert from MWL datum to NAVD88
-    real(sp),dimension(:),allocatable :: prj_dem_z              ! project design elevation of DEM pixel (meters above MWL for marsh creation projects)
+    real(sp) :: mc_depth_threshold_element                      ! element-specific depth threshold for marsh creation projects
     real(sp) :: prj_dz_m                                        ! local variable to store the change in elevation (m) due to the project being implemented on a given pixel
     real(sp) :: depth                                           ! local variable to store water depth (m) of local pixel
     real(sp) :: element_volume_m3                               ! cumulative sediment volume needed to build current ElementID of project
     real(sp) :: element_footprint_m2                            ! cumulative sediment volume needed to build current ElementID of project
-    real(sp) :: mc_depth_threshold_element                      ! element-specific depth threshold for marsh creation projects
+    real(sp),dimension(:),allocatable :: prj_dem_z              ! project design elevation of DEM pixel (meters above MWL for marsh creation projects)
     
     allocate (prj_dem_z(ndem))
-    prj_dem_z = dem_NoDataVal           ! intialize project elevation raster to NoData
+    prj_dem_z = dem_NoDataVal                                   ! intialize project elevation raster to NoData (will be re-written if project specific threshold is read in)
     
     write(  *,*) ' - implementing FWA marsh creation projects'
     write(000,*) ' - implementing FWA marsh creation projects'
@@ -48,8 +49,11 @@ subroutine build_marsh_projects
         do imc = 1,n_mc
             prj_dem_z = dem_NoDataVal           ! intialize project elevation raster to NoData
             design_elev = -9999                 ! initialize design elevation to NoData value used in project DEM files
-            
-            read(401,*) ElementID,prj_xyz_file,mc_depth_threshold_element  ! ElementID, filepath to XYZ raster, & element-specific fill depth threshold
+            elev_datum = 1                      ! initialize design elevation datum to default to 1
+                                                !    - elev_datum = 1: use MWL for the input design elevation datum
+                                                !    - elev_datum = 0: use NAVD88 for input design elevation datum
+                                                
+            read(401,*) ElementID,prj_xyz_file,mc_depth_threshold_element,elev_datum  ! ElementID, filepath to XYZ raster, element-specific fill depth threshold,elevation datum (0=MWL,1=NAVD88)
             
             write(  *,'(A,I0,A,A)') '      - building ',ElementID,' from XYZ file: ',trim(adjustL(prj_xyz_file))
             write(000,'(A,I0,A,A)') '      - building ',ElementID,' from XYZ file: ',trim(adjustL(prj_xyz_file))
@@ -74,15 +78,17 @@ subroutine build_marsh_projects
                 end if
                 
                 ! find correct elevation to build marsh creation project to (input data is defined as the height to build marsh to *above MWL*)
-                if (prj_dem_z(i) /= dem_NoDataVal) then
-                    if (design_elev == -9999) then      ! if design_elev doesn't equal -9999, it has already been set for this project element
-                        c = dem_comp(i)
-                        if (c /= dem_NoDataVal) then
-                            design_elev = (stg_av_yr(c) + stg_av_prev_yr(c) )*0.5 + prj_dem_z(i)
+                if (elev_datum == 1) then
+                    if (prj_dem_z(i) /= dem_NoDataVal) then
+                        if (design_elev == -9999) then      ! if design_elev doesn't equal -9999, it has already been set for this project element
+                            c = dem_comp(i)
+                            if (c /= dem_NoDataVal) then
+                                design_elev = (stg_av_yr(c) + stg_av_prev_yr(c) )*0.5 + prj_dem_z(i)
+                            end if
                         end if
-                    end if
-                    if (design_elev /= -9999) then
-                        prj_dem_z(i) = design_elev  ! update project elevation raster to use the design elevation rather than the height above mean water level
+                        if (design_elev /= -9999) then
+                            prj_dem_z(i) = design_elev  ! update project elevation raster to use the design elevation rather than the height above mean water level
+                        end if
                     end if
                 end if
             end do
