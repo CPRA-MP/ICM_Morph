@@ -87,7 +87,9 @@ subroutine update_elevation
                     end if
                     
                 else        
-                    dem_z(i) = dem_z_bi(dem_to_bidem(i))                                                                                ! if in BI-DEM domain,, use ICM-BI-DEM elevation as final elevation
+                    if (dem_z_bi(dem_to_bidem(i)) /= dem_NoDataVal) then
+                        dem_z(i) = dem_z_bi(dem_to_bidem(i))                                                                                ! if in BI-DEM domain,, use ICM-BI-DEM elevation as final elevation (unless BIDEM returns NoData value
+                    end if
                 end if
             end if
         end if
