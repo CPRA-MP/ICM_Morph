@@ -58,37 +58,39 @@ subroutine inundation_thresholds
                     dep_prev_yr = dem_inun_dep(i,14)
                     sal_prev_yr = sal_av_prev_yr(c)
                                     
-                    ! check here to see if lnd_change_flag has been change by any other subroutines,
-                    ! if so, skip ahead to not overwrite previously run land change functions (e.g. edge erosion)
-                    ! this flag is added to any subroutine that alters lnd_change_flag so that the priority of land change
-                    ! is purely a function of the order in which the subroutines are called in MAIN
-                    
-                    if (lnd_change_flag(i) == 0) then
-                        ! if vegetated land and not forested - check for inundation stress
-                        if (dem_lndtyp(i) == 1) then
-                            if ( dem_for_flag(i) /= 1 ) then        ! Forested pixels were mapped to highest areas and have flag set to 1
-                                
-                                DepthThreshold_Wet = inun_thr_C0 + inun_thr_C1*sal_yr + inun_thr_C2*sal_yr**2 + inun_thr_C3*sal_yr**3 + inun_thr_C4*sal_yr**4+ inun_thr_C5*sal_yr**5
-
-                                ! if current year inundation is above threshold, check previous year            
-                                if (dep_yr >= DepthThreshold_Wet) then
-
-                                    DepthThreshold_Wet_prv = inun_thr_C0 + inun_thr_C1*sal_prev_yr + inun_thr_C2*sal_prev_yr**2 + inun_thr_C3*sal_prev_yr**3 + inun_thr_C4*sal_prev_yr**4+ inun_thr_C5*sal_prev_yr**5
+                    ! inundation criterion should  not be checked in first year of model run since this requires two consecutive years of data
+                    if (elapsed_year > 1) then
+                        ! check here to see if lnd_change_flag has been change by any other subroutines,
+                        ! if so, skip ahead to not overwrite previously run land change functions (e.g. edge erosion)
+                        ! this flag is added to any subroutine that alters lnd_change_flag so that the priority of land change
+                        ! is purely a function of the order in which the subroutines are called in MAIN
+                        if (lnd_change_flag(i) == 0) then
+                            ! if vegetated land and not forested - check for inundation stress
+                            if (dem_lndtyp(i) == 1) then
+                                if ( dem_for_flag(i) /= 1 ) then        ! Forested pixels were mapped to highest areas and have flag set to 1
                                     
-                                    ! if both current year and previous year have inundation above threshold, set flag to collapse land
-                                    if (dep_prev_yr >= DepthThreshold_Wet_prv) then
-                                        lnd_change_flag(i) = -1                         ! lnd_change_flag = -1 for conversion from vegetated wetland to open water
+                                    DepthThreshold_Wet = inun_thr_C0 + inun_thr_C1*sal_yr + inun_thr_C2*sal_yr**2 + inun_thr_C3*sal_yr**3 + inun_thr_C4*sal_yr**4+ inun_thr_C5*sal_yr**5
+    
+                                    ! if current year inundation is above threshold, check previous year            
+                                    if (dep_yr >= DepthThreshold_Wet) then
+    
+                                        DepthThreshold_Wet_prv = inun_thr_C0 + inun_thr_C1*sal_prev_yr + inun_thr_C2*sal_prev_yr**2 + inun_thr_C3*sal_prev_yr**3 + inun_thr_C4*sal_prev_yr**4+ inun_thr_C5*sal_prev_yr**5
+                                        
+                                        ! if both current year and previous year have inundation above threshold, set flag to collapse land
+                                        if (dep_prev_yr >= DepthThreshold_Wet_prv) then
+                                            lnd_change_flag(i) = -1                         ! lnd_change_flag = -1 for conversion from vegetated wetland to open water
+                                        end if
                                     end if
                                 end if
-                            end if
-
-                        ! if upland - check if annual mean water level is close enough to upland classified areas that wetland vegetation could establish
-                        else if (dem_lndtyp(i) == 4) then
-                            if (dep_yr >= -1.0*ht_abv_mwl_est) then
-                                grid_n_upland_wet(g) = grid_n_upland_wet(g) + 1 
-                            else
-                                grid_n_upland_dry(g) = grid_n_upland_dry(g) + 1
-                            end if
+                        end if
+                    end if
+                    
+                    ! if upland - check if annual mean water level is close enough to upland classified areas that wetland vegetation could establish
+                    if (dem_lndtyp(i) == 4) then
+                        if (dep_yr >= -1.0*ht_abv_mwl_est) then
+                            grid_n_upland_wet(g) = grid_n_upland_wet(g) + 1 
+                        else
+                            grid_n_upland_dry(g) = grid_n_upland_dry(g) + 1
                         end if
                     end if
                 end if
