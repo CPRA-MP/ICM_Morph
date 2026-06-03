@@ -101,7 +101,7 @@ subroutine map_forested
                     if (grid_lnd_z(gi,gin) == maxval(grid_lnd_z(gi,:))) then        ! find the pixel with highest elevation
                         grid_lnd_z(gi,gin) = -9999                                  ! set current elevation to negative NoData so it won't be a maxval in next loop
                         dem_i = grid_lnd_i(gi,gin)                                  ! find DEM pixel index for highest land pixel
-                        dem_for_flag(dem_i) = 1                                     ! set bareground flag for pixel to old bareground (1)
+                        dem_for_flag(dem_i) = 1                                     ! set forested flag for pixel to forest (1) - will be used in inundation_thresholds to skip any pixel that is forested
                     end if
                 end do
             end do
