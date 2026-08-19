@@ -214,6 +214,7 @@ module params
     real(sp),dimension(:),allocatable :: grid_pct_vglnd_BM          ! percent of vegetated land that is brackish marsh
     real(sp),dimension(:),allocatable :: grid_pct_vglnd_SM          ! percent of vegetated land that is saline marsh
     real(sp),dimension(:),allocatable :: grid_FIBS_score            ! weighted FIBS score of ICM-LAVegMod grid cell - used for accretion
+    real(sp),dimension(:),allocatable :: grid_pct_vegland           ! percent of ICM_LAVegMod grid cell that is vegetated land (coverages type=8-13)
     
     ! define variables read in from monthly summary files  in subroutine: PREPROCESSING
     real(sp),dimension(:,:),allocatable :: stg_av_mons              ! monthly mean stage (m NAVD88) - second dimension (1-12) corresponds to month 
