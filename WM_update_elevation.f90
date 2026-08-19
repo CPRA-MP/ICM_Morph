@@ -32,7 +32,7 @@ subroutine update_elevation
             c = dem_comp(i)
             if (c /= dem_NoDataVal) then
                 if (dem_to_bidem(i) == dem_NoDataVal) then                                                                      ! if pixel is not within barrier island domain            
-                    if (dem_bg_flag(i) == 1) then                                                                               
+                    if (dem_bg_flag(i) > 0) then                                                                                ! for both old & new bareground (dem_bg_flag = 1 & 2)
                         dz_cm_lndtyp = -1.0*bg_lowerZ_m*100.0
                     else 
                         if (lnd_change_flag(i) == -2) then                                                                      ! lower dead flotant pixels (lnd_change = -2) to a given depth below mean water level
@@ -41,8 +41,6 @@ subroutine update_elevation
                             if (dem_edge_near_z(i) /= dem_NoDataVal) then
                                 dz_cm_lndtyp = min(0.00,-100.0*( dem_z(i) - dem_edge_near_z(i) ) )                               ! lower eroded edge pixels to the elevation of the nearest water body bottom elevation (enforce only lowering - max will be no change)
                                 !dz_cm_lndtyp = min(0.00,-100.0*( dem_z(i) - (stg_av_yr(c) - me_lowerDepth_m) ))                 ! lower eroded edge pixels by value set in input_params.csv
-                            else
-                                dz_cm_lndtyp = 0.0
                             end if
                         end if
                     end if
