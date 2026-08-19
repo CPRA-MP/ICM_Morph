@@ -91,6 +91,7 @@ subroutine params_alloc
     allocate(grid_pct_vglnd_BM(ngrid))
     allocate(grid_pct_vglnd_SM(ngrid))
     allocate(grid_FIBS_score(ngrid))
+    allocate(grid_pct_vegland(ngrid))
     
     ! allocate memory for global variables representing monthly summary files  in subroutine: PREPROCESSING
     allocate(stg_av_mons(ncomp,12))
