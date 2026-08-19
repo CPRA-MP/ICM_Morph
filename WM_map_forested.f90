@@ -56,12 +56,12 @@ subroutine map_forested
     
     dem_for_flag = 0                                                                ! initialize forested flag to 0 (0 = not forested; 1 = forested)
     
-    ! first, convert any bare ground in initial lnd_type to vegetated land
-    do i = 1,ndem
-        if (dem_lndtyp(i) == 3) then
-            dem_lndtyp(i) = 1    
-        end if
-    end do
+!    ! first, convert any bare ground in initial lnd_type to vegetated land
+!    do i = 1,ndem
+!        if (dem_lndtyp(i) == 3) then
+!            dem_lndtyp(i) = 1    
+!        end if
+!    end do
 
     grid_lnd_cntr = 0                                                               ! initialize grid counter
     grid_lnd_i =  0!-9999                                                           ! initialize grid pixel index
@@ -93,7 +93,7 @@ subroutine map_forested
     
     
     do gi = 1,ngrid                                                                 ! loop over grid cells
-        grid_pct_for = grid_pct_vglnd_BLHF(gi) + grid_pct_vglnd_SWF(gi)             ! total percent forest coverage in grid ecell
+        grid_pct_for = (grid_pct_vglnd_BLHF(gi) + grid_pct_vglnd_SWF(gi)) * grid_pct_vegland(gi)             ! total percent forest coverage in grid ecell
         if (grid_pct_for > 0.0) then                                                ! if there is non-zero forested coverage percent in grid cell
             grid_n_forested = int(grid_pct_for*grid_ndem_all(gi))                   ! set number of pixels in grid that are forested from percentage
             do bg = 1,grid_n_forested                                               ! loop over the number of forested pixels in grid cell               
