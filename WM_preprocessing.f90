@@ -15,7 +15,9 @@ subroutine preprocessing
     integer :: row_lookup               ! local variable to find DEM pixel index corresponding to ICM-BI-DEM interpolated point
     integer :: dem_i                    ! local variable that determined DEM pixel index corresponding to ICM-BI-DEM pixel location
     integer :: en                       ! local variable of ecoregion number used for reading in ecoregion name codes
-    
+    real(sp):: ELBA2_Flt, PAHE2_Flt, BAREGRND_Flt                       !local variables to store % veg coverages (flotant species)
+    real(sp):: BAHABI, DISPBI, PAAM2, SOSE, SPPABI, SPVI3, STHE9, UNPA  !local variables to store % veg coverages (barrier island species)
+  
     
     
     ! read pixel-to-compartment mapping file into arrays
@@ -198,16 +200,16 @@ subroutine preprocessing
     open(unit=1115, file=trim(adjustL(comp_eco_file)))
     read(1115,*) dump_txt                            ! dump header
     do i = 1,ncomp
-        read(1115,*) dump_int,                          &       ! ICM-Hydro_comp
-   &                 comp_eco(i),                       &       ! ecoregion number
-   &                 comp_dlt_chnr(i),                   &       ! compartment located in Deltaic Plain (1) or Chenier Plain (2)   
-   &                 comp_land_outside_grid_m2(i),      &       ! area of compartment that is outside of ICM-LAVegMod grid and is assumed to always be land
-   &                 comp_watr_outside_grid_m2(i),      &       ! area of compartment that is outside of ICM-LAVegMod grid and is assumed to always be water
-   &                 dump_txt,                          &       ! ecoregion code
+        read(1115,*) dump_int,                             &       ! ICM-Hydro_comp
+   &                 comp_eco(dump_int),                   &       ! ecoregion number
+   &                 comp_dlt_chnr(dump_int),              &       ! compartment located in Deltaic Plain (1) or Chenier Plain (2)   
+   &                 comp_land_outside_grid_m2(dump_int),  &       ! area of compartment that is outside of ICM-LAVegMod grid and is assumed to always be land
+   &                 comp_watr_outside_grid_m2(dump_int),  &       ! area of compartment that is outside of ICM-LAVegMod grid and is assumed to always be water
+   &                 dump_txt,                             &       ! ecoregion code
    &                 dump_txt                                   ! descriptive name
 
-        comp_land_outside_grid_pixels(i) = int(comp_land_outside_grid_m2(i))/dem_res**2
-        comp_watr_outside_grid_pixels(i) = int(comp_watr_outside_grid_m2(i))/dem_res**2
+        comp_land_outside_grid_pixels(dump_int) = int(comp_land_outside_grid_m2(dump_int))/dem_res**2
+        comp_watr_outside_grid_pixels(dump_int) = int(comp_watr_outside_grid_m2(dump_int))/dem_res**2
     end do
     close(1115)
   
@@ -221,7 +223,7 @@ subroutine preprocessing
     open(unit=1116, file=trim(adjustL(act_del_file)))
     read(1116,*) dump_txt                               ! dump header
     do i = 1,ncomp
-        read(1116,*) dump_int,comp_act_dlt(i)           ! compartment ID, active delta flag (1) or not active (0)
+        read(1116,*) dump_int,comp_act_dlt(dump_int)           ! compartment ID, active delta flag (1) or not active (0)
     end do
     close(1116)
     
@@ -236,7 +238,7 @@ subroutine preprocessing
     open(unit=11166, file=trim(adjustL(no_gain_file)))
     read(11166,*) dump_txt                               ! dump header
     do i = 1,ncomp
-        read(11166,*) dump_int,comp_no_gain(i)           ! compartment ID, active delta flag
+        read(11166,*) dump_int,comp_no_gain(dump_int)           ! compartment ID, active delta flag
     end do
     close(11166)
      
@@ -282,9 +284,9 @@ subroutine preprocessing
         read(1118,*) en,                        &       ! ecoregion number
    &                er_codes(en),               &       ! ecoregion abbreviation
    &                dump_txt,                   &       ! ecoregion name
-   &                er_shsb(i,1),               &       ! 25th %ile shallow subsidence rate (mm/yr) - positive is downward
-   &                er_shsb(i,2),               &       ! 50th %ile shallow subsidence rate (mm/yr) - positive is downward
-   &                er_shsb(i,3),               &       ! 75th %ile shallow subsidence rate (mm/yr) - positive is downward
+   &                er_shsb(en,1),              &       ! 25th %ile shallow subsidence rate (mm/yr) - positive is downward
+   &                er_shsb(en,2),              &       ! 50th %ile shallow subsidence rate (mm/yr) - positive is downward
+   &                er_shsb(en,3),              &       ! 75th %ile shallow subsidence rate (mm/yr) - positive is downward
    &                dump_txt                            ! notes
     end do
     close(1118) 
@@ -316,26 +318,26 @@ subroutine preprocessing
     
     read(112,*) dump_txt        ! dump header
     do i = 1,ncomp
-        read(112,*) dump_txt,               &
-   &         stg_mx_yr(i),                  &
-   &         stg_av_yr(i),                  &
-   &         stg_av_smr(i),                 &
-   &         stg_sd_smr(i),                 &
-   &         sal_av_yr(i),                  &
-   &         sal_av_smr(i),                 &
-   &         sal_mx_14d_yr(i),              &
-   &         tmp_av_yr(i),                  &
-   &         tmp_av_smr(i),                 &
-   &         sed_dp_ow_yr(i),               &
-   &         sed_dp_mi_yr(i),               &
-   &         sed_dp_me_yr(i),               &
-   &         tidal_prism_ave(i),            &
-   &         ave_sepmar_stage(i),           &
-   &         ave_octapr_stage(i),           &
-   &         marsh_edge_erosion_rate(i),    &
-   &         ave_annual_tss(i),             &
-   &         stdev_annual_tss(i),           &
-   &         totalland_m2(i)
+        read(112,*) dump_int,                      &
+   &         stg_mx_yr(dump_int),                  &
+   &         stg_av_yr(dump_int),                  &
+   &         stg_av_smr(dump_int),                 &
+   &         stg_sd_smr(dump_int),                 &
+   &         sal_av_yr(dump_int),                  &
+   &         sal_av_smr(dump_int),                 &
+   &         sal_mx_14d_yr(dump_int),              &
+   &         tmp_av_yr(dump_int),                  &
+   &         tmp_av_smr(dump_int),                 &
+   &         sed_dp_ow_yr(dump_int),               &
+   &         sed_dp_mi_yr(dump_int),               &
+   &         sed_dp_me_yr(dump_int),               &
+   &         tidal_prism_ave(dump_int),            &
+   &         ave_sepmar_stage(dump_int),           &
+   &         ave_octapr_stage(dump_int),           &
+   &         marsh_edge_erosion_rate(dump_int),    &
+   &         ave_annual_tss(dump_int),             &
+   &         stdev_annual_tss(dump_int),           &
+   &         totalland_m2(dump_int)
     end do
     close(112)
     
@@ -347,12 +349,12 @@ subroutine preprocessing
     
     read(1120,*) dump_txt        ! dump header
     do i = 1,ncomp
-        read(1120,*) dump_txt,               &
+        read(1120,*) dump_int,              &
    &         dump_flt    ,                  &
-   &         stg_av_prev_yr(i),             &
+   &         stg_av_prev_yr(dump_int),      &
    &         dump_flt    ,                  &
    &         dump_flt    ,                  &
-   &         sal_av_prev_yr(i),             &
+   &         sal_av_prev_yr(dump_int),      &
    &         dump_flt    ,                  &
    &         dump_flt    ,                  &
    &         dump_flt    ,                  &
@@ -394,102 +396,102 @@ subroutine preprocessing
     
     do i = 1,ncomp
         read(113,*) dump_int,                   &
-   &         stg_av_mons(i,1),                  &
-   &         stg_av_mons(i,2),                  &
-   &         stg_av_mons(i,3),                  &
-   &         stg_av_mons(i,4),                  &
-   &         stg_av_mons(i,5),                  &
-   &         stg_av_mons(i,6),                  &
-   &         stg_av_mons(i,7),                  &
-   &         stg_av_mons(i,8),                  &
-   &         stg_av_mons(i,9),                  &
-   &         stg_av_mons(i,10),                 &
-   &         stg_av_mons(i,11),                 &
-   &         stg_av_mons(i,12)
+   &         stg_av_mons(dump_int,1),                  &
+   &         stg_av_mons(dump_int,2),                  &
+   &         stg_av_mons(dump_int,3),                  &
+   &         stg_av_mons(dump_int,4),                  &
+   &         stg_av_mons(dump_int,5),                  &
+   &         stg_av_mons(dump_int,6),                  &
+   &         stg_av_mons(dump_int,7),                  &
+   &         stg_av_mons(dump_int,8),                  &
+   &         stg_av_mons(dump_int,9),                  &
+   &         stg_av_mons(dump_int,10),                 &
+   &         stg_av_mons(dump_int,11),                 &
+   &         stg_av_mons(dump_int,12)
         
         read(114,*) dump_int,                   &
-   &         stg_mx_mons(i,1),                  &
-   &         stg_mx_mons(i,2),                  &
-   &         stg_mx_mons(i,3),                  &
-   &         stg_mx_mons(i,4),                  &
-   &         stg_mx_mons(i,5),                  &
-   &         stg_mx_mons(i,6),                  &
-   &         stg_mx_mons(i,7),                  &
-   &         stg_mx_mons(i,8),                  &
-   &         stg_mx_mons(i,9),                  &
-   &         stg_mx_mons(i,10),                 &
-   &         stg_mx_mons(i,11),                 &
-   &         stg_mx_mons(i,12)       
+   &         stg_mx_mons(dump_int,1),                  &
+   &         stg_mx_mons(dump_int,2),                  &
+   &         stg_mx_mons(dump_int,3),                  &
+   &         stg_mx_mons(dump_int,4),                  &
+   &         stg_mx_mons(dump_int,5),                  &
+   &         stg_mx_mons(dump_int,6),                  &
+   &         stg_mx_mons(dump_int,7),                  &
+   &         stg_mx_mons(dump_int,8),                  &
+   &         stg_mx_mons(dump_int,9),                  &
+   &         stg_mx_mons(dump_int,10),                 &
+   &         stg_mx_mons(dump_int,11),                 &
+   &         stg_mx_mons(dump_int,12)       
         
         read(115,*) dump_int,                   &
-   &         sed_dp_ow_mons(i,1),               &
-   &         sed_dp_ow_mons(i,2),               &
-   &         sed_dp_ow_mons(i,3),               &
-   &         sed_dp_ow_mons(i,4),               &
-   &         sed_dp_ow_mons(i,5),               &
-   &         sed_dp_ow_mons(i,6),               &
-   &         sed_dp_ow_mons(i,7),               &
-   &         sed_dp_ow_mons(i,8),               &
-   &         sed_dp_ow_mons(i,9),               &
-   &         sed_dp_ow_mons(i,10),              &
-   &         sed_dp_ow_mons(i,11),              &
-   &         sed_dp_ow_mons(i,12)        
+   &         sed_dp_ow_mons(dump_int,1),               &
+   &         sed_dp_ow_mons(dump_int,2),               &
+   &         sed_dp_ow_mons(dump_int,3),               &
+   &         sed_dp_ow_mons(dump_int,4),               &
+   &         sed_dp_ow_mons(dump_int,5),               &
+   &         sed_dp_ow_mons(dump_int,6),               &
+   &         sed_dp_ow_mons(dump_int,7),               &
+   &         sed_dp_ow_mons(dump_int,8),               &
+   &         sed_dp_ow_mons(dump_int,9),               &
+   &         sed_dp_ow_mons(dump_int,10),              &
+   &         sed_dp_ow_mons(dump_int,11),              &
+   &         sed_dp_ow_mons(dump_int,12)        
         
         read(116,*) dump_int,                   &
-   &         sed_dp_mi_mons(i,1),               &
-   &         sed_dp_mi_mons(i,2),               &
-   &         sed_dp_mi_mons(i,3),               &
-   &         sed_dp_mi_mons(i,4),               &
-   &         sed_dp_mi_mons(i,5),               &
-   &         sed_dp_mi_mons(i,6),               &
-   &         sed_dp_mi_mons(i,7),               &
-   &         sed_dp_mi_mons(i,8),               &
-   &         sed_dp_mi_mons(i,9),               &
-   &         sed_dp_mi_mons(i,10),              &
-   &         sed_dp_mi_mons(i,11),              &
-   &         sed_dp_mi_mons(i,12)
+   &         sed_dp_mi_mons(dump_int,1),               &
+   &         sed_dp_mi_mons(dump_int,2),               &
+   &         sed_dp_mi_mons(dump_int,3),               &
+   &         sed_dp_mi_mons(dump_int,4),               &
+   &         sed_dp_mi_mons(dump_int,5),               &
+   &         sed_dp_mi_mons(dump_int,6),               &
+   &         sed_dp_mi_mons(dump_int,7),               &
+   &         sed_dp_mi_mons(dump_int,8),               &
+   &         sed_dp_mi_mons(dump_int,9),               &
+   &         sed_dp_mi_mons(dump_int,10),              &
+   &         sed_dp_mi_mons(dump_int,11),              &
+   &         sed_dp_mi_mons(dump_int,12)
         
         read(117,*) dump_int,                   &
-   &         sed_dp_me_mons(i,1),               &
-   &         sed_dp_me_mons(i,2),               &
-   &         sed_dp_me_mons(i,3),               &
-   &         sed_dp_me_mons(i,4),               &
-   &         sed_dp_me_mons(i,5),               &
-   &         sed_dp_me_mons(i,6),               &
-   &         sed_dp_me_mons(i,7),               &
-   &         sed_dp_me_mons(i,8),               &
-   &         sed_dp_me_mons(i,9),               &
-   &         sed_dp_me_mons(i,10),              &
-   &         sed_dp_me_mons(i,11),              &
-   &         sed_dp_me_mons(i,12)        
+   &         sed_dp_me_mons(dump_int,1),               &
+   &         sed_dp_me_mons(dump_int,2),               &
+   &         sed_dp_me_mons(dump_int,3),               &
+   &         sed_dp_me_mons(dump_int,4),               &
+   &         sed_dp_me_mons(dump_int,5),               &
+   &         sed_dp_me_mons(dump_int,6),               &
+   &         sed_dp_me_mons(dump_int,7),               &
+   &         sed_dp_me_mons(dump_int,8),               &
+   &         sed_dp_me_mons(dump_int,9),               &
+   &         sed_dp_me_mons(dump_int,10),              &
+   &         sed_dp_me_mons(dump_int,11),              &
+   &         sed_dp_me_mons(dump_int,12)        
    
            read(118,*) dump_int,                   &
-   &         sal_av_mons(i,1),               &
-   &         sal_av_mons(i,2),               &
-   &         sal_av_mons(i,3),               &
-   &         sal_av_mons(i,4),               &
-   &         sal_av_mons(i,5),               &
-   &         sal_av_mons(i,6),               &
-   &         sal_av_mons(i,7),               &
-   &         sal_av_mons(i,8),               &
-   &         sal_av_mons(i,9),               &
-   &         sal_av_mons(i,10),              &
-   &         sal_av_mons(i,11),              &
-   &         sal_av_mons(i,12)        
+   &         sal_av_mons(dump_int,1),               &
+   &         sal_av_mons(dump_int,2),               &
+   &         sal_av_mons(dump_int,3),               &
+   &         sal_av_mons(dump_int,4),               &
+   &         sal_av_mons(dump_int,5),               &
+   &         sal_av_mons(dump_int,6),               &
+   &         sal_av_mons(dump_int,7),               &
+   &         sal_av_mons(dump_int,8),               &
+   &         sal_av_mons(dump_int,9),               &
+   &         sal_av_mons(dump_int,10),              &
+   &         sal_av_mons(dump_int,11),              &
+   &         sal_av_mons(dump_int,12)        
    
            read(119,*) dump_int,                   &
-   &         tss_av_mons(i,1),               &
-   &         tss_av_mons(i,2),               &
-   &         tss_av_mons(i,3),               &
-   &         tss_av_mons(i,4),               &
-   &         tss_av_mons(i,5),               &
-   &         tss_av_mons(i,6),               &
-   &         tss_av_mons(i,7),               &
-   &         tss_av_mons(i,8),               &
-   &         tss_av_mons(i,9),               &
-   &         tss_av_mons(i,10),              &
-   &         tss_av_mons(i,11),              &
-   &         tss_av_mons(i,12)        
+   &         tss_av_mons(dump_int,1),               &
+   &         tss_av_mons(dump_int,2),               &
+   &         tss_av_mons(dump_int,3),               &
+   &         tss_av_mons(dump_int,4),               &
+   &         tss_av_mons(dump_int,5),               &
+   &         tss_av_mons(dump_int,6),               &
+   &         tss_av_mons(dump_int,7),               &
+   &         tss_av_mons(dump_int,8),               &
+   &         tss_av_mons(dump_int,9),               &
+   &         tss_av_mons(dump_int,10),              &
+   &         tss_av_mons(dump_int,11),              &
+   &         tss_av_mons(dump_int,12)        
 
     end do
     
@@ -541,9 +543,9 @@ subroutine preprocessing
    &                dump_flt,                                       &      ! NYAQ2
    &                dump_flt,                                       &      ! SANI
    &                dump_flt,                                       &      ! TADI2
-   &                dump_flt,                                       &      ! ELBA2_Flt
-   &                dump_flt,                                       &      ! PAHE2_Flt
-   &                dump_flt,                                       &      ! BAREGRND_Flt
+   &                ELBA2_Flt,                                      &      ! ELBA2_Flt
+   &                PAHE2_Flt,                                      &      ! PAHE2_Flt
+   &                BAREGRND_Flt,                                   &      ! BAREGRND_Flt
    &                grid_pct_dead_flt(g),                           &      ! DEAD_Flt
    &                dump_flt,                                       &      ! COES
    &                dump_flt,                                       &      ! MOCE2
@@ -567,14 +569,17 @@ subroutine preprocessing
    &                dump_flt,                                       &      ! DISP
    &                dump_flt,                                       &      ! JURO
    &                dump_flt,                                       &      ! SPAL
-   &                dump_flt,                                       &      ! BAHABI
-   &                dump_flt,                                       &      ! DISPBI
-   &                dump_flt,                                       &      ! PAAM2
-   &                dump_flt,                                       &      ! SOSE
-   &                dump_flt,                                       &      ! SPPABI
-   &                dump_flt,                                       &      ! SPVI3
-   &                dump_flt,                                       &      ! STHE9
-   &                dump_flt                                               ! UNPA
+   &                BAHABI,                                         &      ! BAHABI
+   &                DISPBI,                                         &      ! DISPBI
+   &                PAAM2,                                          &      ! PAAM2
+   &                SOSE,                                           &      ! SOSE
+   &                SPPABI,                                         &      ! SPPABI
+   &                SPVI3,                                          &      ! SPVI3
+   &                STHE9,                                          &      ! STHE9
+   &                UNPA                                                   ! UNPA
+       
+       dump_flt = ELBA2_Flt + PAHE2_Flt + BAREGRND_Flt + BAHABI + DISPBI + PAAM2 + SOSE + SPPABI + SPVI3 + STHE9 + UNPA
+       grid_pct_vegland(g) = max(0.0, 1.0 - grid_pct_water(g) - grid_pct_upland(g) - grid_pct_bare_old(g) - grid_pct_bare_new(g) - grid_pct_dead_flt(g) - dump_flt)
     end do
     close(120)
     
@@ -613,22 +618,22 @@ subroutine preprocessing
         read(121,*) dump_int,                                       &      ! er_n,
    &                dump_txt,                                       &      ! er,
    &                dump_flt,                                       &      ! SwampOrgAccum_g_cm^-2_yr^-1_lower,
-   &                er_omar(i,1),                                   &      ! SwampOrgAccum_g_cm^-2_yr^-1_median,
+   &                er_omar(dump_int,1),                            &      ! SwampOrgAccum_g_cm^-2_yr^-1_median,
    &                dump_flt,                                       &      ! SwampOrgAccum_g_cm^-2_yr^-1_upper,
    &                dump_flt,                                       &      ! FreshOrgAccum_g_cm^-2_yr^-1_lower,
-   &                er_omar(i,2),                                   &      ! FreshOrgAccum_g_cm^-2_yr^-1_median,
+   &                er_omar(dump_int,2),                            &      ! FreshOrgAccum_g_cm^-2_yr^-1_median,
    &                dump_flt,                                       &      ! FreshOrgAccum_g_cm^-2_yr^-1_upper,
    &                dump_flt,                                       &      ! InterOrgAccum_g_cm^-2_yr^-1_lower,
-   &                er_omar(i,3),                                   &      ! InterOrgAccum_g_cm^-2_yr^-1_median,
+   &                er_omar(dump_int,3),                            &      ! InterOrgAccum_g_cm^-2_yr^-1_median,
    &                dump_flt,                                       &      ! InterOrgAccum_g_cm^-2_yr^-1_upper,
    &                dump_flt,                                       &      ! BrackOrgAccum_g_cm^-2_yr^-1_lower,
-   &                er_omar(i,4),                                   &      ! BrackOrgAccum_g_cm^-2_yr^-1_median,
+   &                er_omar(dump_int,4),                            &      ! BrackOrgAccum_g_cm^-2_yr^-1_median,
    &                dump_flt,                                       &      ! BrackOrgAccum_g_cm^-2_yr^-1_upper,
    &                dump_flt,                                       &      ! SalineOrgAccum_g_cm^-2_yr^-1_lower,
-   &                er_omar(i,5),                                   &      ! SalineOrgAccum_g_cm^-2_yr^-1_median,
+   &                er_omar(dump_int,5),                            &      ! SalineOrgAccum_g_cm^-2_yr^-1_median,
    &                dump_flt,                                       &      ! SalineOrgAccum_g_cm^-2_yr^-1_upper,
    &                dump_flt,                                       &      ! ActiveFreshOrgAccum_g_cm^-2_yr^-1_lower,
-   &                er_omar(i,6),                                   &      ! ActiveFreshOrgAccum_g_cm^-2_yr^-1_median,
+   &                er_omar(dump_int,6),                            &      ! ActiveFreshOrgAccum_g_cm^-2_yr^-1_median,
    &                dump_flt                                               ! ActiveFreshOrgAccum_g_cm^-2_yr^-1_upper
     end do                                                                 
     close(121)                                                             
