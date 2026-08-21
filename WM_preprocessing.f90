@@ -318,26 +318,26 @@ subroutine preprocessing
     
     read(112,*) dump_txt        ! dump header
     do i = 1,ncomp
-        read(112,*) dump_int,                      &
-   &         stg_mx_yr(dump_int),                  &
-   &         stg_av_yr(dump_int),                  &
-   &         stg_av_smr(dump_int),                 &
-   &         stg_sd_smr(dump_int),                 &
-   &         sal_av_yr(dump_int),                  &
-   &         sal_av_smr(dump_int),                 &
-   &         sal_mx_14d_yr(dump_int),              &
-   &         tmp_av_yr(dump_int),                  &
-   &         tmp_av_smr(dump_int),                 &
-   &         sed_dp_ow_yr(dump_int),               &
-   &         sed_dp_mi_yr(dump_int),               &
-   &         sed_dp_me_yr(dump_int),               &
-   &         tidal_prism_ave(dump_int),            &
-   &         ave_sepmar_stage(dump_int),           &
-   &         ave_octapr_stage(dump_int),           &
-   &         marsh_edge_erosion_rate(dump_int),    &
-   &         ave_annual_tss(dump_int),             &
-   &         stdev_annual_tss(dump_int),           &
-   &         totalland_m2(dump_int)
+        read(112,*) dump_txt,               &
+   &         stg_mx_yr(i),                  &
+   &         stg_av_yr(i),                  &
+   &         stg_av_smr(i),                 &
+   &         stg_sd_smr(i),                 &
+   &         sal_av_yr(i),                  &
+   &         sal_av_smr(i),                 &
+   &         sal_mx_14d_yr(i),              &
+   &         tmp_av_yr(i),                  &
+   &         tmp_av_smr(i),                 &
+   &         sed_dp_ow_yr(i),               &
+   &         sed_dp_mi_yr(i),               &
+   &         sed_dp_me_yr(i),               &
+   &         tidal_prism_ave(i),            &
+   &         ave_sepmar_stage(i),           &
+   &         ave_octapr_stage(i),           &
+   &         marsh_edge_erosion_rate(i),    &
+   &         ave_annual_tss(i),             &
+   &         stdev_annual_tss(i),           &
+   &         totalland_m2(i)
     end do
     close(112)
     
@@ -349,12 +349,12 @@ subroutine preprocessing
     
     read(1120,*) dump_txt        ! dump header
     do i = 1,ncomp
-        read(1120,*) dump_int,              &
+        read(1120,*) dump_txt,               &
    &         dump_flt    ,                  &
-   &         stg_av_prev_yr(dump_int),      &
+   &         stg_av_prev_yr(i),             &
    &         dump_flt    ,                  &
    &         dump_flt    ,                  &
-   &         sal_av_prev_yr(dump_int),      &
+   &         sal_av_prev_yr(i),             &
    &         dump_flt    ,                  &
    &         dump_flt    ,                  &
    &         dump_flt    ,                  &
