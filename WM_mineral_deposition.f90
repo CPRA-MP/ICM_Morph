@@ -55,8 +55,8 @@ subroutine mineral_deposition
                 do mn = 1,12                                                                                    ! sum monthly deposition for open water, edge and interior areas over entire year
                     ! check that mineral sediment deposition/erosion do not exceed allowable limits for the month
                     ! if pixel is not inundated, maximum allowable deposition will be calculated as zero
-                    sed_dp_ow_mons_mx = max(0.0,dem_inun_dep(i,mn) / ow_bd)                                     ! calculate sediment deposition mass load [g/cm^2] that would match inundation depth of the open water pixel for the month
-                    sed_dp_mons_mx =    max(0.0,dem_inun_dep(i,mn) / mn_k2)                                     ! calculate sediment deposition mass load [g/cm^2] that would match inundation depth of the marsh pixel for the month
+                    sed_dp_ow_mons_mx = max(0.0,100.0*dem_inun_dep(i,mn) * ow_bd)                               ! calculate sediment deposition mass load [g/cm^2] that would match inundation depth of the open water pixel for the month
+                    sed_dp_mons_mx =    max(0.0,100.0*dem_inun_dep(i,mn) * mn_k2)                               ! calculate sediment deposition mass load [g/cm^2] that would match inundation depth of the marsh pixel for the month
                     
                     sed_dp_int  = sed_dp_int  + min(sed_dp_mons_mx,    sed_dp_mi_mons_corr(c,mn)/10000.0)       ! mineral deposition is calculated in ICM-Hydro (and read in in PREPROCESSING) in g/m^2
                     sed_dp_edge = sed_dp_edge + min(sed_dp_mons_mx,    sed_dp_me_mons(c,mn)/10000.0)            ! must convert to g/cm^2    ! [g/cm^2] = [g/m^2]*[m/100 cm]*[m/100 cm] = [g/m^2]/10000
