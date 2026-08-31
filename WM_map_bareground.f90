@@ -113,7 +113,7 @@ subroutine map_bareground
 
         ! repeat above process for new bareground - this places new bareground higher than old bareground but lower than vegetated land
         if (grid_pct_bare_new(gi) > 0.0) then                                       ! if there is new bareground in grid cell
-            grid_n_bare_old = int(grid_pct_bare_old(gi)*grid_ndem_all(gi))          ! set number of pixels in grid that are new bare ground from percentage
+            grid_n_bare_new = int(grid_pct_bare_new(gi)*grid_ndem_all(gi))          ! set number of pixels in grid that are new bare ground from percentage
             do bg = 1,grid_n_bare_new                                               ! loop over the number of new bareground pixels in grid cell               
                 do gin = 1, grid_lnd_cntr(gi)                                       ! loop over all land pixels in grid cell 
                     if (grid_lnd_z(gi,gin) == minval(grid_lnd_z(gi,:))) then        ! find the pixel with lowest elevation
