@@ -4,18 +4,20 @@ subroutine preprocessing
     implicit none
     
     ! local variables
-    integer :: i                        ! iterator
-    integer :: c                        ! local compartment ID variable
-    integer :: g                        ! local ICM-LAVegMod grid ID variable
-    integer :: i_col                    ! X-coordinate converted to column number of mapped DEM
-    integer :: i_row                    ! Y-coordinate converted to row number of mapped DEM
-    integer :: dem_x_bi                 ! local variable to read in X-coord of ICM-BI-DEM interpolated point
-    integer :: dem_y_bi                 ! local variable to read in Y-coord of ICM-BI-DEM interpolated point
-    integer :: col_lookup               ! local variable to find DEM pixel index corresponding to ICM-BI-DEM interpolated point
-    integer :: row_lookup               ! local variable to find DEM pixel index corresponding to ICM-BI-DEM interpolated point
-    integer :: dem_i                    ! local variable that determined DEM pixel index corresponding to ICM-BI-DEM pixel location
-    integer :: en                       ! local variable of ecoregion number used for reading in ecoregion name codes
-    
+    integer :: i                                                        ! iterator
+    integer :: c                                                        ! local compartment ID variable
+    integer :: g                                                        ! local ICM-LAVegMod grid ID variable
+    integer :: i_col                                                    ! X-coordinate converted to column number of mapped DEM
+    integer :: i_row                                                    ! Y-coordinate converted to row number of mapped DEM
+    integer :: dem_x_bi                                                 ! local variable to read in X-coord of ICM-BI-DEM interpolated point
+    integer :: dem_y_bi                                                 ! local variable to read in Y-coord of ICM-BI-DEM interpolated point
+    integer :: col_lookup                                               ! local variable to find DEM pixel index corresponding to ICM-BI-DEM interpolated point
+    integer :: row_lookup                                               ! local variable to find DEM pixel index corresponding to ICM-BI-DEM interpolated point
+    integer :: dem_i                                                    ! local variable that determined DEM pixel index corresponding to ICM-BI-DEM pixel location
+    integer :: en                                                       ! local variable of ecoregion number used for reading in ecoregion name codes
+    real(sp) :: flt_bi_cov                                              ! local variable used to store temporary sum of barrier island and flotant marsh species coverages
+    real(sp):: ELBA2_Flt, PAHE2_Flt, BAREGRND_Flt                       ! local variables to store flotant marsh species coverages
+    real(sp):: BAHABI, DISPBI, PAAM2, SOSE, SPPABI, SPVI3, STHE9, UNPA  ! local variables to store barrier island species coverages
     
     
     ! read pixel-to-compartment mapping file into arrays
@@ -527,7 +529,7 @@ subroutine preprocessing
     open(unit=120, file=trim(adjustL(veg_out_file)))
     read(120,1234) dump_txt         ! dump column header row ! format 1234 must match structure of veg_out_file column headers
     do i = 1,ngrid
-                read(120,*) g,                                      &      ! CELLID
+        read(120,*) g,                                              &      ! CELLID
    &                grid_pct_water(g),                              &      ! WATER
    &                grid_pct_upland(g),                             &      ! NOTMOD
    &                grid_pct_bare_old(g),                           &      ! BAREGRND_OLD
@@ -541,9 +543,9 @@ subroutine preprocessing
    &                dump_flt,                                       &      ! NYAQ2
    &                dump_flt,                                       &      ! SANI
    &                dump_flt,                                       &      ! TADI2
-   &                dump_flt,                                       &      ! ELBA2_Flt
-   &                dump_flt,                                       &      ! PAHE2_Flt
-   &                dump_flt,                                       &      ! BAREGRND_Flt
+   &                ELBA2_Flt,                                      &      ! ELBA2_Flt
+   &                PAHE2_Flt,                                      &      ! PAHE2_Flt
+   &                BAREGRND_Flt,                                   &      ! BAREGRND_Flt
    &                grid_pct_dead_flt(g),                           &      ! DEAD_Flt
    &                dump_flt,                                       &      ! COES
    &                dump_flt,                                       &      ! MOCE2
@@ -567,14 +569,16 @@ subroutine preprocessing
    &                dump_flt,                                       &      ! DISP
    &                dump_flt,                                       &      ! JURO
    &                dump_flt,                                       &      ! SPAL
-   &                dump_flt,                                       &      ! BAHABI
-   &                dump_flt,                                       &      ! DISPBI
-   &                dump_flt,                                       &      ! PAAM2
-   &                dump_flt,                                       &      ! SOSE
-   &                dump_flt,                                       &      ! SPPABI
-   &                dump_flt,                                       &      ! SPVI3
-   &                dump_flt,                                       &      ! STHE9
-   &                dump_flt                                               ! UNPA
+   &                BAHABI,                                         &      ! BAHABI
+   &                DISPBI,                                         &      ! DISPBI
+   &                PAAM2,                                          &      ! PAAM2
+   &                SOSE,                                           &      ! SOSE
+   &                SPPABI,                                         &      ! SPPABI
+   &                SPVI3,                                          &      ! SPVI3
+   &                STHE9,                                          &      ! STHE9
+   &                UNPA                                                   ! UNPA
+        flt_bi_cov = ELBA2_Flt + PAHE2_Flt + BAREGRND_Flt + BAHABI + DISPBI + PAAM2 + SOSE + SPPABI + SPVI3 + STHE9 + UNPA
+        grid_pct_vegland(g) = max(0.0, 1.0 - grid_pct_water(g) - grid_pct_upland(g) - grid_pct_bare_old(g) - grid_pct_bare_new(g) - grid_pct_dead_flt(g) - flt_bi_cov)
     end do
     close(120)
     
