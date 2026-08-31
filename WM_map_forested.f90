@@ -56,13 +56,6 @@ subroutine map_forested
     
     dem_for_flag = 0                                                                ! initialize forested flag to 0 (0 = not forested; 1 = forested)
     
-    ! first, convert any bare ground in initial lnd_type to vegetated land
-    do i = 1,ndem
-        if (dem_lndtyp(i) == 3) then
-            dem_lndtyp(i) = 1    
-        end if
-    end do
-
     grid_lnd_cntr = 0                                                               ! initialize grid counter
     grid_lnd_i =  0!-9999                                                           ! initialize grid pixel index
     grid_lnd_z = -9999                                                              ! initialize elev array to -9999 so NoData z is always smaller

@@ -59,7 +59,10 @@ subroutine map_bareground
     
     dem_bg_flag = 0                                                                 ! initialize bareground flag to 0 (0 = not bareground; 1 = old bareground; 2 = new bareground)
     
-    ! first, convert any bare ground in initial lnd_type to vegetated land
+    ! First, convert any bare ground in initial lnd_type to vegetated land.
+    !    This 'resets' the veg/bareground map in each grid cell for the current year.
+    !    The new/old bareground values coming from ICM-LAVegMod outputs will then be used to map all bareground,
+    !    regardless of where it may have been mapped in the previous year's ICM-Morph landtype output raster.
     do i = 1,ndem
         if (dem_lndtyp(i) == 3) then
             dem_lndtyp(i) = 1    
