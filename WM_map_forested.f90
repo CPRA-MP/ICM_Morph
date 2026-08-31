@@ -32,18 +32,18 @@ subroutine map_forested
     implicit none
     
     ! local variables
-    integer :: i                                                                    ! iterator
-    integer :: gi                                                                   ! iterator
-    integer :: bg                                                                   ! iterator
-    integer :: gin                                                                  ! iterator
-    integer ::gc                                                                    ! counter that is updated to track index of land pixels in each grid cell
-    integer :: g                                                                    ! local grid ID variable
-    integer :: dem_i                                                                ! local DEM pixel index
-    real(sp) :: grid_pct_for                                                        ! local value of total percent forested land within grid cell
-    integer,dimension(:),allocatable :: grid_lnd_cntr                               ! local array to count number of land pixels per grid cell
-    integer,dimension(:,:),allocatable :: grid_lnd_i                                ! local array to store DEM index for land pixels within each grid cell
-    real(sp),dimension(:,:),allocatable :: grid_lnd_z                               ! local array to store DEM elevation for land pixels within each grid cell            
-    integer :: grid_n_forested                                                      ! local number of pixels of forested wetland in each grid cell (calculated from input percentages)
+    integer :: i                                                                                            ! iterator
+    integer :: gi                                                                                           ! iterator
+    integer :: bg                                                                                           ! iterator
+    integer :: gin                                                                                          ! iterator
+    integer ::gc                                                                                            ! counter that is updated to track index of land pixels in each grid cell
+    integer :: g                                                                                            ! local grid ID variable
+    integer :: dem_i                                                                                        ! local DEM pixel index
+    real(sp) :: grid_pct_for                                                                                ! local value of total percent forested land within grid cell
+    integer,dimension(:),allocatable :: grid_lnd_cntr                                                       ! local array to count number of land pixels per grid cell
+    integer,dimension(:,:),allocatable :: grid_lnd_i                                                        ! local array to store DEM index for land pixels within each grid cell
+    real(sp),dimension(:,:),allocatable :: grid_lnd_z                                                       ! local array to store DEM elevation for land pixels within each grid cell            
+    integer :: grid_n_forested                                                                              ! local number of pixels of forested wetland in each grid cell (calculated from input percentages)
     
     
     allocate(grid_lnd_cntr(ngrid))
@@ -54,11 +54,11 @@ subroutine map_forested
     write(  *,*) ' - mapping forested pixels within each ICM-LAVegMod grid cell'
     write(000,*) ' - mapping forested pixels within each ICM-LAVegMod grid cell'
     
-    dem_for_flag = 0                                                                ! initialize forested flag to 0 (0 = not forested; 1 = forested)
-    
-    grid_lnd_cntr = 0                                                               ! initialize grid counter
-    grid_lnd_i =  0!-9999                                                           ! initialize grid pixel index
-    grid_lnd_z = -9999                                                              ! initialize elev array to -9999 so NoData z is always smaller
+    dem_for_flag = 0                                                                                        ! initialize forested flag to 0 (0 = not forested; 1 = forested)
+                            
+    grid_lnd_cntr = 0                                                                                       ! initialize grid counter
+    grid_lnd_i =  0!-9999                                                                                   ! initialize grid pixel index
+    grid_lnd_z = -9999                                                                                      ! initialize elev array to -9999 so NoData z is always smaller
 
     ! loop through vegetated land pixels and append DEM index and elevation to an array for each grid cell that will be looped over
     do i = 1,ndem
@@ -66,9 +66,9 @@ subroutine map_forested
         if (g /= dem_NoDataVal) then
             gc = grid_lnd_cntr(g)
             if (dem_lndtyp(i) == 1) then
-                grid_lnd_cntr(g) = min(gc + 1,grid_ndem_mx)                         ! determine array location for grid cell to append index and elevation to
-                grid_lnd_i(g,gc+1) = i                                              ! populate array with DEM pixel index for all vegetated wetland pixels in grid cell
-                grid_lnd_z(g,gc+1) = dem_z(i)                                       ! populate array with DEM pixel elevation for all vegetated wetland pixels in grid cell
+                grid_lnd_cntr(g) = min(gc + 1,grid_ndem_mx)                                                 ! determine array location for grid cell to append index and elevation to
+                grid_lnd_i(g,gc+1) = i                                                                      ! populate array with DEM pixel index for all vegetated wetland pixels in grid cell
+                grid_lnd_z(g,gc+1) = dem_z(i)                                                               ! populate array with DEM pixel elevation for all vegetated wetland pixels in grid cell
             end if
         end if
     end do
@@ -85,16 +85,16 @@ subroutine map_forested
     
     
     
-    do gi = 1,ngrid                                                                 ! loop over grid cells
-        grid_pct_for = ( grid_pct_vglnd_BLHF(gi) + grid_pct_vglnd_SWF(gi) )*grid_pct_vegland(gi)             ! total percent forest coverage in grid ecell
-        if (grid_pct_for > 0.0) then                                                ! if there is non-zero forested coverage percent in grid cell
-            grid_n_forested = int(grid_pct_for*grid_ndem_all(gi))                   ! set number of pixels in grid that are forested from percentage
-            do bg = 1,grid_n_forested                                               ! loop over the number of forested pixels in grid cell               
-                do gin = 1, grid_lnd_cntr(gi)                                       ! loop over all land pixels in grid cell 
-                    if (grid_lnd_z(gi,gin) == maxval(grid_lnd_z(gi,:))) then        ! find the pixel with highest elevation
-                        grid_lnd_z(gi,gin) = -9999                                  ! set current elevation to negative NoData so it won't be a maxval in next loop
-                        dem_i = grid_lnd_i(gi,gin)                                  ! find DEM pixel index for highest land pixel
-                        dem_for_flag(dem_i) = 1                                     ! set forested flag for pixel to forest (1) - will be used in inundation_thresholds to skip any pixel that is forested
+    do gi = 1,ngrid                                                                                         ! loop over grid cells
+        grid_pct_for = ( grid_pct_vglnd_BLHF(gi) + grid_pct_vglnd_SWF(gi) )*grid_pct_vegland(gi)            ! total percent forest coverage in grid ecell
+        if (grid_pct_for > 0.0) then                                                                        ! if there is non-zero forested coverage percent in grid cell
+            grid_n_forested = int(grid_pct_for*grid_ndem_all(gi))                                           ! set number of pixels in grid that are forested from percentage
+            do bg = 1,grid_n_forested                                                                       ! loop over the number of forested pixels in grid cell               
+                do gin = 1, grid_lnd_cntr(gi)                                                               ! loop over all land pixels in grid cell 
+                    if (grid_lnd_z(gi,gin) == maxval(grid_lnd_z(gi,:))) then                                ! find the pixel with highest elevation
+                        grid_lnd_z(gi,gin) = -9999                                                          ! set current elevation to negative NoData so it won't be a maxval in next loop
+                        dem_i = grid_lnd_i(gi,gin)                                                          ! find DEM pixel index for highest land pixel
+                        dem_for_flag(dem_i) = 1                                                             ! set forested flag for pixel to forest (1) - will be used in inundation_thresholds to skip any pixel that is forested
                     end if
                 end do
             end do
