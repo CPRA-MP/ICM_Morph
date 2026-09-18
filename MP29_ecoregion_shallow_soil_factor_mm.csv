@@ -1,0 +1,34 @@
+er_n,er,name,ss_25th_mmyr_positive_is_downward,ss_50th_mmyr_positive_is_downward,ss_75th_mmyr_positive_is_downward,notes
+1,MRP,Maurepas,5.5,3.2,1,16 CRMS sites
+2,LPO,Lake_Pontchartrain,4.7,3.8,0,11 CRMS sites
+3,LBO,Lake_Borgne,5,3.5,2.1,16 CRMS sites
+4,CHS,Chandeleur_Sound,4.5,4.3,3.3,combined with CHSbi for analysis, 5 CRMS sites total
+5,CHSbi,Chandeleur_Sound_barrier_islands,4.5,4.3,3.3,combined with CHS for analysis, 5 CRMS sites total
+6,UBR,Upper_Breton,8.8,6.4,5.3,12 CRMS sites
+7,LBR,Lower_Breton,0.7,-2.3,-2.7,combined with LBRbi for analysis, 5 CRMS sites total
+8,LBRbi,Lower_Breton_barrier_islands,0.7,-2.3,-2.7,combined with LBR for analysis, 5 CRMS sites total
+9,BFD,Birdsfoot_Delta,2.4,-0.8,-3.4,9 CRMS sites
+10,UBA,Upper_Barataria,5.8,3.1,1.2,combined with MBA as UMBA for analysis, 8 CRMS sites total
+11,MBA,Mid_Barataria,5.8,3.1,1.2,combined with UBA as UMBA for analysis, 8 CRMS sites total
+12,LBAnw,Lower_Barataria_northwest,3.9,1.4,-1.4,combined with LBAsw and LBAswbi as LBAw for analysis, 12 CRMS sites total
+13,LBAne,Lower_Barataria_northeast,4,2.3,-0.2,combined with LBAnebi for analysis, 17 CRMS sites total
+14,LBAnebi,Lower_Barataria_northeast_barrier_islands,4,2.3,-0.2,combined with LBAne for analysis, 17 CRMS sites total
+15,LBAsw,Lower_Barataria_southwest,3.9,1.4,-1.4,combined with LBAnw and LBAswbi as LBAw for analysis, 12 CRMS sites total
+16,LBAswbi,Lower_Barataria_southwest_barrier_islands,3.9,1.4,-1.4,combined with LBAnw and LBAsw as LBAw for analysis, 12 CRMS sites total
+17,LBAse,Lower_Barataria_southeast,5,2.5,-0.8,combined with LBAsebi for analysis, 6 CRMS sites total
+18,LBAsebi,Lower_Barataria_southeast_barrier_islands,5,2.5,-0.8,combined with LBAse for analysis, 6 CRMS sites total
+19,UVR,Upper_Verret_Basin,0,0,0,removed from analysis, less than 5 observations
+20,VRT,Verret,0,0,0,removed from analysis, less than 5 observations
+21,ETB,Eastern_Terrebonne,5.2,4.1,0.5,combined with ETBbi for analysis, 17 CRMS sites total
+22,ETBbi,Eastern_Terrebonne_barrier_islands,5.2,4.1,0.5,combined with ETB for analysis, 17 CRMS sites total
+23,PEN,Penchant,1.3,0.7,-1,5 CRMS sites
+24,WTE,Western_Terrebonne,2.9,1.4,0,combined with WTEbi for analysis, 18 CRMS sites total
+25,WTEbi,Western_Terrebonne_barrier_islands,2.9,1.4,0,combined with WTE for analysis, 18 CRMS sites total
+26,ATB,Atchafalaya_Basin,0,0,0,removed from analysis, less than 5 observations
+27,ATD,Atchafalaya_Delta,6.6,3.4,1.1,18 CRMS sites
+28,TVB,Teche_Vermilion_Bays,7.5,5.1,1.5,33 CRMS sites
+29,MEL,Mermentau_Lakes,5.5,2.3,-0.2,37 CRMS sites
+30,CHR,Chenier_Ridges,4.8,3.4,1.2,14 CRMS sites
+31,CAL,Calcasieu,6.5,3.6,1,8 CRMS sites
+32,SAB,Sabine,7,5.2,3.3,36 CRMS sites
+33,OUT,Out_of_domain,0,0,0,dummy ecoregion for compartments outside of ecoregion domain
