@@ -43,10 +43,10 @@ subroutine organic_accretion
                                 if (maxval(dem_inun_dep(i,:)) > 0) then                                     ! check that the pixel was inundated at some point during year
                                     FIBS = grid_FIBS_score(g)                                                   
                                     if (FIBS >= 0.0) then                                                   ! check that there is a FIBS score for grid cell
-                                        if (comp_act_dlt(c) == 1) then                                      ! check if compartment is active delta and has at least some fresh and/or intermediate marsh present (based on FFIBS score)
-                                            if (FIBS > FIBS_intvals(1)) then                                ! FRESH MARSH: FORESTED/FRESH MIX - FIBS_intvals(2) indicates start of fresh marsh range of FFIBS values
-                                                if (FIBS < FIBS_intvals(4)) then                            ! FIBS_intvals(4) indicates *start* of brackish marsh range of FFIBS values
-                                                    OMAR = er_omar(e,6)                                     ! use OMAR for fresh/int marsh in active deltas
+                                        if (comp_act_dlt(c) == 1) then                                      ! check if compartment is active delta 
+                                            if (FIBS > FIBS_intvals(1)) then                                ! check if FFIBS score is at least a forested species (this will exclude flotant and bare) - FIBS_intvals(1) is lower end for Fresh forested range
+                                                if (FIBS < FIBS_intvals(4)) then                            ! check if FFIBS scores is lower than the threshold indentifying the start of the brackish marsh range -  FIBS_intvals(4) indicates *start* of brackish marsh range
+                                                    OMAR = er_omar(e,6)                                     ! use OMAR for fresh/int marsh and forested in active deltas
                                                 end if
                                             end if
                                         else
@@ -67,6 +67,8 @@ subroutine organic_accretion
                 end if
             end if
         end do
+
+
     
     else if (OMAR_interp == 1) then                                                                             ! if flag=1 then linear interpolate between input values for OMAR by ecoregion
         do i = 1,ndem
