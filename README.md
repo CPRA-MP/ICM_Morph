@@ -627,7 +627,7 @@ coastwide average. Active deltaic accretion was greatest, followed by
 average delta plain accretion, and lastly average chenier plain
 accretion. Average active deltaic accretion included both fresh and
 intermediate marsh
-values.](https://github.com/stacycalhoun/MP29ReportTemplates/blob/main/ICM-WetlandMorph_Figs/ICM-WetlandMorph-Fig1.png)  
+values.](https://github.com/CPRA-MP/ICM_Morph/blob/ICM_Morph_scg/ICM-WetlandMorph_Figs/ICM-WetlandMorph-Fig1.png)  
 <caption>
 
 **Figure 1.** Calibration of total accretion using three different
@@ -868,7 +868,7 @@ annual mean inundation depth (m) at CRMS stations. The 99.5th quartile,
 represented by a dashed blue line, indicates the salinity inundation
 threshold curve above which vegetation will not be able to persist in
 the
-ICM.](https://github.com/stacycalhoun/MP29ReportTemplates/blob/main/ICM-WetlandMorph_Figs/ICM-WetlandMorph-Fig2.png)  
+ICM.](https://github.com/CPRA-MP/ICM_Morph/blob/ICM_Morph_scg/ICM-WetlandMorph_Figs/ICM-WetlandMorph-Fig2.png)  
 
 <caption>
 
